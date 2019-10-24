@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jogo da Velha", "Jogo da Velha\Jogo da Velha.vcxproj", "{1FEA9D35-5DE9-487E-B276-4F9491884931}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Debug|x64.ActiveCfg = Debug|x64
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Debug|x64.Build.0 = Debug|x64
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Debug|x86.ActiveCfg = Debug|Win32
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Debug|x86.Build.0 = Debug|Win32
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x64.ActiveCfg = Release|x64
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x64.Build.0 = Release|x64
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x86.ActiveCfg = Release|Win32
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {87C20321-2251-43E8-A7C3-8EA284F60B88}
+	EndGlobalSection
+EndGlobal
