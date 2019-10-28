@@ -5,13 +5,10 @@
 
 #define TRUE 1
 
-static int gridISize = 3;
-static int gridJSize = 3;
+int tieVerifyer(int grid[3][3])
+{
 
-static int supergridISize = 26;
-static int supergridJSize = 46;
-
-static int coordinateSize = 2;
+}
 
 /*verifica se alguém venceu, caso X vence, retorna 1
 Caso O vence, retorna -1
@@ -190,9 +187,9 @@ void superGridModifier(char supergrid[26][47], int grid[3][3])
 					  {' ', 'Y', '8', 'a', '.', ' ', ' ', ' ', ' ', '.', 'a', '8', 'P', ' '},
 					  {' ', ' ', '`', '"', 'Y', '8', '8', '8', '8', 'Y', '"', '\'', ' ', ' '} };
 
-	for (gridCoordinates[0] = 0; gridCoordinates[0] < 4; gridCoordinates[0]++)
+	for (gridCoordinates[0] = 0; gridCoordinates[0] < 3; gridCoordinates[0]++)
 	{
-		for (gridCoordinates[1] = 0; gridCoordinates[1] < 4; gridCoordinates[1]++)
+		for (gridCoordinates[1] = 0; gridCoordinates[1] < 3; gridCoordinates[1]++)
 		{
 			memcpy(supergridCoordinates, coordinatesToSupergrid(gridCoordinates), sizeof(supergridCoordinates));
 			supergridI = supergridCoordinates[0];
