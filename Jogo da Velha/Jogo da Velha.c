@@ -5,6 +5,14 @@
 
 #define TRUE 1
 
+static int gridISize = 3;
+static int gridJSize = 3;
+
+static int supergridISize = 26;
+static int supergridJSize = 46;
+
+static int coordinateSize = 2;
+
 /*verifica se alguém venceu, caso X vence, retorna 1
 Caso O vence, retorna -1
 caso não haja vitória, retorna 0*/
@@ -159,11 +167,11 @@ int* coordinatesToSupergrid(int coordinates[2])
 }
 
 //modifica a super grade, botando X ou O
-void superGridModifier(char supergrid[26][46], int grid[3][3])
+void superGridModifier(char supergrid[26][47], int grid[3][3])
 {
 	int supergridCoordinates[2], gridCoordinates[2];
-	int symbolX = 0, symbolY = 0;
-	int supergridX, supergridY;
+	int symbolI = 0, symbolJ = 0;
+	int supergridI, supergridJ;
 	char x[8][14] = { {' ','8', 'b', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'd', '8', ' '},
 					  {' ',' ', 'Y', '8', ',', ' ', ' ', ' ', ' ', ',', '8', 'P', ' ', ' '},
 					  {' ',' ', ' ', '`', '8', 'b', ' ', ' ', 'd', '8', '\'', ' ', ' ', ' '},
@@ -187,21 +195,21 @@ void superGridModifier(char supergrid[26][46], int grid[3][3])
 		for (gridCoordinates[1] = 0; gridCoordinates[1] < 4; gridCoordinates[1]++)
 		{
 			memcpy(supergridCoordinates, coordinatesToSupergrid(gridCoordinates), sizeof(supergridCoordinates));
-			supergridX = supergridCoordinates[0];
-			supergridY = supergridCoordinates[1];
-			symbolY = 0;
-			for (; supergridCoordinates[1] < supergridY + 8; supergridCoordinates[1]++)
+			supergridI = supergridCoordinates[0];
+			supergridJ = supergridCoordinates[1];
+			symbolI = 0;
+			for (supergridCoordinates[0] = supergridI; supergridCoordinates[0] < supergridI + 8; supergridCoordinates[0]++)
 			{
-				symbolX = 0;
-				for (; supergridCoordinates[0] < supergridX + 14; supergridCoordinates[0]++)
+				symbolJ = 0;
+				for (supergridCoordinates[1] = supergridJ; supergridCoordinates[1] < supergridJ + 14; supergridCoordinates[1]++)
 				{
 					if (grid[gridCoordinates[0]][gridCoordinates[1]] == 1)
-						supergrid[supergridCoordinates[0]][supergridCoordinates[1]] = x[symbolX][symbolY];
+						supergrid[supergridCoordinates[0]][supergridCoordinates[1]] = x[symbolI][symbolJ];
 					if (grid[gridCoordinates[0]][gridCoordinates[1]] == -1)
-						supergrid[supergridCoordinates[0]][supergridCoordinates[1]] = o[symbolX][symbolY];
-					symbolX++;
+						supergrid[supergridCoordinates[0]][supergridCoordinates[1]] = o[symbolI][symbolJ];
+					symbolJ++;
 				}
-				symbolY++;
+				symbolI++;
 			}
 		}
 	}
@@ -211,27 +219,32 @@ void superGridModifier(char supergrid[26][46], int grid[3][3])
 //imprime a grade
 void gridPrinter(int grid[3][3], int mod)
 {
-	static char superGrid[26][46];
+	static char superGrid[26][47];
+	int i, j;
 	//cria a super grade
 	if (mod == 0)
 	{
-		for (int i = 0; i < 26; i++)
+		for (i = 0; i < 26; i++)
 		{
-			for (int j = 0; j < 46; j++)
+			for (j = 0; j < 47; j++)
 			{
 				if (j == 14 || j == 15 || j == 30 || j == 31 || i == 8 || i == 17)
 				{
 					superGrid[i][j] = '#';
 				}
-				else if (j == 45)
+				else if (j == 46)
 				{
 					superGrid[i][j] = '\n';
 				}
 				else
 					superGrid[i][j] = ' ';
-				superGrid[8][45] = '\n';
-				superGrid[17][45] = '\n';
+				superGrid[8][46] = '\n';
+				superGrid[17][46] = '\n';
 			}
+		}
+		for (i = 0; i < 26; i++)
+		{
+			superGrid[i][46] = '\n';
 		}
 	}
 	//somente imprime a super grade
@@ -240,7 +253,7 @@ void gridPrinter(int grid[3][3], int mod)
 		for (int i = 0; i < 26; i++)
 		{
 			printf(" ");
-			for (int j = 0; j < 46; j++)
+			for (int j = 0; j < 47; j++)
 			{
 				printf("%c", superGrid[i][j]);
 			}
@@ -253,7 +266,7 @@ void gridPrinter(int grid[3][3], int mod)
 		for (int i = 0; i < 26; i++)
 		{
 			printf(" ");
-			for (int j = 0; j < 46; j++)
+			for (int j = 0; j < 47; j++)
 			{
 				printf("%c", superGrid[i][j]);
 			}
