@@ -19,7 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ai.c" />
     <ClCompile Include="Jogo da Velha.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ai.h" />
+    <ClInclude Include="Jogo da Velha.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
