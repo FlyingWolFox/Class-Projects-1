@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="ai.c" />
     <ClCompile Include="Jogo da Velha.c" />
+    <ClCompile Include="minimax.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ai.h" />
     <ClInclude Include="Jogo da Velha.h" />
+    <ClInclude Include="minimax.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

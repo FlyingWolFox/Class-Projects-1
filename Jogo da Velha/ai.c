@@ -3,6 +3,8 @@
 #include <time.h>
 #include "Jogo da Velha.h"
 #include "ai.h"
+#include "minimax.h"
+
 static int aiSymbol, aiPlayCoordinates[2];
 static int aiGrid[3][3];
 
@@ -461,8 +463,10 @@ int* aiPlay(int grid[3][3], int difficulty)
 		}
 	}
 
+	//minimax algorithm
 	if (difficulty == 2)
 	{
-
+		memcpy(aiPlayCoordinates, mninimaxMain(aiGrid, aiSymbol), sizeof(aiPlayCoordinates));
+		return aiPlayCoordinates;
 	}
 }

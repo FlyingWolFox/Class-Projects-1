@@ -10,5 +10,10 @@ void aiStart(int symbolToPlay);
 e retorna as coordenadas de seua jogada*/
 int* aiPlay(int grid[3][3], int difficulty);
 
+/*verifica se falta somente um simbolo para
+alguém ganhar em uma ou mais posições de vitória
+retornando um array com arrays contendo as informções
+de vitória. è quase uma cópia do winVerifyer em Jogo da Velha.c*/
+int** winPositionVerifyer(int aiGrid[3][3], int symbol);
 
 #endif

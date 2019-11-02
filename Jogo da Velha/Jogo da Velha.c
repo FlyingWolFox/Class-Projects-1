@@ -657,7 +657,7 @@ int main(int argc, char* argv[])
 
 	printf("Iniciando Jogo da Velha!\n");
 	printf("Como gostaria o tabuleiro? (Alerta, muitas linhas! Pressione enter para continuar)\n");
-	getchar();
+	if(getchar() == '\n');
 	printf("1: As posições vão de 1 a 9\n");
 	gridPrinter(grid, 3);
 	printf("\n2: As posições são coordenadas to tipo (x,y)\n");
@@ -704,6 +704,8 @@ int main(int argc, char* argv[])
 					playCoordinates[0]--;
 					playCoordinates[1]--;
 				}
+				if (playCoordinates[0] < 0 || playCoordinates[1] < 0)
+					break;
 				if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
 				{
 					printf("\nEssa casa já foi marcada!\n");
@@ -736,7 +738,7 @@ int main(int argc, char* argv[])
 				}
 			}
 			printf("\nContinuar Jogando?\n s- Sim  n- Não\n");
-			getchar();
+			if(getchar() == '\n');
 			if (scanf("%c", &keepPlaying) == 1);
 			player = 0;
 		}
@@ -776,6 +778,8 @@ int main(int argc, char* argv[])
 					playCoordinates[0]--;
 					playCoordinates[1]--;
 				}
+				if (playCoordinates[0] < 0 || playCoordinates[1] < 0)
+					break;
 				if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
 				{
 					printf("\nEssa casa já foi marcada!\n");
@@ -808,7 +812,7 @@ int main(int argc, char* argv[])
 				}
 			}
 			printf("\nContinuar Jogando?\n s- Sim  n- Não\n");
-			getchar();
+			if (getchar() == '\n');
 			if (scanf("%c", &keepPlaying) == 1);
 		}
 	}
