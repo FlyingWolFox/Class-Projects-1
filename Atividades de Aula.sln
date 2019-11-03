@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Jogo da Velha", "Jogo da Velha\Jogo da Velha.vcxproj", "{1FEA9D35-5DE9-487E-B276-4F9491884931}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lig 4", "Lig 4\Lig 4.vcxproj", "{0644F248-5E49-477A-BAD7-7FCA86DA135A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x64.Build.0 = Release|x64
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x86.ActiveCfg = Release|Win32
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x86.Build.0 = Release|Win32
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Debug|x64.ActiveCfg = Debug|x64
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Debug|x64.Build.0 = Debug|x64
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Debug|x86.ActiveCfg = Debug|Win32
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Debug|x86.Build.0 = Debug|Win32
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release|x64.ActiveCfg = Release|x64
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release|x64.Build.0 = Release|x64
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release|x86.ActiveCfg = Release|Win32
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
