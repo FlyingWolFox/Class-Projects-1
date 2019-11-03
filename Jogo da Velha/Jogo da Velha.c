@@ -797,6 +797,13 @@ int main(int argc, char* argv[])
 				}
 				if (player == 1)
 					grid[playCoordinates[0]][playCoordinates[1]] = symbolPreference;
+				if (freeCellsReturn[0][0] == 3)
+				{
+					gridPrinter(grid, 2);
+					printf("\nDeu velha...\n");
+					tie = 1;
+					break;
+				}
 				if (player == 2)
 				{
 					memcpy(playCoordinates, aiPlay(grid, difficulty), sizeof(playCoordinates));

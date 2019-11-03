@@ -19,7 +19,7 @@ int** winPositionVerifyer(int aiGrid[3][3], int symbol)
 
 	for (i = 0; i < 3; i++)
 	{
-		if (aiGrid[i][0] == symbol && aiGrid[i][1] == symbol && aiGrid[i][2] !=-symbol)
+		if (aiGrid[i][0] == symbol && aiGrid[i][1] == symbol && aiGrid[i][2] == 0)
 		{
 			returnValue[count1][0] = 2;
 			returnValue[count1][1] = 0;
@@ -27,7 +27,7 @@ int** winPositionVerifyer(int aiGrid[3][3], int symbol)
 			count1++;
 		}
 
-		if (aiGrid[i][0] == symbol && aiGrid[i][1] != -symbol && aiGrid[i][2] == symbol)
+		if (aiGrid[i][0] == symbol && aiGrid[i][1] == 0 && aiGrid[i][2] == symbol)
 		{
 			returnValue[count1][0] = 1;
 			returnValue[count1][1] = 0;
@@ -35,7 +35,7 @@ int** winPositionVerifyer(int aiGrid[3][3], int symbol)
 			count1++;
 		}
 
-		if (aiGrid[i][0] !=-symbol && aiGrid[i][1] == symbol && aiGrid[i][2] == symbol)
+		if (aiGrid[i][0] == 0 && aiGrid[i][1] == symbol && aiGrid[i][2] == symbol)
 		{
 			returnValue[count1][0] = 0;
 			returnValue[count1][1] = 0;
@@ -46,7 +46,7 @@ int** winPositionVerifyer(int aiGrid[3][3], int symbol)
 
 	for (j = 0; j < 3; j++)
 	{
-		if (aiGrid[0][j] == symbol && aiGrid[1][j] == symbol && aiGrid[2][j] !=-symbol)
+		if (aiGrid[0][j] == symbol && aiGrid[1][j] == symbol && aiGrid[2][j] == 0)
 		{
 			returnValue[count1][0] = 2;
 			returnValue[count1][1] = 1;
@@ -54,7 +54,7 @@ int** winPositionVerifyer(int aiGrid[3][3], int symbol)
 			count1++;
 		}
 
-		if (aiGrid[0][j] == symbol && aiGrid[1][j] !=-symbol && aiGrid[2][j] == symbol)
+		if (aiGrid[0][j] == symbol && aiGrid[1][j] == 0 && aiGrid[2][j] == symbol)
 		{
 			returnValue[count1][0] = 1;
 			returnValue[count1][1] = 1;
@@ -62,7 +62,7 @@ int** winPositionVerifyer(int aiGrid[3][3], int symbol)
 			count1++;
 		}
 
-		if (aiGrid[0][j] !=-symbol && aiGrid[1][j] == symbol && aiGrid[2][j] == symbol)
+		if (aiGrid[0][j] == 0 && aiGrid[1][j] == symbol && aiGrid[2][j] == symbol)
 		{
 			returnValue[count1][0] = 0;
 			returnValue[count1][1] = 1;
@@ -73,23 +73,23 @@ int** winPositionVerifyer(int aiGrid[3][3], int symbol)
 
 	i = 0;
 	j = 0;
-	if (aiGrid[i][j] == symbol && aiGrid[i + 1][j + 1] == symbol && aiGrid[i + 2][j + 2] != -symbol)
+	if (aiGrid[i][j] == symbol && aiGrid[i + 1][j + 1] == symbol && aiGrid[i + 2][j + 2] == 0)
 	{
 		returnValue[count1][0] = 2;
 		returnValue[count1][1] = 2;
-		returnValue[count1][2] = j;
+		returnValue[count1][2] = (j + 2);
 		count1++;
 	}
 
-	if (aiGrid[i][j] == symbol && aiGrid[i + 1][j + 1] != -symbol && aiGrid[i + 2][j + 2] == symbol)
+	if (aiGrid[i][j] == symbol && aiGrid[i + 1][j + 1] == 0 && aiGrid[i + 2][j + 2] == symbol)
 	{
 		returnValue[count1][0] = 1;
 		returnValue[count1][1] = 2;
-		returnValue[count1][2] = j;
+		returnValue[count1][2] = (j + 1);
 		count1++;
 	}
 
-	if (aiGrid[i][j] != -symbol && aiGrid[i + 1][j + 1] == symbol && aiGrid[i + 2][j + 2] == symbol)
+	if (aiGrid[i][j] == 0 && aiGrid[i + 1][j + 1] == symbol && aiGrid[i + 2][j + 2] == symbol)
 	{
 		returnValue[count1][0] = 0;
 		returnValue[count1][1] = 2;
@@ -99,23 +99,23 @@ int** winPositionVerifyer(int aiGrid[3][3], int symbol)
 
 	i = 0;
 	j = 2;
-	if (aiGrid[i][j] == symbol && aiGrid[i + 1][j - 1] == symbol && aiGrid[i + 2][j - 2] != -symbol)
+	if (aiGrid[i][j] == symbol && aiGrid[i + 1][j - 1] == symbol && aiGrid[i + 2][j - 2] == 0)
 	{
 		returnValue[count1][0] = 2;
 		returnValue[count1][1] = 3;
-		returnValue[count1][2] = j;
+		returnValue[count1][2] = (j - 2);
 		count1++;
 	}
 
-	if (aiGrid[i][j] == symbol && aiGrid[i + 1][j - 1] != -symbol && aiGrid[i + 2][j - 2] == symbol)
+	if (aiGrid[i][j] == symbol && aiGrid[i + 1][j - 1] == 0 && aiGrid[i + 2][j - 2] == symbol)
 	{
 		returnValue[count1][0] = 1;
 		returnValue[count1][1] = 3;
-		returnValue[count1][2] = j;
+		returnValue[count1][2] = (j - 1);
 		count1++;
 	}
 
-	if (aiGrid[i][j] != -symbol && aiGrid[i + 1][j - 1] == symbol && aiGrid[i + 2][j - 2] == symbol)
+	if (aiGrid[i][j] == 0 && aiGrid[i + 1][j - 1] == symbol && aiGrid[i + 2][j - 2] == symbol)
 	{
 		returnValue[count1][0] = 0;
 		returnValue[count1][1] = 3;
@@ -418,6 +418,22 @@ int* aiPlay(int grid[3][3], int difficulty)
 			{
 				freeWinPositions[count][0] = 2;
 				freeWinPositions[count][1] = 1;
+				freeWinPositions[count][2] = (j + 2);
+				count++;
+			}
+
+			if (aiGrid[i][j] == 0 && aiGrid[i + 1][j + 1] == aiSymbol && aiGrid[i + 2][j + 2] == 0)
+			{
+				freeWinPositions[count][0] = 1;
+				freeWinPositions[count][1] = 1;
+				freeWinPositions[count][2] = (j + 1);
+				count++;
+			}
+
+			if (aiGrid[i][j] == aiSymbol && aiGrid[i + 1][j + 1] == 0 && aiGrid[i + 2][j + 2] == 0)
+			{
+				freeWinPositions[count][0] = 0;
+				freeWinPositions[count][1] = 1;
 				freeWinPositions[count][2] = j;
 				count++;
 			}
@@ -428,9 +444,26 @@ int* aiPlay(int grid[3][3], int difficulty)
 			{
 				freeWinPositions[count][0] = 2;
 				freeWinPositions[count][1] = 1;
+				freeWinPositions[count][2] = (j - 2);
+				count++;
+			}
+
+			if (aiGrid[i][j] == 0 && aiGrid[i + 1][j - 1] == aiSymbol && aiGrid[i + 2][j - 2] == 0)
+			{
+				freeWinPositions[count][0] = 1;
+				freeWinPositions[count][1] = 1;
+				freeWinPositions[count][2] = (j - 1);
+				count++;
+			}
+
+			if (aiGrid[i][j] == aiSymbol && aiGrid[i + 1][j - 1] == 0 && aiGrid[i + 2][j - 2] == 0)
+			{
+				freeWinPositions[count][0] = 0;
+				freeWinPositions[count][1] = 1;
 				freeWinPositions[count][2] = j;
 				count++;
 			}
+
 
 			if (freeWinPositions[1][2] == 0 && freeWinPositions[0][2] != 0)
 			{
@@ -452,14 +485,20 @@ int* aiPlay(int grid[3][3], int difficulty)
 				if (possibleWin[0][1] == 2)
 				{
 					aiPlayCoordinates[0] = randPostion(possibleWin[0][0]);
-					aiPlayCoordinates[1] = randPostion(possibleWin[0][0]);
+					aiPlayCoordinates[1] = aiPlayCoordinates[0];
 					return aiPlayCoordinates;
 				}
 
 				if (possibleWin[0][1] == 3)
 				{
 					aiPlayCoordinates[0] = randPostion(possibleWin[0][0]);
-					aiPlayCoordinates[1] = randPostion(possibleWin[0][2]);
+					
+					if (aiPlayCoordinates[0] == 0)
+						aiPlayCoordinates[1] = (aiPlayCoordinates[0] + 2);
+					if (aiPlayCoordinates[0] == 1)
+						aiPlayCoordinates[1] = (aiPlayCoordinates[0]);
+					if (aiPlayCoordinates[0] == 2)
+						aiPlayCoordinates[1] = (aiPlayCoordinates[0] - 2);
 					return aiPlayCoordinates;
 				}
 			}
@@ -491,14 +530,19 @@ int* aiPlay(int grid[3][3], int difficulty)
 				if (possibleWin[winPossibilitiesCount][1] == 2)
 				{
 					aiPlayCoordinates[0] = randPostion(possibleWin[winPossibilitiesCount][0]);
-					aiPlayCoordinates[1] = randPostion(possibleWin[winPossibilitiesCount][0]);
+					aiPlayCoordinates[1] = (aiPlayCoordinates[0]);
 					return aiPlayCoordinates;
 				}
 
 				if (possibleWin[winPossibilitiesCount][1] == 3)
 				{
 					aiPlayCoordinates[0] = randPostion(possibleWin[winPossibilitiesCount][0]);
-					aiPlayCoordinates[1] = randPostion(possibleWin[winPossibilitiesCount][2]);
+					if (aiPlayCoordinates[0] == 0)
+						aiPlayCoordinates[1] = (aiPlayCoordinates[0] + 2);
+					if (aiPlayCoordinates[0] == 1)
+						aiPlayCoordinates[1] = (aiPlayCoordinates[0]);
+					if (aiPlayCoordinates[0] == 2)
+						aiPlayCoordinates[1] = (aiPlayCoordinates[0] - 2);
 					return aiPlayCoordinates;
 				}
 			}
