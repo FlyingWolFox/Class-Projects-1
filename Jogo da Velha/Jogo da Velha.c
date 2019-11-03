@@ -1,9 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include "Jogo da Velha.h"
+#include "ai.h"
+#include "minimax.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Jogo da Velha.h"
-#include "ai.h"
 
 /*verifica se alguém venceu e retorna um array[3]
 caso verdade, retorna {1, W, C},
@@ -123,17 +124,9 @@ int* winVerifyer(int grid[3][3])
 e retorna as 3 posições, ou menos*/
 int** freeCells(int grid[3][3])
 {
-	static int freePositions[4][2];
+	static int freePositions[4][2] = { 0 };
 	int count1;
 
-	freePositions[3][0] = -1;
-	freePositions[3][1] = -1;
-	freePositions[2][0] = -1;
-	freePositions[2][1] = -1;
-	freePositions[1][0] = -1;
-	freePositions[1][1] = -1;
-	freePositions[0][0] = -1;
-	freePositions[0][1] = -1;
 	count1 = 0;
 
 	for (int i = 0; i < 3; i++)
@@ -158,16 +151,16 @@ int** freeCells(int grid[3][3])
 			}
 		}
 	}
-	if (freePositions[2][0] == -1 && freePositions[2][1] == -1 && freePositions[1][0] == -1 && freePositions[1][1] == -1 && freePositions[0][0] == -1 && freePositions[0][1] == -1)
+	if (freePositions[2][0] == 0 && freePositions[2][1] == 0 && freePositions[1][0] == 0 && freePositions[1][1] == 0 && freePositions[0][0] == 0 && freePositions[0][1] == 0)
 	{
-		freePositions[3][0] = 0;
-		freePositions[3][1] = 0;
-		freePositions[2][0] = 0;
-		freePositions[2][1] = 0;
-		freePositions[1][0] = 0;
-		freePositions[1][1] = 0;
-		freePositions[0][0] = 0;
-		freePositions[0][1] = 0;
+		freePositions[3][0] = 3;
+		freePositions[3][1] = 3;
+		freePositions[2][0] = 3;
+		freePositions[2][1] = 3;
+		freePositions[1][0] = 3;
+		freePositions[1][1] = 3;
+		freePositions[0][0] = 3;
+		freePositions[0][1] = 3;
 	}
 	return freePositions;
 }
@@ -709,7 +702,7 @@ int main(int argc, char* argv[])
 				if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
 				{
 					printf("\nEssa casa já foi marcada!\n");
-					system("pause");
+					if (getchar() != NULL);
 					continue;
 				}
 				if (player == 1)
@@ -727,6 +720,14 @@ int main(int argc, char* argv[])
 				memcpy(freeCellsReturn, freeCells(grid), sizeof(freeCellsReturn));
 				if (freeCellsReturn[0][0] != -1)
 				{
+					if (freeCellsReturn[0][0] = 3)
+					{
+						gridPrinter(gridTiedReturner(grid, 1), 2);
+						printf("\nDeu velha...\n");
+						tie = 1;
+						break;
+					}
+
 					if (tieVerifyer(grid, player, insertionPreference) == 1)
 					{
 						memcpy(grid, gridTiedReturner(grid, 1), sizeof(grid));
@@ -746,6 +747,11 @@ int main(int argc, char* argv[])
 	
 	if (player == 1)
 	{
+		int difficulty;
+		printf("Selecione sua dificuldade: 1- Fácil, 2- Normal, 3- Impossível\n");
+		if (scanf(" %i", &difficulty) == 1);
+		difficulty--;
+		aiStart(grid, -symbolPreference);
 		while (keepPlaying != 'n' && keepPlaying != 'N')
 		{
 			for (int i = 0; i < 3; i++)
@@ -763,37 +769,47 @@ int main(int argc, char* argv[])
 			while (win == 0 && tie == 0)
 			{
 				printf("\033[2J"); //funciona como system("clear") ou system("cls");
-				gridPrinter(grid, 2);
 				if (player == 3)
 					player = 1;
-				printf("Jogue, Jogador %i\n", player);
-				if (insertionPreference == 1)
+				if (player == 1)
 				{
-					if (scanf("%i", &playPosition) == 1);
-					memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
-				}
-				if (insertionPreference == 2)
-				{
-					if (scanf("%i %i", &playCoordinates[0], &playCoordinates[1]) == 2);
-					playCoordinates[0]--;
-					playCoordinates[1]--;
-				}
-				if (playCoordinates[0] < 0 || playCoordinates[1] < 0)
-					break;
-				if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
-				{
-					printf("\nEssa casa já foi marcada!\n");
-					system("pause");
-					continue;
+					gridPrinter(grid, 2);
+					printf("Jogue, Jogador!\n");
+					if (insertionPreference == 1)
+					{
+						if (scanf("%i", &playPosition) == 1);
+						memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
+					}
+					if (insertionPreference == 2)
+					{
+						if (scanf("%i %i", &playCoordinates[0], &playCoordinates[1]) == 2);
+						playCoordinates[0]--;
+						playCoordinates[1]--;
+					}
+					if (playCoordinates[0] < 0 || playCoordinates[1] < 0)
+						break;
+					if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
+					{
+						printf("\nEssa casa já foi marcada!\n");
+						if (getchar() != NULL);
+						continue;
+					}
 				}
 				if (player == 1)
 					grid[playCoordinates[0]][playCoordinates[1]] = symbolPreference;
 				if (player == 2)
+				{
+					memcpy(playCoordinates, aiPlay(grid, difficulty), sizeof(playCoordinates));
 					grid[playCoordinates[0]][playCoordinates[1]] = -symbolPreference;
+				}
+					
 				if ((winVerifyer(grid))[0] == 1)
 				{
 					gridPrinter(grid, 5);
-					printf("\nJogador %i venceu!", player);
+					if (player == 1)
+						printf("\nVocê venceu!");
+					if (player == 2)
+						printf("\nVocê Perdeu!\n");
 					win = 1;
 					break;
 				}
@@ -801,6 +817,14 @@ int main(int argc, char* argv[])
 				memcpy(freeCellsReturn, freeCells(grid), sizeof(freeCellsReturn));
 				if (freeCellsReturn[0][0] != -1)
 				{
+					if (freeCellsReturn[0][0] == 3)
+					{
+						gridPrinter(grid, 2);
+						printf("\nDeu velha...\n");
+						tie = 1;
+						break;
+					}
+
 					if (tieVerifyer(grid, player, insertionPreference) == 1)
 					{
 						memcpy(grid, gridTiedReturner(grid, 1), sizeof(grid));

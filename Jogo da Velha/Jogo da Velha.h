@@ -15,7 +15,7 @@ int* winVerifyer(int grid[3][3]);
 
 /*verifica se há até 3 casas livres
 e retorna as 3 posições, ou menos*/
-int** freeCells(int grid[3][3]);
+extern int** freeCells(int grid[3][3]);
 
 /*retem a gridCopy usada na tieVerifyer
 para passá-la para a main*/
@@ -27,7 +27,7 @@ caso não, retorna 0*/
 int tieVerifyer(int grid[3][3], int player, int insertionPreference);
 
 //converte o posicionamento de 1 a 9 por coordenadas
-int* convertToCoordinate(int position);
+extern int* convertToCoordinate(int position);
 
 //converte as coordenadas da grade para coordenadas da
 //super grade

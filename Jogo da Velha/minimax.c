@@ -1,5 +1,6 @@
-#include <stdbool.h>
 #include "minimax.h"
+#include <stdbool.h>
+
 
 /*finds the next optimal move
 for the A.I.*/
@@ -8,6 +9,24 @@ typedef struct {
 }Move;
 
 int aiSymbol, playerSymbol;
+
+int max(int a, int b)
+{
+	if (a > b)
+		return a;
+	if (a < b)
+		return b;
+	return a;
+}
+
+int min(int a, int b)
+{
+	if (a < b)
+		return a;
+	if (a > b)
+		return b;
+	return a;
+}
 
 bool isMovesLeft(int aiGrid[3][3])
 {
@@ -109,7 +128,7 @@ int minimax(int aiGrid[3][3], int depth, bool isMax)
 					// the maximum value 
 					best = max(best,
 						minimax(aiGrid, depth + 1, !isMax));
-
+					
 					// Undo the move 
 					aiGrid[i][j] = 0;
 				}
