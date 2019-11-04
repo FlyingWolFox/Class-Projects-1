@@ -152,10 +152,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ai.c" />
+    <ClCompile Include="ansi_escapes.c" />
     <ClCompile Include="Lig 4.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ai.h" />
+    <ClInclude Include="ansi_escapes.h" />
     <ClInclude Include="Lig 4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -720,7 +720,7 @@ int main(int argc, char* argv[])
 				memcpy(freeCellsReturn, freeCells(grid), sizeof(freeCellsReturn));
 				if (freeCellsReturn[0][0] != -1)
 				{
-					if (freeCellsReturn[0][0] = 3)
+					if (freeCellsReturn[0][0] == 3)
 					{
 						gridPrinter(gridTiedReturner(grid, 1), 2);
 						printf("\nDeu velha...\n");

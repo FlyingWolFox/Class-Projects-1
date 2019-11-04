@@ -1,5 +1,5 @@
-#ifndef FUNCTIONS_H_INCLUDED
-#define FUNCTIONS_H_INCLUDED
+#ifndef JOGO_DA_VELHA_MAIN_H
+#define JOGO_DA_VELHA_MAIN_H
 /* ^^ these are the include guards */
 
 /* Prototypes for the functions */

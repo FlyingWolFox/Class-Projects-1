@@ -1,5 +1,5 @@
-#ifndef FUNCTIONS_H_INCLUDED
-#define FUNCTIONS_H_INCLUDED
+#ifndef TIC_TAC_TOE_AI_H
+#define TIC_TAC_TOE_AI_H
 /* ^^ these are the include guards */
 
 /* Prototypes for the functions */
