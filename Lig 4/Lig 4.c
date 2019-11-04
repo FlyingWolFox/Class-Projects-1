@@ -11,7 +11,42 @@ extern void restoreConsole(void);
 
 Win winVerifyer(int grid[6][7])
 {
+	Win returnValue;
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (grid[i][j] == 1 && grid[i][j + 1] == 1 && grid[i][j + 2] == 1 && grid[i][j + 3] == 1)
+			{
+				returnValue.win = true;
+				returnValue.victoryType = 'H';
+				returnValue.row = i;
+				returnValue.row = j;
+			}
 
+			if (grid[i][j] == -1 && grid[i][j + 1] == -1 && grid[i][j + 2] == -1 && grid[i][j + 3] == -1)
+			{
+				returnValue.win = true;
+				returnValue.victoryType = 'H';
+				returnValue.row = i;
+				returnValue.row = j;
+			}
+		}
+
+		for (int j = 0; j < 7; j++)
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				if (grid[i][j] == 1 && grid[i + 1][j] == 1 && grid[i + 2][j] == 1 && grid[i + 3][j] == 1)
+				{
+					returnValue.win = true;
+					returnValue.victoryType = 'V';
+					returnValue.row = i;
+					returnValue.row = j;
+				}
+			}
+		}
+	}
 }
 
 void supergridGenerator(char supergrid[37][98])
