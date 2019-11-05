@@ -10,6 +10,7 @@ typedef struct MoveCoordinates {
 typedef struct WinInfo {
 	bool win;
 	char victoryType;
+	int victoryTypeVariation;
 	int row, col;
 }Win;
 

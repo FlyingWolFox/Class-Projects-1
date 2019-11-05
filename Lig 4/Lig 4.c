@@ -12,41 +12,105 @@ extern void restoreConsole(void);
 Win winVerifyer(int grid[6][7])
 {
 	Win returnValue;
-	for (int i = 0; i < 6; i++)
+	returnValue.win = false;
+	for (int i = 5; i >= 0; i--)
 	{
-		for (int j = 0; j < 3; j++)
+		for (int j = 0; j < 4; j++)
 		{
 			if (grid[i][j] == 1 && grid[i][j + 1] == 1 && grid[i][j + 2] == 1 && grid[i][j + 3] == 1)
 			{
 				returnValue.win = true;
 				returnValue.victoryType = 'H';
+				returnValue.victoryTypeVariation = 1;
 				returnValue.row = i;
-				returnValue.row = j;
+				returnValue.col = j;
 			}
 
 			if (grid[i][j] == -1 && grid[i][j + 1] == -1 && grid[i][j + 2] == -1 && grid[i][j + 3] == -1)
 			{
 				returnValue.win = true;
 				returnValue.victoryType = 'H';
+				returnValue.victoryTypeVariation = 1;
 				returnValue.row = i;
-				returnValue.row = j;
-			}
-		}
-
-		for (int j = 0; j < 7; j++)
-		{
-			for (int i = 0; i < 2; i++)
-			{
-				if (grid[i][j] == 1 && grid[i + 1][j] == 1 && grid[i + 2][j] == 1 && grid[i + 3][j] == 1)
-				{
-					returnValue.win = true;
-					returnValue.victoryType = 'V';
-					returnValue.row = i;
-					returnValue.row = j;
-				}
+				returnValue.col = j;
 			}
 		}
 	}
+
+	for (int j = 0; j < 7; j++)
+	{
+		for (int i = 5; i > 2; i--)
+		{
+			if (grid[i][j] == 1 && grid[i - 1][j] == 1 && grid[i - 2][j] == 1 && grid[i - 3][j] == 1)
+			{
+				returnValue.win = true;
+				returnValue.victoryType = 'V';
+				returnValue.victoryTypeVariation = 1;
+				returnValue.row = i;
+				returnValue.col = j;
+			}
+
+			if (grid[i][j] == -1 && grid[i - 1][j] == -1 && grid[i - 2][j] == -1 && grid[i - 3][j] == -1)
+			{
+				returnValue.win = true;
+				returnValue.victoryType = 'V';
+				returnValue.victoryTypeVariation = 1;
+				returnValue.row = i;
+				returnValue.col = j;
+			}
+		}
+
+	}
+
+	for (int j = 0; j < 4; j++)
+	{
+		for (int i = 5; i > 2; i--)
+		{
+			if (grid[i][j] == 1 && grid[i - 1][j + 1] == 1 && grid[i - 2][j + 2] == 1 && grid[i - 3][j + 3] == 1)
+			{
+				returnValue.win = true;
+				returnValue.victoryType = 'D';
+				returnValue.victoryTypeVariation = 1;
+				returnValue.row = i;
+				returnValue.col = j;
+			}
+
+			if (grid[i][j] == -1 && grid[i - 1][j + 1] == -1 && grid[i - 2][j + 2] == -1 && grid[i - 3][j + 3] == -1)
+			{
+				returnValue.win = true;
+				returnValue.victoryType = 'D';
+				returnValue.victoryTypeVariation = 1;
+				returnValue.row = i;
+				returnValue.col = j;
+			}
+		}
+	}
+
+	for (int j = 6; j > 2; j--)
+	{
+		for (int i = 5; i > 2; i--)
+		{
+			if (grid[i][j] == 1 && grid[i - 1][j - 1] == 1 && grid[i - 2][j - 2] == 1 && grid[i - 3][j - 3] == 1)
+			{
+				returnValue.win = true;
+				returnValue.victoryType = 'D';
+				returnValue.victoryTypeVariation = 2;
+				returnValue.row = i;
+				returnValue.col = j;
+			}
+
+			if (grid[i][j] == -1 && grid[i - 1][j - 1] == -1 && grid[i - 2][j - 2] == -1 && grid[i - 3][j - 3] == -1)
+			{
+				returnValue.win = true;
+				returnValue.victoryType = 'D';
+				returnValue.victoryTypeVariation = 2;
+				returnValue.row = i;
+				returnValue.col = j;
+			}
+		}
+	}
+
+	return returnValue;
 }
 
 void supergridGenerator(char supergrid[37][98])
@@ -83,7 +147,7 @@ void supergridGenerator(char supergrid[37][98])
 	}
 }
 
-void supergridPrinter(char supergrid[37][98], int grid[6][7])
+void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinates[4])
 {
 	for (int i = 0, gridI = 0; i < 37; i++)
 	{
@@ -119,14 +183,26 @@ void supergridPrinter(char supergrid[37][98], int grid[6][7])
 				if (grid[gridI][gridJ] == 1)
 				{
 					setTextColorBright(BLUE_TXT);
+					for (int count = 0; count < 4; count++)
+					{
+						if (winCoordinates[count].col == gridJ && winCoordinates[count].row == gridI)
+							setBackgroundColorBright(WHITE_BKG);
+					}
 					printf("%c", supergrid[i][j]);
 					setTextColor(WHITE_TXT);
+					setBackgroundColor(BLACK_BKG);
 				}
 				if (grid[gridI][gridJ] == -1)
 				{
 					setTextColorBright(RED_TXT);
+					for (int count = 0; count < 4; count++)
+					{
+						if (winCoordinates[count].col == gridJ && winCoordinates[count].row == gridI)
+							setBackgroundColor(WHITE_BKG);
+					}
 					printf("%c", supergrid[i][j]);
 					setTextColor(WHITE_TXT);
+					setBackgroundColor(BLACK_BKG);
 				}
 				if (grid[gridI][gridJ] == 0)
 					printf("%c", supergrid[i][j]);
@@ -188,7 +264,7 @@ void supergridModifyer(char supergrid[37][98], Move modification)
 
 void getTheRow(int grid[6][7], Move *move)
 {
-	for (int i = 6; i >= 0; i--)
+	for (int i = 5; i >= 0; i--)
 	{
 		if (grid[i][move->col] == 0)
 		{
@@ -207,28 +283,42 @@ int main(int argc, char* argv)
 	int grid[6][7] = { 0 };
 	char supergrid[37][98];
 
-	supergridGenerator(supergrid);
 	printf("\n");
 
 	
-	for (int mainMenu = 0; mainMenu == 0;)
+	for (bool mainMenu = true; mainMenu == true;)
 	{
 		int player;
 		char playerNumber[3];
 		Move playerMove;
 		char playerMovement[3];
+		Win winVerifyerReturn;
+		Move winCoordinates[4];
 		printf("Gostaria de jogar o modo: 1- Singleplyer ou 2- Multiplayer\n");
 		if (scanf("%i", &player) == 1);
 
 		for (char keepPlaying = 's'; keepPlaying == 's' || keepPlaying == 'S';)
 		{
-			player = 1;
-			for (int win = 0, tie = 0; win == 0 && tie == 0;)
+			supergridGenerator(supergrid);
+			for (int i = 0; i < 6; i++)
 			{
+				for (int j = 0; j < 7; j++)
+					grid[i][j] = 0;
+			}
+			player = 1;
+			for (bool win = false, tie = false; win == false && tie == false;)
+			{
+				for (int count = 0; count < 4; count++)
+				{
+					winCoordinates[count].row = -1;
+					winCoordinates[count].col = -1;
+				}
+
 				if (player == 3)
 					player = 1; 
 				setupConsole();
-				supergridPrinter(supergrid, grid);
+				printf("/033[90");
+				supergridPrinter(supergrid, grid, winCoordinates);
 				restoreConsole();
 				printf("Jogue jogador %i\n", player);
 				if(scanf(" %i", &playerMove.col) == 1);
@@ -246,11 +336,58 @@ int main(int argc, char* argv)
 				if (player == 2)
 					grid[playerMove.row][playerMove.col] = -1;
 				supergridModifyer(supergrid, playerMove);
+				winVerifyerReturn = winVerifyer(grid);
+				if (winVerifyerReturn.win == true)
+				{
+					if (winVerifyerReturn.victoryType == 'H')
+					{
+						for (int count = 0; count < 4; count++)
+						{
+							winCoordinates[count].row = winVerifyerReturn.row;
+							winCoordinates[count].col = (winVerifyerReturn.col + count);
+						}
+					}
+
+					if (winVerifyerReturn.victoryType == 'V')
+					{
+						for (int count = 0; count < 4; count++)
+						{
+							winCoordinates[count].row = (winVerifyerReturn.row - count);
+							winCoordinates[count].col = winVerifyerReturn.col;
+						}
+					}
+
+					if (winVerifyerReturn.victoryType == 'D' && winVerifyerReturn.victoryTypeVariation == 1)
+					{
+						for (int count = 0; count < 4; count++)
+						{
+							winCoordinates[count].row = (winVerifyerReturn.row - count);
+							winCoordinates[count].col = (winVerifyerReturn.col + count);
+						}
+					}
+
+					if (winVerifyerReturn.victoryType == 'D' && winVerifyerReturn.victoryTypeVariation == 2)
+					{
+						for (int count = 0; count < 4; count++)
+						{
+							winCoordinates[count].row = (winVerifyerReturn.row - count);
+							winCoordinates[count].col = (winVerifyerReturn.col - count);
+						}
+					}
+					supergridPrinter(supergrid, grid, winCoordinates);
+					printf("Jogador %i venceu!", player);
+					win = true;
+				}
 				player++;
 			}
 
 			printf("\nContinuar jogando? s-sim n-não\n");
-			if (scanf(" %c", &keepPlaying) == 1);
+			if (scanf(" %c", &keepPlaying) == 1)
+				continue;			
+			printf("Voltar ao menu principal? s-sim n-não\n");
+			if (getchar() == '\n');
+			if (getchar() == 'n')
+				mainMenu = false;
 		}
 	}
 
