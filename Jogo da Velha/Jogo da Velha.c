@@ -80,6 +80,8 @@ int* winVerifyer(int grid[3][3])
 		}
 	}
 
+
+
 	for (j = 0; j < 3; j++)
 	{
 		if (grid[0][j] == -1)

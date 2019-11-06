@@ -30,8 +30,13 @@ enum ClearCodes {
 };
 
 void setupConsole(void);
+void restoreConsoleMode(void);
 void restoreConsole(void);
 void getCursorPosition(int* row, int* col);
+
+static inline setTextColorRGB(int r, int g, int b) {
+	printf("\x1b[38;2;%d;%d;%dm", r, g, b);
+}
 
 static inline void setTextColor(int code) {
 	printf("\x1b[%dm", code);
@@ -39,6 +44,10 @@ static inline void setTextColor(int code) {
 
 static inline void setTextColorBright(int code) {
 	printf("\x1b[%d;1m", code);
+}
+
+static inline setBackgroundColorRGB(int r, int g, int b) {
+	printf("\x1b[48;2;%d;%d;%dm", r, g, b);
 }
 
 static inline void setBackgroundColor(int code) {

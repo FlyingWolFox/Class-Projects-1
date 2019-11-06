@@ -7,6 +7,7 @@
 
 
 extern void setupConsole(void);
+extern void restoreConsoleMode(void);
 extern void restoreConsole(void);
 
 Win winVerifyer(int grid[6][7])
@@ -186,11 +187,11 @@ void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinate
 					for (int count = 0; count < 4; count++)
 					{
 						if (winCoordinates[count].col == gridJ && winCoordinates[count].row == gridI)
-							setBackgroundColorBright(WHITE_BKG);
+							setBackgroundColorRGB(50, 50, 50);
 					}
 					printf("%c", supergrid[i][j]);
 					setTextColor(WHITE_TXT);
-					setBackgroundColor(BLACK_BKG);
+					setBackgroundColorRGB(20, 20, 20);
 				}
 				if (grid[gridI][gridJ] == -1)
 				{
@@ -198,11 +199,11 @@ void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinate
 					for (int count = 0; count < 4; count++)
 					{
 						if (winCoordinates[count].col == gridJ && winCoordinates[count].row == gridI)
-							setBackgroundColor(WHITE_BKG);
+							setBackgroundColorRGB(50, 50, 50);
 					}
 					printf("%c", supergrid[i][j]);
 					setTextColor(WHITE_TXT);
-					setBackgroundColor(BLACK_BKG);
+					setBackgroundColorRGB(20, 20, 20);
 				}
 				if (grid[gridI][gridJ] == 0)
 					printf("%c", supergrid[i][j]);
@@ -283,8 +284,39 @@ int main(int argc, char* argv)
 	int grid[6][7] = { 0 };
 	char supergrid[37][98];
 
-	printf("\n");
+	printf("Test Mode?\n");
+	int test_mode;
+	test_mode = getchar();
+	while (test_mode == '1')
+	{
+		int r, g, b, text;
+		bool textColor;
+		printf("Red __ Green __ Blue __\n");
+		scanf(" %i %i %i", &r, &g, &b);
+		if (r == -1 || g == -1 || b == -1)
+			break;
+		printf(" True - Blue, False - Red\n");
+		scanf(" %d", &text);
+		textColor = text;
+		if (textColor == true)
+			setTextColor(BLUE_TXT);
+		else
+			setTextColor(RED_TXT);
+		setBackgroundColorRGB(r, g, b);
+		char circle[5][12] = { { ' ', ' ', ' ', '.', '-', '\"', '\"', '-', '.', ' ', ' ', ' ' },
+						{ ' ', ' ', '/', ' ', ' ', ' ', ' ', ' ', ' ', '\\', ' ', ' ' },
+						{ ' ', ';', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ';', ' ' },
+						{ ' ', ' ', '\\', ' ', ' ', ' ', ' ', ' ', ' ', '/', ' ' , ' '},
+						{ ' ', ' ', ' ', '\'', '-', '.', '.', '-', '\'', ' ', ' ', ' ' } };
+		for (int i = 0; i < 5; i++)
+		{
+			for (int j = 0; j < 12; j++)
+				printf("%c", circle[i][j]);
+			printf("\n");
+		}
+		
 
+	}
 	
 	for (bool mainMenu = true; mainMenu == true;)
 	{
@@ -294,6 +326,38 @@ int main(int argc, char* argv)
 		char playerMovement[3];
 		Win winVerifyerReturn;
 		Move winCoordinates[4];
+		bool isMaximazed = false;
+		setupConsole();
+		setBackgroundColorRGB(20, 20, 20);
+		printf("Você vai precisar maximizar a janela do console para poder jogar\n");
+		printf("Gostaria de testar pra ver se está funcionando? s- sim n- não\n");
+		restoreConsoleMode();
+		if (getchar() == 's')
+		{
+			supergridGenerator(supergrid);
+			for (int i = 0; i < 6; i++)
+			{
+				for (int j = 0; j < 7; j++)
+					grid[i][j] = 0;
+			}
+			setupConsole();
+			setBackgroundColorRGB(20, 20, 20);
+			moveTo(0, 0);
+			clearScreenToBottom();
+			moveTo(0, 0);
+			supergridPrinter(supergrid, grid, winCoordinates);
+			printf("\n\n\n\n");
+			supergridPrinter(supergrid, grid, winCoordinates);
+			restoreConsoleMode();
+			printf("\nEsses dois tabuleiros foram impressos iguais? s- sim n- não\n");
+			if (getchar() == 's')
+			{
+				printf("Confirmado, executando modo expandido!\n");
+				isMaximazed = true;
+			}
+			printf("Bem, aparentemente não. Caso você errou o teste você pode reiniciar o programa\n");
+
+		}
 		printf("Gostaria de jogar o modo: 1- Singleplyer ou 2- Multiplayer\n");
 		if (scanf("%i", &player) == 1);
 
@@ -317,12 +381,25 @@ int main(int argc, char* argv)
 				if (player == 3)
 					player = 1; 
 				setupConsole();
-				printf("/033[90");
+				setBackgroundColorRGB(20, 20, 20);
+				if (isMaximazed == true)
+				{
+					moveTo(0, 0);
+					clearScreenToBottom();
+					moveTo(0, 0);
+				}
+				else
+					clearScreen();
 				supergridPrinter(supergrid, grid, winCoordinates);
-				restoreConsole();
+				restoreConsoleMode();
 				printf("Jogue jogador %i\n", player);
 				if(scanf(" %i", &playerMove.col) == 1);
 				playerMove.col--;
+				if (playerMove.col > 6 || playerMove.col < 0)
+				{
+					printf("Fora de Alcance!");
+					continue;
+				}
 				getTheRow(grid, &playerMove);
 				if (playerMove.row == -1)
 				{
@@ -385,7 +462,7 @@ int main(int argc, char* argv)
 			if (scanf(" %c", &keepPlaying) == 1)
 				continue;			
 			printf("Voltar ao menu principal? s-sim n-não\n");
-			if (getchar() == '\n');
+			getchar();
 			if (getchar() == 'n')
 				mainMenu = false;
 		}
