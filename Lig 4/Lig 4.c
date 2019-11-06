@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "ai.h"
 #include "ansi_escapes.h"
-#include "Lig 4.h"
+#include "lig 4.h"
 
 
 extern void setupConsole(void);

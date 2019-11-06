@@ -18,11 +18,19 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Lig 4\ansi_escapes.c" />
+    <ClCompile Include="genius.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Lig 4\ansi_escapes.h" />
+    <ClInclude Include="genius.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{0644F248-5E49-477A-BAD7-7FCA86DA135A}</ProjectGuid>
+    <ProjectGuid>{97AD3B54-D0D8-45CD-ABAC-D591E179E54A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Lig4</RootNamespace>
+    <RootNamespace>Genius</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -150,16 +158,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="ai.c" />
-    <ClCompile Include="ansi_escapes.c" />
-    <ClCompile Include="lig 4.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ai.h" />
-    <ClInclude Include="ansi_escapes.h" />
-    <ClInclude Include="lig 4.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
