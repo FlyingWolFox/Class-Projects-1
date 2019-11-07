@@ -5,10 +5,33 @@
 #include "ansi_escapes.h"
 #include "lig 4.h"
 
+#ifdef __linux__
+#define linux
+#include <sys/ioctl.h>
+#endif //define to just compile linux code
+
+#ifdef _WIN32
+#define windows
+#include <windows.h>
+#include <wincon.h>
+#include <consoleapi2.h>
+
+BOOL WINAPI SetConsoleWindowInfo(
+	_In_       HANDLE     hConsoleOutput,
+	_In_       BOOL       bAbsolute,
+	_In_ const SMALL_RECT* lpConsoleWindow
+);
+#endif //define to just compile windows code
+
+#ifdef __APPLE__ && __MACH__
+#define mac
+#include <sys/ioctl.h>
+#endif // __APPLE__ && __MACH__
 
 extern void setupConsole(void);
 extern void restoreConsoleMode(void);
 extern void restoreConsole(void);
+
 
 Win winVerifyer(int grid[6][7])
 {
@@ -192,9 +215,11 @@ void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinate
 					printf("%c", supergrid[i][j]);
 					setTextColor(WHITE_TXT);
 					setBackgroundColorRGB(20, 20, 20);
+
 				}
 				if (grid[gridI][gridJ] == -1)
 				{
+
 					setTextColorBright(RED_TXT);
 					for (int count = 0; count < 4; count++)
 					{
@@ -204,6 +229,7 @@ void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinate
 					printf("%c", supergrid[i][j]);
 					setTextColor(WHITE_TXT);
 					setBackgroundColorRGB(20, 20, 20);
+
 				}
 				if (grid[gridI][gridJ] == 0)
 					printf("%c", supergrid[i][j]);
@@ -223,7 +249,7 @@ void supergridModifyer(char supergrid[37][98], Move modification)
 						{ ' ', ';', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ';', ' ' },
 						{ ' ', ' ', '\\', ' ', ' ', ' ', ' ', ' ', ' ', '/', ' ' , ' '},
 						{ ' ', ' ', ' ', '\'', '-', '.', '.', '-', '\'', ' ', ' ', ' ' } };
-		
+
 	if (modification.row == 0)
 		startCoordinate.row = 1;
 	if (modification.row == 1)
@@ -263,7 +289,7 @@ void supergridModifyer(char supergrid[37][98], Move modification)
 
 }
 
-void getTheRow(int grid[6][7], Move *move)
+void getTheRow(int grid[6][7], Move* move)
 {
 	for (int i = 5; i >= 0; i--)
 	{
@@ -279,45 +305,14 @@ void getTheRow(int grid[6][7], Move *move)
 	}
 }
 
-int main(int argc, char* argv)
+
+
+int main(int argc, char** argv)
 {
 	int grid[6][7] = { 0 };
 	char supergrid[37][98];
 
-	printf("Test Mode?\n");
-	int test_mode;
-	test_mode = getchar();
-	while (test_mode == '1')
-	{
-		int r, g, b, text;
-		bool textColor;
-		printf("Red __ Green __ Blue __\n");
-		scanf(" %i %i %i", &r, &g, &b);
-		if (r == -1 || g == -1 || b == -1)
-			break;
-		printf(" True - Blue, False - Red\n");
-		scanf(" %d", &text);
-		textColor = text;
-		if (textColor == true)
-			setTextColor(BLUE_TXT);
-		else
-			setTextColor(RED_TXT);
-		setBackgroundColorRGB(r, g, b);
-		char circle[5][12] = { { ' ', ' ', ' ', '.', '-', '\"', '\"', '-', '.', ' ', ' ', ' ' },
-						{ ' ', ' ', '/', ' ', ' ', ' ', ' ', ' ', ' ', '\\', ' ', ' ' },
-						{ ' ', ';', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ';', ' ' },
-						{ ' ', ' ', '\\', ' ', ' ', ' ', ' ', ' ', ' ', '/', ' ' , ' '},
-						{ ' ', ' ', ' ', '\'', '-', '.', '.', '-', '\'', ' ', ' ', ' ' } };
-		for (int i = 0; i < 5; i++)
-		{
-			for (int j = 0; j < 12; j++)
-				printf("%c", circle[i][j]);
-			printf("\n");
-		}
-		
 
-	}
-	
 	for (bool mainMenu = true; mainMenu == true;)
 	{
 		int player;
@@ -327,12 +322,38 @@ int main(int argc, char* argv)
 		Win winVerifyerReturn;
 		Move winCoordinates[4];
 		bool isMaximazed = false;
+		char choice[10];
+
+		//used to freeze the program instead of getchar
+		char trashCan[10];
+
 		setupConsole();
 		setBackgroundColorRGB(20, 20, 20);
 		printf("Você vai precisar maximizar a janela do console para poder jogar\n");
+
+		#ifdef windows
+		while (0) {
+			CONSOLE_SCREEN_BUFFER_INFO csbi;
+			int columns, rows;
+
+			GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+			columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+			rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+
+			printf(" %i %i", rows, columns);
+			if (columns == 0 && rows == 0)
+			{
+				printf("A janela não está no tamanha adequado!\n");
+				printf("Aparentemente sua resolução de tela é pequena, rodando no modo legacy");
+			}
+			getchar();
+		}
+		#endif
+
 		printf("Gostaria de testar pra ver se está funcionando? s- sim n- não\n");
 		restoreConsoleMode();
-		if (getchar() == 's')
+		fgets(trashCan, 5, stdin);
+		if (trashCan[0] == 's' || trashCan[0] == 'S')
 		{
 			supergridGenerator(supergrid);
 			for (int i = 0; i < 6; i++)
@@ -340,8 +361,6 @@ int main(int argc, char* argv)
 				for (int j = 0; j < 7; j++)
 					grid[i][j] = 0;
 			}
-			setupConsole();
-			setBackgroundColorRGB(20, 20, 20);
 			moveTo(0, 0);
 			clearScreenToBottom();
 			moveTo(0, 0);
@@ -377,23 +396,35 @@ int main(int argc, char* argv)
 					winCoordinates[count].row = -1;
 					winCoordinates[count].col = -1;
 				}
-
 				if (player == 3)
-					player = 1; 
+					player = 1;
 				setupConsole();
 				setBackgroundColorRGB(20, 20, 20);
+
 				if (isMaximazed == true)
 				{
 					moveTo(0, 0);
 					clearScreenToBottom();
 					moveTo(0, 0);
 				}
+
 				else
 					clearScreen();
+
 				supergridPrinter(supergrid, grid, winCoordinates);
+				#ifdef windows
+				CONSOLE_SCREEN_BUFFER_INFO csbi;
+				int columns, rows;
+
+				GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+				columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+				rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+
+				printf(" %i %i\n", rows, columns);				
+				#endif
 				restoreConsoleMode();
 				printf("Jogue jogador %i\n", player);
-				if(scanf(" %i", &playerMove.col) == 1);
+				while (scanf(" %i", &playerMove.col) != 1);
 				playerMove.col--;
 				if (playerMove.col > 6 || playerMove.col < 0)
 				{
@@ -404,8 +435,7 @@ int main(int argc, char* argv)
 				if (playerMove.row == -1)
 				{
 					printf("Você não pode jogar aí!\n");
-					getchar();
-					getchar();
+					fgets(trashCan, 5, stdin);
 					continue;
 				}
 				if (player == 1)
@@ -460,20 +490,11 @@ int main(int argc, char* argv)
 
 			printf("\nContinuar jogando? s-sim n-não\n");
 			if (scanf(" %c", &keepPlaying) == 1)
-				continue;			
+				continue;
 			printf("Voltar ao menu principal? s-sim n-não\n");
-			getchar();
-			if (getchar() == 'n')
+			fgets(trashCan, 5, stdin);
+			if (trashCan[0] == 'n' || trashCan[1] == 'N')
 				mainMenu = false;
 		}
 	}
-
-
-	setBackgroundColor(MAGENTA_BKG);
-	setTextColorBright(RED_TXT);
-	puts("Hello, World\n");
-	setTextColorBright(BLUE_TXT);
-	puts("Hello, World\n");
-	restoreConsole();
-	
 }
