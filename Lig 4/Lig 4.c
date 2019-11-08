@@ -1,37 +1,64 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdbool.h>
-#include "ai.h"
+#include "minimax.h"
 #include "ansi_escapes.h"
 #include "lig 4.h"
 
-#ifdef __linux__
-#define linux
-#include <sys/ioctl.h>
-#endif //define to just compile linux code
-
 #ifdef _WIN32
 #define windows
-#include <windows.h>
-#include <wincon.h>
-#include <consoleapi2.h>
-
-BOOL WINAPI SetConsoleWindowInfo(
-	_In_       HANDLE     hConsoleOutput,
-	_In_       BOOL       bAbsolute,
-	_In_ const SMALL_RECT* lpConsoleWindow
-);
-#endif //define to just compile windows code
-
-#ifdef __APPLE__ && __MACH__
-#define mac
-#include <sys/ioctl.h>
-#endif // __APPLE__ && __MACH__
+#include <Windows.h>
+#include <Wincon.h>
+#include <ConsoleApi2.h>
 
 extern void setupConsole(void);
 extern void restoreConsoleMode(void);
 extern void restoreConsole(void);
 
+#endif //define to just compile windows code
+
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+#if TARGET_OS_SIMULATOR
+#	pragma message("You're compiling in the Xcode (OS_SIMULATOR), some terminal interaction may not work\n");
+#elif TARGET_OS_IPHONE
+#	pragma message("You're compiling in the iPhone, some terminal interaction may not work\n");
+#elif TARGET_OS_MAC
+#	pragma message("You're compiling in the Mac OS X, some terminal interaction may not work\n");
+#else
+#   pragma message("You're compiling in a Unknown Apple platform, some terminal interaction may not work")
+#endif
+#	pragma message("If you run into problems, cut the #define linux from the code under the __APPLE__ definition\n");
+#define linux
+#include <sys/ioctl.h>
+#include <unistd.h>
+#endif // Define linux headers on apple devices. No guarantee of work.
+
+#ifndef __linux__
+#ifndef __APPLE__
+#define unknonwOS
+#define linux
+#	pragma message("Compiling in a Unknown system (or even on UNIX based system)\n")
+#	pragma message("Using some linux terminal interation. So some terminal interations and ANSI escapes may not work\n")
+#	pragma message("If you run into problems, cut the #define linux from the code under the unknowSO definition\n")
+#endif // !__APPLE__
+
+#endif // Define linux headers on other OS's. No guarantee of work.
+
+#ifdef __linux__
+#ifdef linux
+#pragma message("You're compiling with Linux support. Make sure to activate the code and headers defined to run at linux, as it's marked as comment")
+#endif
+#infdef linux
+#define linux
+#pragma message("You're compiling on Linux. Make sure to activate the code defined and headers to run at linux, as it's marked as comment")
+//#include <sys/ioctl.h>
+//#include <unistd.h>
+#endif //define to just compile linux code
+
+extern void supergridTied(char supergrid[37][98]);
+extern bool minimaxTie(int grid[6][7], int nextplayer);
+extern Move minimaxPlay(int grid[6][7], int nextplayer);
 
 Win winVerifyer(int grid[6][7])
 {
@@ -44,6 +71,7 @@ Win winVerifyer(int grid[6][7])
 			if (grid[i][j] == 1 && grid[i][j + 1] == 1 && grid[i][j + 2] == 1 && grid[i][j + 3] == 1)
 			{
 				returnValue.win = true;
+				returnValue.player = 1;
 				returnValue.victoryType = 'H';
 				returnValue.victoryTypeVariation = 1;
 				returnValue.row = i;
@@ -53,6 +81,7 @@ Win winVerifyer(int grid[6][7])
 			if (grid[i][j] == -1 && grid[i][j + 1] == -1 && grid[i][j + 2] == -1 && grid[i][j + 3] == -1)
 			{
 				returnValue.win = true;
+				returnValue.player = 2;
 				returnValue.victoryType = 'H';
 				returnValue.victoryTypeVariation = 1;
 				returnValue.row = i;
@@ -68,6 +97,7 @@ Win winVerifyer(int grid[6][7])
 			if (grid[i][j] == 1 && grid[i - 1][j] == 1 && grid[i - 2][j] == 1 && grid[i - 3][j] == 1)
 			{
 				returnValue.win = true;
+				returnValue.player = 1;
 				returnValue.victoryType = 'V';
 				returnValue.victoryTypeVariation = 1;
 				returnValue.row = i;
@@ -77,6 +107,7 @@ Win winVerifyer(int grid[6][7])
 			if (grid[i][j] == -1 && grid[i - 1][j] == -1 && grid[i - 2][j] == -1 && grid[i - 3][j] == -1)
 			{
 				returnValue.win = true;
+				returnValue.player = 2;
 				returnValue.victoryType = 'V';
 				returnValue.victoryTypeVariation = 1;
 				returnValue.row = i;
@@ -93,6 +124,7 @@ Win winVerifyer(int grid[6][7])
 			if (grid[i][j] == 1 && grid[i - 1][j + 1] == 1 && grid[i - 2][j + 2] == 1 && grid[i - 3][j + 3] == 1)
 			{
 				returnValue.win = true;
+				returnValue.player = 1;
 				returnValue.victoryType = 'D';
 				returnValue.victoryTypeVariation = 1;
 				returnValue.row = i;
@@ -102,6 +134,7 @@ Win winVerifyer(int grid[6][7])
 			if (grid[i][j] == -1 && grid[i - 1][j + 1] == -1 && grid[i - 2][j + 2] == -1 && grid[i - 3][j + 3] == -1)
 			{
 				returnValue.win = true;
+				returnValue.player = 2;
 				returnValue.victoryType = 'D';
 				returnValue.victoryTypeVariation = 1;
 				returnValue.row = i;
@@ -117,6 +150,7 @@ Win winVerifyer(int grid[6][7])
 			if (grid[i][j] == 1 && grid[i - 1][j - 1] == 1 && grid[i - 2][j - 2] == 1 && grid[i - 3][j - 3] == 1)
 			{
 				returnValue.win = true;
+				returnValue.player = 1;
 				returnValue.victoryType = 'D';
 				returnValue.victoryTypeVariation = 2;
 				returnValue.row = i;
@@ -126,6 +160,7 @@ Win winVerifyer(int grid[6][7])
 			if (grid[i][j] == -1 && grid[i - 1][j - 1] == -1 && grid[i - 2][j - 2] == -1 && grid[i - 3][j - 3] == -1)
 			{
 				returnValue.win = true;
+				returnValue.player = -1;
 				returnValue.victoryType = 'D';
 				returnValue.victoryTypeVariation = 2;
 				returnValue.row = i;
@@ -305,8 +340,6 @@ void getTheRow(int grid[6][7], Move* move)
 	}
 }
 
-
-
 int main(int argc, char** argv)
 {
 	int grid[6][7] = { 0 };
@@ -316,23 +349,24 @@ int main(int argc, char** argv)
 	for (bool mainMenu = true; mainMenu == true;)
 	{
 		int player;
-		char playerNumber[3];
+		bool multiplayer;
 		Move playerMove;
-		char playerMovement[3];
 		Win winVerifyerReturn;
 		Move winCoordinates[4];
 		bool isMaximazed = false;
-		char choice[10];
+		bool legacyMode = true;
 
 		//used to freeze the program instead of getchar
 		char trashCan[10];
 
 		setupConsole();
 		setBackgroundColorRGB(20, 20, 20);
+		restoreConsole();
 		printf("Você vai precisar maximizar a janela do console para poder jogar\n");
 
+		// Windows mode
 		#ifdef windows
-		while (0) {
+		while (1) {
 			CONSOLE_SCREEN_BUFFER_INFO csbi;
 			int columns, rows;
 
@@ -340,45 +374,58 @@ int main(int argc, char** argv)
 			columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
 			rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
-			printf(" %i %i", rows, columns);
-			if (columns == 0 && rows == 0)
+			if (rows < 41 || columns < 101)
 			{
-				printf("A janela não está no tamanha adequado!\n");
-				printf("Aparentemente sua resolução de tela é pequena, rodando no modo legacy");
+				printf("A janela não está no tamanha adequado! Tente aumenta-la ou maximizá-la\n");
+				printf("Caso você não consiga aumentar mais digite \'n\'\n");
+				fgets(trashCan, 5, stdin);
+				if (trashCan[0] == 'n')
+				{
+					printf("Ok. Rodando no modo legacy\n");
+					legacyMode = true;
+					break;
+				}
 			}
-			getchar();
+			
+			if (rows > 40 && columns > 100)
+			{
+				legacyMode = false;
+				break;
+			}
 		}
 		#endif
 
-		printf("Gostaria de testar pra ver se está funcionando? s- sim n- não\n");
-		restoreConsoleMode();
+		// Linux mode
+		/*#ifdef linux
+		while (1)
+		{
+			struct winsize w;
+			ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+			if (w.ws_row < 41 && w.ws_col < 101)
+			{
+				printf("A janela não está no tamanha adequado! Tente aumenta-la ou maximizá-la\n");
+				printf("Caso você não consiga aumentar mais digite \'n\'");
+				fgets(trashCan, 5, stdin);
+				if (trashCan[0] == 'n')
+				{
+					printf("Ok. Rodando no modo legacy");
+					legacyMode = true;
+					break;
+				}
+			}
+
+			if (w.ws_row > 40 && w.ws_col > 100)
+				break;
+		}
+		#endif*/
+
+		printf("Gostaria de jogar o modo: 1- Singleplyer ou 2- Multiplayer\n");
 		fgets(trashCan, 5, stdin);
 		if (trashCan[0] == 's' || trashCan[0] == 'S')
-		{
-			supergridGenerator(supergrid);
-			for (int i = 0; i < 6; i++)
-			{
-				for (int j = 0; j < 7; j++)
-					grid[i][j] = 0;
-			}
-			moveTo(0, 0);
-			clearScreenToBottom();
-			moveTo(0, 0);
-			supergridPrinter(supergrid, grid, winCoordinates);
-			printf("\n\n\n\n");
-			supergridPrinter(supergrid, grid, winCoordinates);
-			restoreConsoleMode();
-			printf("\nEsses dois tabuleiros foram impressos iguais? s- sim n- não\n");
-			if (getchar() == 's')
-			{
-				printf("Confirmado, executando modo expandido!\n");
-				isMaximazed = true;
-			}
-			printf("Bem, aparentemente não. Caso você errou o teste você pode reiniciar o programa\n");
-
-		}
-		printf("Gostaria de jogar o modo: 1- Singleplyer ou 2- Multiplayer\n");
-		if (scanf("%i", &player) == 1);
+			multiplayer = true;
+		else
+			multiplayer = false;
 
 		for (char keepPlaying = 's'; keepPlaying == 's' || keepPlaying == 'S';)
 		{
@@ -401,7 +448,7 @@ int main(int argc, char** argv)
 				setupConsole();
 				setBackgroundColorRGB(20, 20, 20);
 
-				if (isMaximazed == true)
+				if (legacyMode == false)
 				{
 					moveTo(0, 0);
 					clearScreenToBottom();
@@ -412,16 +459,6 @@ int main(int argc, char** argv)
 					clearScreen();
 
 				supergridPrinter(supergrid, grid, winCoordinates);
-				#ifdef windows
-				CONSOLE_SCREEN_BUFFER_INFO csbi;
-				int columns, rows;
-
-				GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-				columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-				rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-
-				printf(" %i %i\n", rows, columns);				
-				#endif
 				restoreConsoleMode();
 				printf("Jogue jogador %i\n", player);
 				while (scanf(" %i", &playerMove.col) != 1);
@@ -443,6 +480,11 @@ int main(int argc, char** argv)
 				if (player == 2)
 					grid[playerMove.row][playerMove.col] = -1;
 				supergridModifyer(supergrid, playerMove);
+				if (multiplayer == true)
+				{
+					supergridModifyer(supergrid, minimaxPlay(grid, 2));
+					player = 0;
+				}
 				winVerifyerReturn = winVerifyer(grid);
 				if (winVerifyerReturn.win == true)
 				{
@@ -486,6 +528,16 @@ int main(int argc, char** argv)
 					win = true;
 				}
 				player++;
+				tie = minimaxTie(grid, player);
+				if (tie == true);
+				{
+					if (tie == true)
+					{
+						supergridTied(supergrid);
+						printf("Empate!");
+						fgets(trashCan, 5, stdin);
+					}
+				}
 			}
 
 			printf("\nContinuar jogando? s-sim n-não\n");

@@ -30,7 +30,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -151,14 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ai.c" />
     <ClCompile Include="ansi_escapes.c" />
     <ClCompile Include="lig 4.c" />
+    <ClCompile Include="minimax.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ai.h" />
     <ClInclude Include="ansi_escapes.h" />
     <ClInclude Include="lig 4.h" />
+    <ClInclude Include="minimax.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

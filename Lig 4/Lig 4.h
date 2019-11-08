@@ -9,9 +9,13 @@ typedef struct MoveCoordinates {
 
 typedef struct WinInfo {
 	bool win;
+	int player;
 	char victoryType;
 	int victoryTypeVariation;
 	int row, col;
 }Win;
+
+Win winVerifyer(int grid[6][7]);
+void getTheRow(int grid[6][7], Move* move);
 
 #endif

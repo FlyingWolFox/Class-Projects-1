@@ -49,7 +49,7 @@ int evaluate(int aiGrid[3][3])
 		{
 			if (aiGrid[i][0] == aiSymbol)
 				return +10;
-			else if (aiGrid[i][0] == playerSymbol)
+			else if (aiGrid[i][0] == -aiSymbol)
 				return -10;
 		}
 	}
@@ -63,7 +63,7 @@ int evaluate(int aiGrid[3][3])
 			if (aiGrid[0][col] == aiSymbol)
 				return +10;
 
-			else if (aiGrid[0][col] -aiSymbol)
+			else if (aiGrid[0][col] == -aiSymbol)
 				return -10;
 		}
 	}
@@ -73,7 +73,7 @@ int evaluate(int aiGrid[3][3])
 	{
 		if (aiGrid[0][0] == aiSymbol)
 			return +10;
-		else if (aiGrid[0][0] -aiSymbol)
+		else if (aiGrid[0][0] == -aiSymbol)
 			return -10;
 	}
 
@@ -81,7 +81,7 @@ int evaluate(int aiGrid[3][3])
 	{
 		if (aiGrid[0][2] == aiSymbol)
 			return +10;
-		else if (aiGrid[0][2] -aiSymbol)
+		else if (aiGrid[0][2] == -aiSymbol)
 			return -10;
 	}
 
