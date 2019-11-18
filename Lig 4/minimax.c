@@ -66,7 +66,7 @@ int** tiedGridReturner(int aiGrid[6][7], int mod)
 	}
 	if (mod == 1)
 		return tiedGrid;
-	return aiGrid;
+	return tiedGrid;
 }
 
 bool isMovesLeft(int aiGrid[6][7])
@@ -124,20 +124,23 @@ int minimax(int aiGrid[6][7], int depth, bool isMax, Move layer[7])
 		for (int count = 0; count < 7; count++)
 		{
 			// Check if cell is empty
-			if (aiGrid[layer[count].row][layer[count].col] == 0)
+			if (makeAMove(aiGrid, layer[count]) != 2)
 			{
-				// Make the move
-				aiGrid[layer[count].row][layer[count].col] = player;
-				layer[count].row--;
+				if (aiGrid[layer[count].row][layer[count].col] == 0)
+				{
+					// Make the move
+					aiGrid[layer[count].row][layer[count].col] = player;
+					layer[count].row--;
 
-				// Call minimax recursively and choose 
-					// the maximum value 
-				best = max(best,
-					minimax(aiGrid, depth + 1, !isMax, layer));
+					// Call minimax recursively and choose 
+						// the maximum value 
+					best = max(best,
+						minimax(aiGrid, depth + 1, !isMax, layer));
 
-				// Undo the move 
-				aiGrid[layer[count].row][layer[count].col] = 0;
-				layer[count].row++;
+					// Undo the move 
+					aiGrid[layer[count].row][layer[count].col] = 0;
+					layer[count].row++;
+				}
 			}
 		}
 
@@ -153,20 +156,23 @@ int minimax(int aiGrid[6][7], int depth, bool isMax, Move layer[7])
 		for (int count = 0; count < 7; count++)
 		{
 			// Check if cell is empty
-			if (aiGrid[layer[count].row][layer[count].col] == 0)
+			if (makeAMove(aiGrid, layer[count]) != 2)
 			{
-				// Make the move
-				aiGrid[layer[count].row][layer[count].col] = -player;
-				layer[count].row--;
+				if (aiGrid[layer[count].row][layer[count].col] == 0)
+				{
+					// Make the move
+					aiGrid[layer[count].row][layer[count].col] = -player;
+					layer[count].row--;
 
-				// Call minimax recursively and choose 
-					// the maximum value 
-				best = min(best,
-					minimax(aiGrid, depth + 1, !isMax, layer));
+					// Call minimax recursively and choose 
+						// the maximum value 
+					best = min(best,
+						minimax(aiGrid, depth + 1, !isMax, layer));
 
-				// Undo the move 
-				aiGrid[layer[count].row][layer[count].col] = 0;
-				layer[count].row++;
+					// Undo the move 
+					aiGrid[layer[count].row][layer[count].col] = 0;
+					layer[count].row++;
+				}
 			}
 		}
 		return best;

@@ -18,7 +18,7 @@
     <ClCompile Include="forca.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="..\Lig 4\ansi_escapes.c">
+    <ClCompile Include="ansi_escapes.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,7 +26,7 @@
     <ClInclude Include="forca.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="..\Lig 4\ansi_escapes.h">
+    <ClInclude Include="ansi_escapes.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>

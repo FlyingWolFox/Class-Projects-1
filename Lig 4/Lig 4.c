@@ -36,11 +36,17 @@ extern void restoreConsole(void);
 
 #ifndef __linux__
 #ifndef __APPLE__
+#ifndef _WIN32
+
+
+
 #define unknonwOS
 #define linux
 #	pragma message("Compiling in a Unknown system (or even on UNIX based system)\n")
 #	pragma message("Using some linux terminal interation. So some terminal interations and ANSI escapes may not work\n")
 #	pragma message("If you run into problems, cut the #define linux from the code under the unknowSO definition\n")
+#endif // !_WIN32
+
 #endif // !__APPLE__
 
 #endif // Define linux headers on other OS's. No guarantee of work.
@@ -279,6 +285,8 @@ void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinate
 void supergridModifyer(char supergrid[37][98], Move modification)
 {
 	Move startCoordinate, copy_of_startCoordinate, circleCoordinates;
+	startCoordinate.row = 1;
+	startCoordinate.col = 1;
 	char circle[5][12] = { { ' ', ' ', ' ', '.', '-', '\"', '\"', '-', '.', ' ', ' ', ' ' },
 						{ ' ', ' ', '/', ' ', ' ', ' ', ' ', ' ', ' ', '\\', ' ', ' ' },
 						{ ' ', ';', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ';', ' ' },
@@ -420,9 +428,9 @@ int main(int argc, char** argv)
 		}
 		#endif*/
 
-		printf("Gostaria de jogar o modo: 1- Singleplyer ou 2- Multiplayer\n");
+		printf("Gostaria de jogar o modo: 1- Singleplayer ou 2- Multiplayer\n");
 		fgets(trashCan, 5, stdin);
-		if (trashCan[0] == 's' || trashCan[0] == 'S')
+		if (trashCan[0] == '2')
 			multiplayer = true;
 		else
 			multiplayer = false;
@@ -480,7 +488,7 @@ int main(int argc, char** argv)
 				if (player == 2)
 					grid[playerMove.row][playerMove.col] = -1;
 				supergridModifyer(supergrid, playerMove);
-				if (multiplayer == true)
+				if (multiplayer == false)
 				{
 					supergridModifyer(supergrid, minimaxPlay(grid, 2));
 					player = 0;
@@ -526,6 +534,7 @@ int main(int argc, char** argv)
 					supergridPrinter(supergrid, grid, winCoordinates);
 					printf("Jogador %i venceu!", player);
 					win = true;
+					continue;
 				}
 				player++;
 				tie = minimaxTie(grid, player);

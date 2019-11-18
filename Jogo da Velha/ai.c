@@ -204,81 +204,6 @@ int* aiPlay(int grid[3][3], int difficulty)
 	{
 		int possibleWin[8][3];
 
-		//1 - verificar se o player pode vencer na próxima jogada
-		memcpy(possibleWin, winPositionVerifyer(aiGrid, -aiSymbol), sizeof(possibleWin));
-		if (possibleWin[0][2] != 0)
-		{
-			if (possibleWin[1][2] == 0)
-			{
-				if (possibleWin[0][1] == 0)
-				{
-					aiPlayCoordinates[0] = possibleWin[0][2];
-					aiPlayCoordinates[1] = possibleWin[0][0];
-					return aiPlayCoordinates;
-				}
-
-				if (possibleWin[0][1] == 1)
-				{
-					aiPlayCoordinates[0] = possibleWin[0][0];
-					aiPlayCoordinates[1] = possibleWin[0][2];
-					return aiPlayCoordinates;
-				}
-
-				if (possibleWin[0][1] == 2)
-				{
-					aiPlayCoordinates[0] = possibleWin[0][0];
-					aiPlayCoordinates[1] = possibleWin[0][0];
-					return aiPlayCoordinates;
-				}
-
-				if (possibleWin[0][1] == 3)
-				{
-					aiPlayCoordinates[0] = possibleWin[0][0];
-					aiPlayCoordinates[1] = possibleWin[0][2];
-					return aiPlayCoordinates;
-				}
-			}
-			
-			if (possibleWin[1][2] != 0)
-			{
-				int winPossibilitiesCount = 0;
-				for (int count = 0; count < 8; count++)
-				{
-					if (possibleWin[count][2] != 0)
-						winPossibilitiesCount++;
-				}
-				winPossibilitiesCount = rand() % (++winPossibilitiesCount);
-
-				if (possibleWin[winPossibilitiesCount][1] == 0)
-				{
-					aiPlayCoordinates[0] = possibleWin[winPossibilitiesCount][2];
-					aiPlayCoordinates[1] = possibleWin[winPossibilitiesCount][0];
-					return aiPlayCoordinates;
-				}
-
-				if (possibleWin[winPossibilitiesCount][1] == 1)
-				{
-					aiPlayCoordinates[0] = possibleWin[winPossibilitiesCount][0];
-					aiPlayCoordinates[1] = possibleWin[winPossibilitiesCount][2];
-					return aiPlayCoordinates;
-				}
-
-				if (possibleWin[winPossibilitiesCount][1] == 2)
-				{
-					aiPlayCoordinates[0] = possibleWin[winPossibilitiesCount][0];
-					aiPlayCoordinates[1] = possibleWin[winPossibilitiesCount][0];
-					return aiPlayCoordinates;
-				}
-
-				if (possibleWin[winPossibilitiesCount][1] == 3)
-				{
-					aiPlayCoordinates[0] = possibleWin[winPossibilitiesCount][0];
-					aiPlayCoordinates[1] = possibleWin[winPossibilitiesCount][2];
-					return aiPlayCoordinates;
-				}
-			}
-		}
-
 		memcpy(possibleWin, winPositionVerifyer(aiGrid, aiSymbol), sizeof(possibleWin));
 		if (possibleWin[0][2] != 0)
 		{
@@ -353,6 +278,81 @@ int* aiPlay(int grid[3][3], int difficulty)
 			}
 		}
 
+		memcpy(possibleWin, winPositionVerifyer(aiGrid, -aiSymbol), sizeof(possibleWin));
+		if (possibleWin[0][2] != 0)
+		{
+			if (possibleWin[1][2] == 0)
+			{
+				if (possibleWin[0][1] == 0)
+				{
+					aiPlayCoordinates[0] = possibleWin[0][2];
+					aiPlayCoordinates[1] = possibleWin[0][0];
+					return aiPlayCoordinates;
+				}
+
+				if (possibleWin[0][1] == 1)
+				{
+					aiPlayCoordinates[0] = possibleWin[0][0];
+					aiPlayCoordinates[1] = possibleWin[0][2];
+					return aiPlayCoordinates;
+				}
+
+				if (possibleWin[0][1] == 2)
+				{
+					aiPlayCoordinates[0] = possibleWin[0][0];
+					aiPlayCoordinates[1] = possibleWin[0][0];
+					return aiPlayCoordinates;
+				}
+
+				if (possibleWin[0][1] == 3)
+				{
+					aiPlayCoordinates[0] = possibleWin[0][0];
+					aiPlayCoordinates[1] = possibleWin[0][2];
+					return aiPlayCoordinates;
+				}
+			}
+
+			if (possibleWin[1][2] != 0)
+			{
+				int winPossibilitiesCount = 0;
+				for (int count = 0; count < 8; count++)
+				{
+					if (possibleWin[count][2] != 0)
+						winPossibilitiesCount++;
+				}
+				winPossibilitiesCount = rand() % (++winPossibilitiesCount);
+
+				if (possibleWin[winPossibilitiesCount][1] == 0)
+				{
+					aiPlayCoordinates[0] = possibleWin[winPossibilitiesCount][2];
+					aiPlayCoordinates[1] = possibleWin[winPossibilitiesCount][0];
+					return aiPlayCoordinates;
+				}
+
+				if (possibleWin[winPossibilitiesCount][1] == 1)
+				{
+					aiPlayCoordinates[0] = possibleWin[winPossibilitiesCount][0];
+					aiPlayCoordinates[1] = possibleWin[winPossibilitiesCount][2];
+					return aiPlayCoordinates;
+				}
+
+				if (possibleWin[winPossibilitiesCount][1] == 2)
+				{
+					aiPlayCoordinates[0] = possibleWin[winPossibilitiesCount][0];
+					aiPlayCoordinates[1] = possibleWin[winPossibilitiesCount][0];
+					return aiPlayCoordinates;
+				}
+
+				if (possibleWin[winPossibilitiesCount][1] == 3)
+				{
+					aiPlayCoordinates[0] = possibleWin[winPossibilitiesCount][0];
+					aiPlayCoordinates[1] = possibleWin[winPossibilitiesCount][2];
+					return aiPlayCoordinates;
+				}
+			}
+		}
+
+		memcpy(possibleWin, winPositionVerifyer(aiGrid, aiSymbol), sizeof(possibleWin));
 		if (possibleWin[0][2] == 0)
 		{
 			int freeWinPositions[9][3] = { 0 };
