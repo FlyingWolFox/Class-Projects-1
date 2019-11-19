@@ -1,9 +1,29 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "forca.h"
 #include "ansi_escapes.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+
+typedef struct WordInfo {
+	char word[30];
+	int numberOfLetters;
+	char tip[40];
+}Word;
+
+typedef struct Coordinates {
+	int row, col;
+}Coordinate;
+
+typedef enum BodyParts {
+	HANG,
+	HEAD,
+	UPPER_BODY,
+	LEFT_ARM,
+	RIGHT_ARM,
+	LOWER_BODY,
+	LEFT_LEG,
+	RIGHT_LEG
+}Body;
 
 void letterArrayCreator(char letters[28][3][5])
 {
@@ -314,14 +334,13 @@ void screenPrinter(char hangMan[8][11], char* tip, Word word, char* alreadyChoos
 
 	moveUp(7);
 	int alreadyChoosenLettersCounter = 0;
-	for (int count1 = 0; count1 < 7; count1++)
+	for (int count1 = 0; count1 < 6; count1++)
 	{		
 		for (int count2 = 0; count2 < 6; count2++)
 		{
 			if (alreadyChoosenLetters[alreadyChoosenLettersCounter] == '\0' || alreadyChoosenLetters[alreadyChoosenLettersCounter] == ' ')
 			{
 				printf("%c", alreadyChoosenLetters[alreadyChoosenLettersCounter]);
-				break;
 			}
 			else
 				printf("%c", alreadyChoosenLetters[alreadyChoosenLettersCounter] - 32);

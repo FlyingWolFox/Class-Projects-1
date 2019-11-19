@@ -19,18 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Lig 4\ansi_escapes.c" />
-    <ClCompile Include="genius.c" />
+    <ClCompile Include="ansi_escapes.c" />
+    <ClCompile Include="simon.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Lig 4\ansi_escapes.h" />
-    <ClInclude Include="genius.h" />
+    <ClInclude Include="ansi_escapes.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{97AD3B54-D0D8-45CD-ABAC-D591E179E54A}</ProjectGuid>
+    <ProjectGuid>{108814A1-98EE-47AA-8749-2BFDAFC780E0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Genius</RootNamespace>
+    <RootNamespace>Simon</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
