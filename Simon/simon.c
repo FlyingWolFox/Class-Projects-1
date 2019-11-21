@@ -12,85 +12,74 @@ extern void getCursorPosition(int* row, int* col);
 typedef unsigned char sshort;
 
 typedef enum ColorButtons {
+	NO_COLOR = 0,
 	GREEN = 1,
 	RED,
 	YELLOW,
 	BLUE
 }Color;
 
-void display(int button, bool zero, int screenSize[2])
+void display(int button, int screenSize[2])
 {
 	setupConsole();
-	if (zero == true)
+
+	moveTo(0, 0);
+
+	for (int row = 0; row <= (screenSize[0] / 2) - 2; row++)
 	{
-		moveTo(0, 0);
-		
-		for (int row = 0; row <= screenSize[0]/2 ; row++)
-		{
-			setBackgroundColorRGB(30, 50, 40); // shadow green
-			for (int greenCol = 0; greenCol <= (screenSize[1] / 2) - 1; greenCol++)
-				printf(" ");
+		if (button == GREEN)
+			setBackgroundColorRGB(0, 150, 0); // bright green
+		else
+			setBackgroundColorRGB(15, 60, 15); // shadow green
+		for (int greenCol = 0; greenCol <= (screenSize[1] / 2) - 1; greenCol++)
+			printf(" ");
 
-			if (screenSize[1] % 2 != 0)
-				printf(" ");
+		if (button == RED)
+			setBackgroundColorRGB(150, 30, 40); // bright red
+		else
+			setBackgroundColorRGB(70, 30, 30); // shadow red
+		for (int rednCol = 0; rednCol <= (screenSize[1] / 2) - 1; rednCol++)
+			printf(" ");
 
-			setBackgroundColorRGB(50, 30, 40); // shadow red
-			for (int rednCol = 0; rednCol <= (screenSize[1] / 2) - 1; rednCol++)
-				printf(" ");
-
-			printf("\n");
-		}
-
-		if (screenSize[0] % 2 != 0)
-			printf("\n");
-
-		for (int row = 0; row <= screenSize[0]/2; row++)
-		{
-			setBackgroundColorRGB(50, 50, 0); // shadow yellow
-			for (int greenCol = 0; greenCol <= (screenSize[1] / 2) - 1; greenCol++)
-				printf(" ");
-
-			if (screenSize[1] % 2 != 0)
-				printf(" ");
-
-			setBackgroundColorRGB(40, 30, 50); // shadow blue
-			for (int rednCol = 0; rednCol <= (screenSize[1] / 2) - 1; rednCol++)
-				printf(" ");
-
-			printf("\n");
-		}
+		printf("\n");
 
 	}
 
+	if (screenSize[0] % 2 != 0)
+		printf("\n");
 
-	restoreConsoleMode();
+	for (int row = 0; row <= (screenSize[0] / 2) - 2; row++)
+	{
+		if (button == YELLOW)
+			setBackgroundColorRGB(255, 255, 0); // bright yellow
+		else
+			setBackgroundColorRGB(50, 50, 0); // shadow yellow
+		for (int greenCol = 0; greenCol <= (screenSize[1] / 2) - 1; greenCol++)
+			printf(" ");
+
+
+		if (screenSize[1] % 2 != 0)
+			printf(" ");
+
+		if (button == BLUE)
+			setBackgroundColorRGB(40, 30, 150); // bright blue
+		else
+			setBackgroundColorRGB(15, 15, 60); // shadow blue
+		for (int rednCol = 0; rednCol <= (screenSize[1] / 2) - 1; rednCol++)
+			printf(" ");
+	}
+	restoreConsole();
+	printf("\n");
 }
 
 void rng(int* sequence, int level)
 {
-	unsigned int sequenceSize = level;
-	bool repetion;
-	sequence[sequenceSize - 2] = 0;
-	for (int count1 = 0; count1 < sequence[sequenceSize - 1]; count1++)
-	{
-		sequence[count1] = 1 + rand() % 4;
-		for (int count2 = 0; count2 < count1; count2++)
-		{
-			if (sequence[count2] == sequence[count1])
-				repetion = true;
-			while (repetion == 1)
-			{
-				sequence[count1] = 1 + rand() % 9;
-				if (sequence[count2] != sequence[count1])
-					repetion = false;
-			}
-		}
-	}
+	sequence[level - 1] = 1 + rand() % 4;
 }
 
 int main(int argc, char** argv)
 {
-	int level = 2;
+	int level = 1;
 	int windowSize[2];
 	sshort sequence[4000];
 	char trashcan[10];
@@ -114,7 +103,21 @@ int main(int argc, char** argv)
 			getCursorPosition(&windowSize[0], &windowSize[1]);
 			clearScreenToTop();
 			restoreConsoleMode();
-			display(1, true, windowSize);
+			display(NO_COLOR, windowSize);
+			fgets(trashcan, 5, stdin);
+
+			display(GREEN, windowSize);			
+			fgets(trashcan, 5, stdin);
+
+			display(RED, windowSize);
+			fgets(trashcan, 5, stdin);
+
+			display(YELLOW, windowSize);
+			fgets(trashcan, 5, stdin);
+
+			display(BLUE, windowSize);
+			fgets(trashcan, 5, stdin);
+
 			resetColor();
 			break;
 		}
