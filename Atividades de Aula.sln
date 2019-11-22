@@ -17,6 +17,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release StaticCRT|x64 = Release StaticCRT|x64
+		Release StaticCRT|x86 = Release StaticCRT|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -25,6 +27,10 @@ Global
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Debug|x64.Build.0 = Debug|x64
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Debug|x86.ActiveCfg = Debug|Win32
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Debug|x86.Build.0 = Debug|Win32
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release StaticCRT|x64.ActiveCfg = Release|x64
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release StaticCRT|x64.Build.0 = Release|x64
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release StaticCRT|x86.ActiveCfg = Release|Win32
+		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release StaticCRT|x86.Build.0 = Release|Win32
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x64.ActiveCfg = Release|x64
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x64.Build.0 = Release|x64
 		{1FEA9D35-5DE9-487E-B276-4F9491884931}.Release|x86.ActiveCfg = Release|Win32
@@ -33,6 +39,10 @@ Global
 		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Debug|x64.Build.0 = Debug|x64
 		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Debug|x86.ActiveCfg = Debug|Win32
 		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Debug|x86.Build.0 = Debug|Win32
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release StaticCRT|x64.ActiveCfg = Release|x64
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release StaticCRT|x64.Build.0 = Release|x64
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release StaticCRT|x86.ActiveCfg = Release|Win32
+		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release StaticCRT|x86.Build.0 = Release|Win32
 		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release|x64.ActiveCfg = Release|x64
 		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release|x64.Build.0 = Release|x64
 		{0644F248-5E49-477A-BAD7-7FCA86DA135A}.Release|x86.ActiveCfg = Release|Win32
@@ -41,6 +51,10 @@ Global
 		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Debug|x64.Build.0 = Debug|x64
 		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Debug|x86.ActiveCfg = Debug|Win32
 		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Debug|x86.Build.0 = Debug|Win32
+		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Release StaticCRT|x64.ActiveCfg = Release|x64
+		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Release StaticCRT|x64.Build.0 = Release|x64
+		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Release StaticCRT|x86.ActiveCfg = Release|Win32
+		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Release StaticCRT|x86.Build.0 = Release|Win32
 		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Release|x64.ActiveCfg = Release|x64
 		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Release|x64.Build.0 = Release|x64
 		{E42D6209-08C2-41E3-A600-C199645ADC2C}.Release|x86.ActiveCfg = Release|Win32
@@ -49,6 +63,10 @@ Global
 		{EE58612E-920A-4BC3-8567-0AEB20070867}.Debug|x64.Build.0 = Debug|x64
 		{EE58612E-920A-4BC3-8567-0AEB20070867}.Debug|x86.ActiveCfg = Debug|Win32
 		{EE58612E-920A-4BC3-8567-0AEB20070867}.Debug|x86.Build.0 = Debug|Win32
+		{EE58612E-920A-4BC3-8567-0AEB20070867}.Release StaticCRT|x64.ActiveCfg = Release|x64
+		{EE58612E-920A-4BC3-8567-0AEB20070867}.Release StaticCRT|x64.Build.0 = Release|x64
+		{EE58612E-920A-4BC3-8567-0AEB20070867}.Release StaticCRT|x86.ActiveCfg = Release|Win32
+		{EE58612E-920A-4BC3-8567-0AEB20070867}.Release StaticCRT|x86.Build.0 = Release|Win32
 		{EE58612E-920A-4BC3-8567-0AEB20070867}.Release|x64.ActiveCfg = Release|x64
 		{EE58612E-920A-4BC3-8567-0AEB20070867}.Release|x64.Build.0 = Release|x64
 		{EE58612E-920A-4BC3-8567-0AEB20070867}.Release|x86.ActiveCfg = Release|Win32
@@ -57,6 +75,10 @@ Global
 		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Debug|x64.Build.0 = Debug|x64
 		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Debug|x86.ActiveCfg = Debug|Win32
 		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Debug|x86.Build.0 = Debug|Win32
+		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Release StaticCRT|x64.ActiveCfg = Release|x64
+		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Release StaticCRT|x64.Build.0 = Release|x64
+		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Release StaticCRT|x86.ActiveCfg = Release|Win32
+		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Release StaticCRT|x86.Build.0 = Release|Win32
 		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Release|x64.ActiveCfg = Release|x64
 		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Release|x64.Build.0 = Release|x64
 		{108814A1-98EE-47AA-8749-2BFDAFC780E0}.Release|x86.ActiveCfg = Release|Win32

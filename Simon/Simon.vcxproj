@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClCompile Include="ansi_escapes.c" />
     <ClCompile Include="simon.c" />
+    <ClCompile Include="windowsConsoleInteraction.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ansi_escapes.h" />
+    <ClInclude Include="linuxMouseInteraction.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <time.h>
 #include "ansi_escapes.h"
+#include "windowsMouseInteraction.h"
+
 
 extern void setupConsole(void);
 extern void restoreConsoleMode(void);
@@ -82,6 +84,7 @@ int main(int argc, char** argv)
 	int level = 1;
 	int windowSize[2];
 	sshort sequence[4000];
+	sshort mouseCoordinates[2];
 	char trashcan[10];
 
 	srand(time(NULL));
@@ -104,19 +107,9 @@ int main(int argc, char** argv)
 			clearScreenToTop();
 			restoreConsoleMode();
 			display(NO_COLOR, windowSize);
-			fgets(trashcan, 5, stdin);
 
-			display(GREEN, windowSize);			
-			fgets(trashcan, 5, stdin);
-
-			display(RED, windowSize);
-			fgets(trashcan, 5, stdin);
-
-			display(YELLOW, windowSize);
-			fgets(trashcan, 5, stdin);
-
-			display(BLUE, windowSize);
-			fgets(trashcan, 5, stdin);
+			mouseClick(&mouseCoordinates[0], &mouseCoordinates[1]);
+			printf("%i %i", mouseCoordinates[0], mouseCoordinates[1]);
 
 			resetColor();
 			break;
