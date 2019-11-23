@@ -20,13 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ansi_escapes.c" />
-    <ClCompile Include="linuxMouseInteraction.c" />
     <ClCompile Include="simon.c" />
     <ClCompile Include="windowsConsoleInteraction.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ansi_escapes.h" />
-    <ClInclude Include="linuxMouseInteraction.h" />
     <ClInclude Include="windowsConsoleInteraction.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
