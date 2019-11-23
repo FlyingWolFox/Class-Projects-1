@@ -3,7 +3,9 @@
 #include <stdbool.h>
 #include <time.h>
 #include "ansi_escapes.h"
-#include "windowsMouseInteraction.h"
+#include "windowsConsoleInteraction.h"
+
+extern EVENT eventMain(VOID);
 
 
 extern void setupConsole(void);
@@ -20,6 +22,17 @@ typedef enum ColorButtons {
 	YELLOW,
 	BLUE
 }Color;
+
+void delay(int milliseconds)
+{
+	long pause;
+	clock_t now, then;
+
+	pause = milliseconds * (CLOCKS_PER_SEC / 1000);
+	now = then = clock();
+	while ((now - then) < pause)
+		now = clock();
+}
 
 void display(int button, int screenSize[2])
 {
@@ -74,9 +87,30 @@ void display(int button, int screenSize[2])
 	printf("\n");
 }
 
-void rng(int* sequence, int level)
+int coordinatesToButton(COORD click, int windowSize[2])
+{
+	if (click.Y < windowSize[0] / 2)
+	{
+		if (click.X < windowSize[1] / 2)
+			return GREEN;
+		if (click.X > windowSize[1] / 2)
+			return RED;
+	}
+
+	if (click.Y > windowSize[0] / 2)
+	{
+		if (click.X < windowSize[1] / 2)
+			return YELLOW;
+		if (click.X > windowSize[1] / 2)
+			return BLUE;
+	}
+	return 0;
+}
+
+void rng(sshort* sequence, int level)
 {
 	sequence[level - 1] = 1 + rand() % 4;
+	sequence[level] = 0;
 }
 
 int main(int argc, char** argv)
@@ -84,8 +118,11 @@ int main(int argc, char** argv)
 	int level = 1;
 	int windowSize[2];
 	sshort sequence[4000];
-	sshort mouseCoordinates[2];
+	sshort input[4000];
+	COORD mouseCoord;
+	EVENT retEvent;
 	char trashcan[10];
+	bool mistake = false;
 
 	srand(time(NULL));
 
@@ -101,18 +138,58 @@ int main(int argc, char** argv)
 	{
 		for (bool replay = true; replay == true;)
 		{
-			setupConsole();
-			moveTo(999, 999);
-			getCursorPosition(&windowSize[0], &windowSize[1]);
-			clearScreenToTop();
-			restoreConsoleMode();
-			display(NO_COLOR, windowSize);
+			level = 1;
+			while (mistake == false)
+			{
+				setupConsole();
+				moveTo(999, 999);
+				getCursorPosition(&windowSize[0], &windowSize[1]);
+				clearScreenToTop();
+				restoreConsoleMode();
+				display(NO_COLOR, windowSize);
 
-			mouseClick(&mouseCoordinates[0], &mouseCoordinates[1]);
-			printf("%i %i", mouseCoordinates[0], mouseCoordinates[1]);
+				rng(sequence, level);
 
-			resetColor();
-			break;
+				for (int count = 0; count < level; count++)
+				{
+					delay(500);
+					display(sequence[count], windowSize);
+					display(NO_COLOR, windowSize);
+				}
+
+				for (int count = 0; count < level; count++)
+				{
+					display(NO_COLOR, windowSize);
+					while (true)
+					{
+						retEvent.event.mouseEvent = 0xc00;
+						retEvent = eventMain();
+						mouseCoord = retEvent.event.mouseCoord;
+						if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
+							break;
+					}
+
+					input[count] = coordinatesToButton(mouseCoord, windowSize);
+
+					display(input[count], windowSize);
+
+					if (sequence[count] != input[count])
+					{
+						mistake = true;
+						break;
+					}
+				}
+
+				if (mistake == true)
+				{
+					//play error
+					puts("Not right! Try again? (Y/N)");
+					fgets(trashcan, 5, stdin);
+					if (trashcan[0] == 'n' || trashcan[0] == 'N')
+						replay = false;
+				}
+				level++;
+			}
 		}
 	}
 

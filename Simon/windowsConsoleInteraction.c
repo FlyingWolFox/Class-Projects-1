@@ -1,19 +1,17 @@
-#include <windows.h>
-#include <stdio.h>
-
-//https://stackoverflow.com/questions/35797336/how-to-find-the-mouse-button-click-position-x-and-y*/
+#include "windowsConsoleInteraction.h"
 
 HANDLE hStdin;
 DWORD fdwSaveOldMode;
+EVENT retEvent;
 
 VOID ErrorExit(LPSTR);
 VOID KeyEventProc(KEY_EVENT_RECORD);
 VOID MouseEventProc(MOUSE_EVENT_RECORD);
 VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD);
 
-int main(VOID)
+EVENT eventMain(VOID)
 {
-	DWORD cNumRead, fdwMode, i;
+		DWORD cNumRead, fdwMode, i;
 	INPUT_RECORD irInBuf[128];
 	int counter = 0;
 
@@ -31,58 +29,54 @@ int main(VOID)
 	// Enable the window and mouse input events.
 
 	fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT;
+	fdwMode &= ~ENABLE_QUICK_EDIT_MODE;
+	SetConsoleMode(hStdin, fdwMode | ENABLE_EXTENDED_FLAGS);
 	if (!SetConsoleMode(hStdin, fdwMode))
 		ErrorExit("SetConsoleMode");
 
-	// Loop to read and handle the next 100 input events.
+	// Wait for the events.
 
-	while (counter++ <= 100)
+	if (!ReadConsoleInput(
+		hStdin,      // input buffer handle
+		irInBuf,     // buffer to read into
+		128,         // size of read buffer
+		&cNumRead)) // number of records read
+		ErrorExit("ReadConsoleInput");
+
+	// Dispatch the events to the appropriate handler.
+
+	i = 0;
+	switch (irInBuf[i].EventType)
 	{
-		// Wait for the events.
+	case KEY_EVENT: // keyboard input
+		KeyEventProc(irInBuf[i].Event.KeyEvent);
+		break;
 
-		if (!ReadConsoleInput(
-			hStdin,      // input buffer handle
-			irInBuf,     // buffer to read into
-			128,         // size of read buffer
-			&cNumRead)) // number of records read
-			ErrorExit("ReadConsoleInput");
+	case MOUSE_EVENT: // mouse input
+		MouseEventProc(irInBuf[i].Event.MouseEvent);
+		break;
 
-		// Dispatch the events to the appropriate handler.
+	case WINDOW_BUFFER_SIZE_EVENT: // scrn buf. resizing
+		ResizeEventProc(irInBuf[i].Event.WindowBufferSizeEvent);
+		break;
 
-		for (i = 0; i < cNumRead; i++)
-		{
-			switch (irInBuf[i].EventType)
-			{
-			case KEY_EVENT: // keyboard input
-				KeyEventProc(irInBuf[i].Event.KeyEvent);
-				break;
+	case FOCUS_EVENT:  // disregard focus events
 
-			case MOUSE_EVENT: // mouse input
-				MouseEventProc(irInBuf[i].Event.MouseEvent);
-				break;
+	case MENU_EVENT:   // disregard menu events
+		break;
 
-			case WINDOW_BUFFER_SIZE_EVENT: // scrn buf. resizing
-				ResizeEventProc(irInBuf[i].Event.WindowBufferSizeEvent);
-				break;
-
-			case FOCUS_EVENT:  // disregard focus events
-
-			case MENU_EVENT:   // disregard menu events
-				break;
-
-			default:
-				ErrorExit("Unknown event type");
-				break;
-			}
-		}
+	default:
+		ErrorExit("Unknown event type");
+		break;
 	}
 
 	// Restore input mode on exit.
 
 	SetConsoleMode(hStdin, fdwSaveOldMode);
 
-	return 0;
+	return retEvent;
 }
+
 VOID ErrorExit(LPSTR lpszMessage)
 {
 	fprintf(stderr, "%s\n", lpszMessage);
@@ -96,54 +90,66 @@ VOID ErrorExit(LPSTR lpszMessage)
 
 VOID KeyEventProc(KEY_EVENT_RECORD ker)
 {
-	printf("Key event: ");
+	/*printf("Key event: ");
 	if (ker.bKeyDown)
 		printf("key pressed\n");
-	else printf("key released\n");
+	else printf("key released\n");*/
+
+	retEvent.regEvent = _KEY_EVENT;
+	retEvent.event.keyPress = ker.uChar.AsciiChar;
 }
 VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
 {
 #ifndef MOUSE_HWHEELED
 #define MOUSE_HWHEELED 0x0008
 #endif
-	printf("Mouse event: ");
+	//printf("Mouse event: ");
 
 	switch (mer.dwEventFlags)
 	{
 	case 0:
-
+		retEvent.regEvent = _MOUSE_EVENT;
 		if (mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
 		{
-			printf("left button press \n");
+			//printf("left button press \n");
+			retEvent.event.mouseEvent = mer.dwButtonState;
+			retEvent.event.mouseCoord = mer.dwMousePosition;
 		}
 		else if (mer.dwButtonState == RIGHTMOST_BUTTON_PRESSED)
 		{
-			printf("right button press \n");
+			//printf("right button press \n");
+			retEvent.event.mouseEvent = mer.dwButtonState;
 		}
 		else
 		{
-			printf("button press\n");
+			//printf("button press\n");
+			retEvent.event.mouseEvent = mer.dwButtonState;
 		}
 		break;
 	case DOUBLE_CLICK:
-		printf("double click\n");
+		//printf("double click\n");
+		retEvent.event.mouseEvent = mer.dwButtonState;
 		break;
 	case MOUSE_HWHEELED:
-		printf("horizontal mouse wheel\n");
+		//printf("horizontal mouse wheel\n");
+		retEvent.event.mouseEvent = mer.dwButtonState;
 		break;
 	case MOUSE_MOVED:
-		printf("mouse moved\n");
+		//printf("mouse moved\n");
+		retEvent.event.mouseEvent = mer.dwButtonState;
 		break;
 	case MOUSE_WHEELED:
-		printf("vertical mouse wheel\n");
+		//printf("vertical mouse wheel\n");
+		retEvent.event.mouseEvent = mer.dwButtonState;
 		break;
 	default:
-		printf("unknown\n");
+		//printf("unknown\n");
+		retEvent.event.mouseEvent = mer.dwButtonState;
 		break;
 	}
 }
 VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD wbsr)
 {
-	printf("Resize event\n");
-	printf("Console screen buffer is %d columns by %d rows.\n", wbsr.dwSize.X, wbsr.dwSize.Y);
+	//printf("Resize event\n");
+	//printf("Console screen buffer is %d columns by %d rows.\n", wbsr.dwSize.X, wbsr.dwSize.Y);
 }

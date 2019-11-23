@@ -1,6 +1,7 @@
 #ifndef LINUX_MOUSE_INTERACTION
 #define LINUX_MOUSE_INTERACTION
 
+#include <curses.h>
 
 
 #endif // !LINUX_MOUSE_INTERACTION
