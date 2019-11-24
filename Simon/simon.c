@@ -147,6 +147,29 @@ void Error(const char* text)
 	exit(0);
 }
 
+void thanks()
+{
+	clearScreenToTop();
+	moveTo(0, 0);
+	puts("Thanks for Playing!");
+	puts("");
+	puts("Thanks to:");
+	puts("Brodhead Media Features for the Wrong Buzzer SFX (https://youtu.be/2naim9F4010)");
+	puts("gamesplusjames for the button sounds that he used in his simon");
+	puts("Stackoverflow people, mainly Ahmad Taha whose question was my solution");
+	puts("Tomasz P. Szynalski and his Online Tone Generator for helping me to organze the sounds");
+	puts("The neat things that this program uses works because of them!");
+	puts("");
+	puts("Also, thanks to Super Mario Maker streamers on twitch, coded everything hearing you");
+	puts("");
+	puts("The make of this project has the participation of:");
+	puts("BASS Audio Library, with wich this can play sound");
+	puts("Audacity, that was used to cut the audio");
+	puts("Visual Studio Community 2019, in wich this project was made on.");
+	puts("");
+	puts("---Press any key to exit---");
+}
+
 int main(int argc, char** argv)
 {
 
@@ -180,14 +203,38 @@ int main(int argc, char** argv)
 	blue_button = BASS_StreamCreateFile(FALSE, "blue_button.wav", 0, 0, 0);
 	wrong = BASS_StreamCreateFile(FALSE, "wrong.wav", 0, 0, 0);
 
-	//BASS_Free();
-
 	printf("Starting Simon. Do you wish to:\n(P) play now\nor \n(T)see the tutorial?\n");
 	fgets(trashcan, 5, stdin);
 
 	if (trashcan[0] == 'T' || trashcan[0] == 't')
 	{
-		//teach how to play
+		clearScreenToTop();
+		moveTo(0, 0);
+		puts("Simon rules:");
+		puts("-The board will flash colors on screen, in certain order");
+		puts("-You repeat the pattern clicking on the same colors");
+		puts("-If you get every color right, you go to the next level");
+		puts("-Each level increases by one the number of colors to repeat");
+		puts("-If you miss one, the game ends");
+		puts("-Also, the color have sounds, use this to your advantage");
+		puts("-Your failure also has a sound, don't be scared");
+		puts("-Here you can go until the level 3999, good luck");
+		puts("");
+		puts("-Ready to start?");
+		for (int count = 0; count < 15; count++)
+		{
+			delay(250);
+			puts("---Press enter to continue---");
+			moveUp(1);
+			delay(250);
+			puts("                               ");
+			moveUp(1);
+		}
+		puts("---Press enter to continue---");
+		fgets(trashcan, 5, stdin);
+		trashcan[0] = 'P';
+		clearScreenToTop();
+		moveTo(0, 0);
 	}
 
 	if (trashcan[0] == 'P' || trashcan[0] == 'p')
@@ -252,6 +299,9 @@ int main(int argc, char** argv)
 			}
 		}
 	}
+	BASS_Free();
+	thanks();
+	fgets(trashcan, 5, stdin);
 
 	return 0;
 }

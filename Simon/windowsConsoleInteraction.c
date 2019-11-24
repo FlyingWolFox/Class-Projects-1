@@ -96,7 +96,8 @@ VOID KeyEventProc(KEY_EVENT_RECORD ker)
 	else printf("key released\n");*/
 
 	retEvent.regEvent = _KEY_EVENT;
-	retEvent.event.keyPress = ker.uChar.AsciiChar;
+	retEvent.event.keyPressed = ker.bKeyDown;
+	retEvent.event.keyPressed = ker.uChar.AsciiChar;
 }
 VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
 {

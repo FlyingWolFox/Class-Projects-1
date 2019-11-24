@@ -12,7 +12,10 @@ typedef enum event {
 typedef struct Interaction_Event_t {
 	eventType regEvent;
 	union eventContent {
-		char keyPress;
+		struct keyPress {
+			BOOL keyDown;
+			char keyPressed;
+		};
 		struct mouse {
 			int mouseEvent;
 			COORD mouseCoord;
