@@ -25,7 +25,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ansi_escapes.h" />
+    <ClInclude Include="bass.h" />
     <ClInclude Include="windowsConsoleInteraction.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="blue_button.wav" />
+    <Media Include="green_button.wav" />
+    <Media Include="red_button.wav" />
+    <Media Include="wrong.wav" />
+    <Media Include="yellow_button.wav" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -100,10 +108,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
