@@ -154,18 +154,19 @@ void thanks()
 	puts("Thanks for Playing!");
 	puts("");
 	puts("Thanks to:");
-	puts("Brodhead Media Features for the Wrong Buzzer SFX (https://youtu.be/2naim9F4010)");
-	puts("gamesplusjames for the button sounds that he used in his simon");
-	puts("Stackoverflow people, mainly Ahmad Taha whose question was my solution");
-	puts("Tomasz P. Szynalski and his Online Tone Generator for helping me to organze the sounds");
-	puts("The neat things that this program uses works because of them!");
+	puts("-Brodhead Media Features for the Wrong Buzzer SFX (https://youtu.be/2naim9F4010)");
+	puts("-gamesplusjames for the button sounds that he used in his simon");
+	puts("-Stackoverflow people, mainly Ahmad Taha whose question was my solution (https://stackoverflow.com/questions/35797336/how-to-find-the-mouse-button-click-position-x-and-y*/)");
+	puts("-Raymond, helping with disabling the quick edit mode (https://devblogs.microsoft.com/oldnewthing/?p=4453)");
+	puts("-Tomasz P. Szynalski and his Online Tone Generator for helping me to organze the sounds");
+	puts("-The neat things that this program uses works because of them!");
 	puts("");
-	puts("Also, thanks to Super Mario Maker streamers on twitch, coded everything hearing you");
+	puts("-Also, thanks to Super Mario Maker streamers on twitch, coded everything hearing you");
 	puts("");
 	puts("The make of this project has the participation of:");
-	puts("BASS Audio Library, with wich this can play sound");
-	puts("Audacity, that was used to cut the audio");
-	puts("Visual Studio Community 2019, in wich this project was made on.");
+	puts("-BASS Audio Library, with wich this can play sound");
+	puts("-Audacity, that was used to cut the audio");
+	puts("-Visual Studio Community 2019, in wich this project was made on.");
 	puts("");
 	puts("---Press any key to exit---");
 }
@@ -216,6 +217,7 @@ int main(int argc, char** argv)
 		puts("-If you get every color right, you go to the next level");
 		puts("-Each level increases by one the number of colors to repeat");
 		puts("-If you miss one, the game ends");
+		puts("-Have paciense, the click will only work if the cursor is at the botton of the window");
 		puts("-Also, the color have sounds, use this to your advantage");
 		puts("-Your failure also has a sound, don't be scared");
 		puts("-Here you can go until the level 3999, good luck");
