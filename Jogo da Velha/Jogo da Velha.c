@@ -635,7 +635,7 @@ void thanks()
 	printf("\n");
 	printf("Esse projeto é possível graças ao Notepad++ e ao Visual Studio Community 2019\n");
 	printf("\n");
-	printf("Autoria de Lucas Isaac (@FlyingWolFox)\n");
+	printf("Autoria de Lucas Isaac (@LIPSilva5)\n");
 	system("pause");
 }
 

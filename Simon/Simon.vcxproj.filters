@@ -15,19 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Lig 4\ansi_escapes.c">
+    <ClCompile Include="simon.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="genius.c">
+    <ClCompile Include="ansi_escapes.c">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsConsoleInteraction.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Lig 4\ansi_escapes.h">
+    <ClInclude Include="ansi_escapes.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="genius.h">
+    <ClInclude Include="windowsConsoleInteraction.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="bass.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="blue_button.wav">
+      <Filter>Arquivos de Recurso</Filter>
+    </Media>
+    <Media Include="green_button.wav">
+      <Filter>Arquivos de Recurso</Filter>
+    </Media>
+    <Media Include="wrong.wav">
+      <Filter>Arquivos de Recurso</Filter>
+    </Media>
+    <Media Include="yellow_button.wav">
+      <Filter>Arquivos de Recurso</Filter>
+    </Media>
+    <Media Include="red_button.wav">
+      <Filter>Arquivos de Recurso</Filter>
+    </Media>
   </ItemGroup>
 </Project>
