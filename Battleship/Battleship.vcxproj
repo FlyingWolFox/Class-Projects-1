@@ -19,16 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="batalha_naval.c" />
+    <ClCompile Include="ansi_escapes.c" />
+    <ClCompile Include="battleship.c" />
+    <ClCompile Include="windowsConsoleInteraction.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="batalha_naval.h" />
+    <ClInclude Include="ansi_escapes.h" />
+    <ClInclude Include="windowsConsoleInteraction.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{EE58612E-920A-4BC3-8567-0AEB20070867}</ProjectGuid>
+    <ProjectGuid>{1896E8DC-0FF8-4DB3-A437-36ACB913CC95}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>BatalhaNaval</RootNamespace>
+    <RootNamespace>Battleship</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
