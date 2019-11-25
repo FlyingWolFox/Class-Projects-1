@@ -5,62 +5,9 @@
 #include "ansi_escapes.h"
 #include "lig 4.h"
 
-#ifdef _WIN32
-#define windows
-#include <Windows.h>
-#include <Wincon.h>
-#include <ConsoleApi2.h>
-
 extern void setupConsole(void);
 extern void restoreConsoleMode(void);
 extern void restoreConsole(void);
-
-#endif //define to just compile windows code
-
-#ifdef __APPLE__
-#include "TargetConditionals.h"
-#if TARGET_OS_SIMULATOR
-#	pragma message("You're compiling in the Xcode (OS_SIMULATOR), some terminal interaction may not work\n");
-#elif TARGET_OS_IPHONE
-#	pragma message("You're compiling in the iPhone, some terminal interaction may not work\n");
-#elif TARGET_OS_MAC
-#	pragma message("You're compiling in the Mac OS X, some terminal interaction may not work\n");
-#else
-#   pragma message("You're compiling in a Unknown Apple platform, some terminal interaction may not work")
-#endif
-#	pragma message("If you run into problems, cut the #define linux from the code under the __APPLE__ definition\n");
-#define linux
-#include <sys/ioctl.h>
-#include <unistd.h>
-#endif // Define linux headers on apple devices. No guarantee of work.
-
-#ifndef __linux__
-#ifndef __APPLE__
-#ifndef _WIN32
-
-
-
-#define unknonwOS
-#define linux
-#	pragma message("Compiling in a Unknown system (or even on UNIX based system)\n")
-#	pragma message("Using some linux terminal interation. So some terminal interations and ANSI escapes may not work\n")
-#	pragma message("If you run into problems, cut the #define linux from the code under the unknowSO definition\n")
-#endif // !_WIN32
-
-#endif // !__APPLE__
-
-#endif // Define linux headers on other OS's. No guarantee of work.
-
-#ifdef __linux__
-#ifdef linux
-#pragma message("You're compiling with Linux support. Make sure to activate the code and headers defined to run at linux, as it's marked as comment")
-#endif
-#infdef linux
-#define linux
-#pragma message("You're compiling on Linux. Make sure to activate the code defined and headers to run at linux, as it's marked as comment")
-//#include <sys/ioctl.h>
-//#include <unistd.h>
-#endif //define to just compile linux code
 
 extern void supergridTied(char supergrid[37][98]);
 extern bool minimaxTie(int grid[6][7], int nextplayer);
@@ -361,72 +308,30 @@ int main(int argc, char** argv)
 		Move playerMove;
 		Win winVerifyerReturn;
 		Move winCoordinates[4];
-		bool isMaximazed = false;
-		bool legacyMode = true;
-
 		//used to freeze the program instead of getchar
 		char trashCan[10];
+
+		{
+			int windowSize[2];
+			setupConsole();
+			moveTo(999, 999);
+			getCursorPosition(&windowSize[0], &windowSize[1]);
+			moveTo(0, 0);
+
+			while (windowSize[0] < 41 || windowSize[1] < 101)
+			{
+				puts("You'll need to expand the windows to play");
+				moveTo(999, 999);
+				getCursorPosition(&windowSize[0], &windowSize[1]);
+				moveTo(0, 0);
+			}
+			clearScreenToBottom();
+			restoreConsoleMode();
+		}
 
 		setupConsole();
 		setBackgroundColorRGB(20, 20, 20);
 		restoreConsole();
-		printf("Você vai precisar maximizar a janela do console para poder jogar\n");
-
-		// Windows mode
-		#ifdef windows
-		while (1) {
-			CONSOLE_SCREEN_BUFFER_INFO csbi;
-			int columns, rows;
-
-			GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-			columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-			rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-
-			if (rows < 41 || columns < 101)
-			{
-				printf("A janela não está no tamanha adequado! Tente aumenta-la ou maximizá-la\n");
-				printf("Caso você não consiga aumentar mais digite \'n\'\n");
-				fgets(trashCan, 5, stdin);
-				if (trashCan[0] == 'n')
-				{
-					printf("Ok. Rodando no modo legacy\n");
-					legacyMode = true;
-					break;
-				}
-			}
-			
-			if (rows > 40 && columns > 100)
-			{
-				legacyMode = false;
-				break;
-			}
-		}
-		#endif
-
-		// Linux mode
-		/*#ifdef linux
-		while (1)
-		{
-			struct winsize w;
-			ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
-			if (w.ws_row < 41 && w.ws_col < 101)
-			{
-				printf("A janela não está no tamanha adequado! Tente aumenta-la ou maximizá-la\n");
-				printf("Caso você não consiga aumentar mais digite \'n\'");
-				fgets(trashCan, 5, stdin);
-				if (trashCan[0] == 'n')
-				{
-					printf("Ok. Rodando no modo legacy");
-					legacyMode = true;
-					break;
-				}
-			}
-
-			if (w.ws_row > 40 && w.ws_col > 100)
-				break;
-		}
-		#endif*/
 
 		printf("Gostaria de jogar o modo: 1- Singleplayer ou 2- Multiplayer\n");
 		fgets(trashCan, 5, stdin);
@@ -455,16 +360,6 @@ int main(int argc, char** argv)
 					player = 1;
 				setupConsole();
 				setBackgroundColorRGB(20, 20, 20);
-
-				if (legacyMode == false)
-				{
-					moveTo(0, 0);
-					clearScreenToBottom();
-					moveTo(0, 0);
-				}
-
-				else
-					clearScreen();
 
 				supergridPrinter(supergrid, grid, winCoordinates);
 				restoreConsoleMode();
