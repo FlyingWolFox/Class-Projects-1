@@ -14,25 +14,35 @@ typedef struct Coordinates {
 coord clickToCoordinates(COORD click)
 {
 	coord retValue;
+	
+	click.X--;
+	retValue.i = -1;
+	retValue.j = -1;
 
-	for (int count = 0; count < 37; count += 9)
+	for (int count = 0; count < 37; count += 4)
 	{
-		if (click.Y > count && click.Y < count + 9)
-			retValue.i = count/9;
+		if (click.Y > count&& click.Y < count + 4)
+		{
+			retValue.i = count / 4;
+			break;
+		}
 	}
-	for (int count = 0; count < 109; count += 4)
+	for (int count = 0; count < 109; count += 9)
 	{
-		if (click.X > count && click.X < count + 4)
-			retValue.j = count/4;
+		if (click.X > count&& click.X < count + 9)
+		{
+			retValue.j = count / 9;
+			break;
+		}
 	}
 	return retValue;
 }
 
-void createDisplayeGrid(char displayGrid[37][109])
+void createDisplayeGrid(char displayGrid[37][100])
 {
 	for (int i = 0; i < 37; i++)
 	{
-		for (int j = 0; j < 109; j++)
+		for (int j = 0; j < 100; j++)
 		{
 			if (j % 9 == 0 || i % 4 == 0)
 			{
@@ -48,7 +58,7 @@ void createDisplayeGrid(char displayGrid[37][109])
 	}
 }
 
-void modifyDisplayGrid(char displayGrid[37][109], coord coordinates, char symbol)
+void modifyDisplayGrid(char displayGrid[37][100], coord coordinates, char symbol)
 {
 	char horizontalBow[3][8] = { {' ', ' ', ' ', ' ', ' ', ' ', ' ', '_'} ,
 								 {' ', ' ', ' ', ' ', '_', '_', '/', ' '} ,
@@ -74,58 +84,87 @@ void modifyDisplayGrid(char displayGrid[37][109], coord coordinates, char symbol
 								 {' ', '|', '_', '_', '_', '_', '|', ' '} ,
 								 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '} };
 
-	char nope[3][8] = { {' ', ' ', '\\', '_', '_', ' / ', ' ', ' '} ,
+	char nope[3][8] = { {' ', ' ', '\\', '_', '_', '/', ' ', ' '} ,
 						{' ', '-', '|', '_', '_', '|', '-', ' '} ,
 						{' ', ' ', '/', ' ', ' ', '\\', ' ', ' '} };
 
-	char submarine[3][18] = { {' ', ' ', ' ', ' ', '_', ' ', ' ', ' '} ,
-							  {' ', '_', '_', '/', 'o', '\\', '_', ' '} ,
-							  {'|', '_', '_', '_', '_', '_', '_', '|'} };
+	char submarine[3][8] = { {' ', ' ', ' ', ' ', '_', ' ', ' ', ' '} ,
+							 {' ', '_', '_', '/', 'o', '\\', '_', ' '} ,
+							 {'|', '_', '_', '_', '_', '_', '_', '|'} };
 
 	coord start;
 
 	for (int count = 0; count < 9; count++)
 	{
 		if (coordinates.i == count)
+		{
 			start.i = (count * 4) + 1;
+			break;
+		}
 	}
 	for (int count = 0; count < 11; count++)
 	{
 		if (coordinates.j == count)
+		{
 			start.j = (count * 9) + 1;
+			break;
+		}
 	}
 
 	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < 18; j++)
+		for (int j = 0; j < 8; j++)
 		{
 			if (symbol == '<')
+			{
 				displayGrid[start.i + i][start.j + j] = horizontalBow[i][j];
+				continue;
+			}
 			if (symbol == '=')
+			{
 				displayGrid[start.i + i][start.j + j] = horizontalMiddle[i][j];
+				continue;
+			}
 			if (symbol == '>')
+			{
 				displayGrid[start.i + i][start.j + j] = horizontalStern[i][j];
+				continue;
+			}
 			if (symbol == '^')
+			{
 				displayGrid[start.i + i][start.j + j] = verticalBow[i][j];
+				continue;
+			}
 			if (symbol == '|')
+			{
 				displayGrid[start.i + i][start.j + j] = verticalMiddle[i][j];
+				continue;
+			}
 			if (symbol == '~')
+			{
 				displayGrid[start.i + i][start.j + j] = verticalStern[i][j];
+			}
 			if (symbol == ' ')
+			{
 				displayGrid[start.i + i][start.j + j] = nope[i][j];
+				continue;
+			}
 			if (symbol == 'o')
+			{
 				displayGrid[start.i + i][start.j + j] = submarine[i][j];
+				continue;
+			}
 		}
 	}
 
 }
 
-void printDisplayGrid(char displayGrid[37][109])
+void printDisplayGrid(char displayGrid[37][100])
 {
 	for (int i = 0; i < 37; i++)
 	{
 		moveRight(1);
-		for (int j = 0; j < 109; j++)
+		for (int j = 0; j < 100; j++)
 			printf("%c", displayGrid[i][j]);
 		printf("\n");
 	}
@@ -159,7 +198,7 @@ int main(int argc, char** argv)
 		return -2;
 	}
 
-	char displayGrid[37][109];
+	char displayGrid[37][100];
 	char grid[9][11];
 	char playGrid[9][11];
 	coord play;
@@ -229,13 +268,13 @@ int main(int argc, char** argv)
 			retEvent.event.mouseEvent = 0xc00;
 			retEvent = eventMain();
 			mouseCoord = retEvent.event.mouseCoord;
-			if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
+			if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED) 
 				break;
 		}
-		printf("%i %i\n", mouseCoord.Y, mouseCoord.X);
+
 		play = clickToCoordinates(mouseCoord);
-		printf("%i %i\n", play.i, play.j);
-		fgets(trashcan, 5, stdin);
+		if (play.i == -1 || play.j == -1)
+			continue;
 
 		modifyDisplayGrid(displayGrid, play, grid[play.i][play.j]);
 		clearScreenToTop;
@@ -245,6 +284,7 @@ int main(int argc, char** argv)
 		if (isEnd(grid, playGrid))
 		{
 			puts("Game Over!");
+			playing = false;
 			fgets(trashcan, 5, stdin);
 			break;
 		}
