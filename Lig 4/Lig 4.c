@@ -361,6 +361,9 @@ int main(int argc, char** argv)
 				setupConsole();
 				setBackgroundColorRGB(20, 20, 20);
 
+				clearScreenToTop();
+				moveTo(0, 0);
+
 				supergridPrinter(supergrid, grid, winCoordinates);
 				restoreConsoleMode();
 				printf("Jogue jogador %i\n", player);
@@ -426,6 +429,8 @@ int main(int argc, char** argv)
 							winCoordinates[count].col = (winVerifyerReturn.col - count);
 						}
 					}
+					clearScreenToTop();
+					moveTo(0, 0);
 					supergridPrinter(supergrid, grid, winCoordinates);
 					printf("Jogador %i venceu!", player);
 					win = true;
@@ -437,6 +442,8 @@ int main(int argc, char** argv)
 				{
 					if (tie == true)
 					{
+						clearScreenToTop();
+						moveTo(0, 0);
 						supergridTied(supergrid);
 						printf("Empate!");
 						fgets(trashCan, 5, stdin);
