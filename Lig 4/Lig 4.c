@@ -445,6 +445,7 @@ int main(int argc, char** argv)
 						clearScreenToTop();
 						moveTo(0, 0);
 						supergridTied(supergrid);
+						supergridPrinter(supergrid, grid, winCoordinates);
 						printf("Empate!");
 						fgets(trashCan, 5, stdin);
 					}
