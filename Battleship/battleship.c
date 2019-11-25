@@ -182,6 +182,15 @@ bool isEnd(char grid[9][11], char playerGrid[9][11])
 	return isEnd;
 }
 
+void thanks(void)
+{
+	puts("Thanks for playing!");
+	puts("");
+	puts("Shoutouts for the people on Stack Overflow!");
+	puts("This project was made using Visual Studio Comuity 2019, Excel and Notepad++");
+	puts("");
+}
+
 int main(int argc, char** argv)
 {
 	if (argc < 2)
@@ -277,6 +286,7 @@ int main(int argc, char** argv)
 			continue;
 
 		modifyDisplayGrid(displayGrid, play, grid[play.i][play.j]);
+		playGrid[play.i][play.j] = grid[play.i][play.j];
 		clearScreenToTop;
 		moveTo(0, 0);
 		printDisplayGrid(displayGrid);
@@ -285,11 +295,12 @@ int main(int argc, char** argv)
 		{
 			puts("Game Over!");
 			playing = false;
-			fgets(trashcan, 5, stdin);
 			break;
 		}
 	}
 
-
+	thanks();
+	puts("---Press any key to exit---");
+	fgets(trashcan, 5, stdin);
 	return 0;
 }
