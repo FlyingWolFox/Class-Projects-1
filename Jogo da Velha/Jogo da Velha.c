@@ -26,6 +26,7 @@ int* winVerifyer(int grid[3][3])
 	static int returnValue[3];
 	int i, j;
 
+	// looks for X horizontal wins
 	for (i = 0; i < 3; i++)
 	{
 		if (grid[i][0] == 1)
@@ -40,6 +41,7 @@ int* winVerifyer(int grid[3][3])
 		}
 	}
 
+	// looks for X vertical wins
 	for (j = 0; j < 3; j++)
 	{
 		if (grid[0][j] == 1)
@@ -54,6 +56,7 @@ int* winVerifyer(int grid[3][3])
 		}
 	}
 
+	// look for X \ diagonal wins
 	i = 0;
 	j = 0;
 	if (grid[i][j] == 1 && grid[i + 1][j + 1] == 1 && grid[i + 2][j + 2] == 1)
@@ -64,6 +67,7 @@ int* winVerifyer(int grid[3][3])
 		return returnValue;
 	}
 
+	// look for X / diagonal wins
 	i = 0;
 	j = 2;
 	if (grid[i][j] == 1 && grid[i + 1][j - 1] == 1 && grid[i + 2][j - 2] == 1)
@@ -74,6 +78,7 @@ int* winVerifyer(int grid[3][3])
 		return returnValue;
 	}
 
+	//looks for O horizontal wins
 	for (i = 0; i < 3; i++)
 	{
 		if (grid[i][0] == -1)
@@ -89,7 +94,7 @@ int* winVerifyer(int grid[3][3])
 	}
 
 
-
+	// looks for O vertical wins
 	for (j = 0; j < 3; j++)
 	{
 		if (grid[0][j] == -1)
@@ -104,6 +109,7 @@ int* winVerifyer(int grid[3][3])
 		}
 	}
 
+	// look for O \ diagonal wins
 	i = 0;
 	j = 0;
 	if (grid[i][j] == -1 && grid[i + 1][j + 1] == -1 && grid[i + 2][j + 2] == -1)
@@ -113,7 +119,8 @@ int* winVerifyer(int grid[3][3])
 		returnValue[2] = j;
 		return returnValue;
 	}
-
+	
+	// look for O / diagonal wins
 	i = 0;
 	j = 2;
 	if (grid[i][j] == -1 && grid[i + 1][j - 1] == -1 && grid[i + 2][j - 2] == -1)
@@ -124,6 +131,7 @@ int* winVerifyer(int grid[3][3])
 		return returnValue;
 	}
 
+	// if no one won returns everything -1
 	returnValue[0] = -1;
 	returnValue[1] = -1;
 	returnValue[2] = -1;
@@ -139,10 +147,12 @@ int** freeCells(int grid[3][3])
 
 	count1 = 0;
 
+	// looks for free cells
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
+			// if more than 3 free cells are found return all -1
 			if (count1 > 3)
 			{
 				freePositions[2][0] = -1;
@@ -161,6 +171,7 @@ int** freeCells(int grid[3][3])
 			}
 		}
 	}
+	// no free position was found, set everything to 3
 	if (freePositions[2][0] == 0 && freePositions[2][1] == 0 && freePositions[1][0] == 0 && freePositions[1][1] == 0 && freePositions[0][0] == 0 && freePositions[0][1] == 0)
 	{
 		freePositions[3][0] = 3;
@@ -180,8 +191,10 @@ int** gridTiedReturner(int gridCopy[3][3], int mod)
 {
 	static int gridCopyToReturn[3][3];
 
+	// gets the tied grid
 	if (mod == 0)
 		memcpy(gridCopyToReturn, gridCopy, sizeof(gridCopyToReturn));
+	// returns the pereviously got tied grid
 	if (mod == 1)
 		return gridCopyToReturn;
 	return 0;
