@@ -299,6 +299,7 @@ int main(int argc, char** argv)
 				}
 				level++;
 			}
+			mistake = false;
 		}
 	}
 	BASS_Free();
