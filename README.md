@@ -27,18 +27,18 @@ Here you'll find 5 games: Tic Tac Toe (or naughts and crosses), Connect 4, Hangm
  
 - ### Connect 4
   - If you played Club Penguin you already know this game
-  - Two people play against each oder, dropping pieces, wich fall in the last line in the board, trying to connect 4 pieces horizontaly, verticaly or diagonally. Who does that first wins
+  - Two people play against each oder, dropping pieces, which fall in the last line in the board, trying to connect 4 pieces horizontaly, verticaly or diagonally. Who does that first wins
   - The game nedd ANSI Escape Codes to clear the screen and give colors to the pieces, backgroung, and detecting window size
   - The game needs a certain Window Size to work, because the board is big
   - The game has two modes: Singleplayer and Multiplayer
     - On multiplayer you and a person play against each other
     - On singleplayer you'll play against a AI, which is made to be impossible to win. More on that on the wiki
-  - The board is made with ascii art, including the pieces, wich have colors! . The thanks for the people behind the ascii art is in the wiki and the game
+  - The board is made with ascii art, including the pieces, which have colors! . The thanks for the people behind the ascii art is in the wiki and the game
   - The background color are made with true color (RGB), your terminal emulator may not support it. If it doesn't I don't know What will happen
   
 - ### Hangman
   - Works just as expected. You'll have to guess the word before the stickman gets hanged. Each mistake make him closer to his death. Get all letters right before this and you win!
-  - The word is given by a file wich is passed by argument. The project uses C:\word.txt as default
+  - The word is given by a file which is passed by argument. The project uses C:\word.txt as default
   - The file should look like:
   ```
   <word>
@@ -54,7 +54,7 @@ Here you'll find 5 games: Tic Tac Toe (or naughts and crosses), Connect 4, Hangm
   - There's a little tutorial in the program at the start, however it's optional
   - The game nedd ANSI Escape Codes to clear the screen, and print colors in terminal
   - The colors are made with true color (RGB), your terminal emulator may not support it. If it doesn't I don't know What will happen
-  - The game uses mouse interaction, wich, for now, it's limited to Windows
+  - The game uses mouse interaction, which, for now, it's limited to Windows
   - The game has sounds for each button/color and a game over sound!
   - It uses the BASS Audio Library to play the souds. There five audio files on the project already, 4 for the buttons and 1 for the game over. If you keep the name, you can put your own sounds!
   - Due to have to print the entire screen, the game is dependent of the cpu speed, slowdown with the printing may occur. Don't cick until the cursor is at the botton of the screen or the click won't count
