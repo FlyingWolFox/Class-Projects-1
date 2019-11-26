@@ -11,13 +11,16 @@ extern void setupConsole(void);
 extern void restoreConsoleMode(void);
 extern void restoreConsole(void);
 
-/*verifica se alguém venceu e retorna um array[3]
-caso verdade, retorna {1, W, C},
-sendo W o tipo de vitória:
-0 = Horizontal, 1 = Vertical
-2 = Diagonal 1 (\), 3 = Diagonal 2 (/)
-sendo C uma coordenada, i para vitória
-horizontal e j para o resto */
+// Verifyes if someone won and return an array[3]
+//if someone won, returns {1, W, C}, being:
+//	W the win type:
+//		0, if horizontal
+//		1, if vertical
+//		2, if diagonal 1 (\)
+//		3, if diagonal 2 (/)
+//	C the coordinate, being:
+//		row for horizontal win
+//		column for the rest
 int* winVerifyer(int grid[3][3])
 {
 	static int returnValue[3];
@@ -127,8 +130,8 @@ int* winVerifyer(int grid[3][3])
 	return returnValue;
 }
 
-/*verifica se há até 3 casas livres
-e retorna as 3 posições, ou menos*/
+// Verifyes if exists 3 or less free cells
+// and return the coordinate of these cells
 int** freeCells(int grid[3][3])
 {
 	static int freePositions[4][2] = { 0 };
@@ -172,9 +175,7 @@ int** freeCells(int grid[3][3])
 	return freePositions;
 }
 
-
-/*retem a gridCopy usada na tieVerifyer
-para passá-la para a main*/
+// gets the tied grid to pass it to main
 int** gridTiedReturner(int gridCopy[3][3], int mod)
 {
 	static int gridCopyToReturn[3][3];
@@ -186,9 +187,9 @@ int** gridTiedReturner(int gridCopy[3][3], int mod)
 	return 0;
 }
 
-/*verifica se o jogo vai empatar daqui 3, 2 ou 1 jogada(s)
-caso empate, retorna 1
-caso não, retorna 0*/
+// Verifyes if the game will tie in 3, 2 or 1 plays
+// if it ties, returns 1
+// if not, returns 0
 int tieVerifyer(int grid[3][3], int player, int insertionPreference)
 {
 	static int gridCopy[3][3];
@@ -266,7 +267,7 @@ int tieVerifyer(int grid[3][3], int player, int insertionPreference)
 	return 1;
 }
 
-//converte o posicionamento de 1 a 9 por coordenadas
+// Converts the position to coordinates
 int* convertToCoordinate(int position)
 {
 	static int coordinate[2];
@@ -319,8 +320,7 @@ int* convertToCoordinate(int position)
 	return coordinate;
 }
 
-//converte as coordenadas da grade para coordenadas da
-//super grade
+// converts the grid coordinates to supergrid coordinates
 int* coordinatesToSupergrid(int coordinates[2])
 {
 	static int supergridCoordinates[2];
@@ -359,7 +359,7 @@ int* coordinatesToSupergrid(int coordinates[2])
 	return supergridCoordinates;
 }
 
-//modifica a super grade, botando X ou O
+// Modifies the supergrid, putting X or O
 void superGridModifier(char supergrid[31][51], int grid[3][3])
 {
 	int supergridCoordinates[2], gridCoordinates[2];
@@ -409,7 +409,7 @@ void superGridModifier(char supergrid[31][51], int grid[3][3])
 
 }
 
-//imprime a grade
+// prints the supergrid
 void gridPrinter(int grid[3][3], int mod)
 {
 	static char superGrid[31][51];
@@ -630,7 +630,7 @@ void gridPrinter(int grid[3][3], int mod)
 	}
 }
 
-//imprime os agradecimentos
+//print the thanks
 void thanks()
 {
 	printf("\nMuito Obrigado por Jogar!\n");
@@ -646,23 +646,22 @@ void thanks()
 
 int main(int argc, char* argv[])
 {
-	static int grid[3][3] = { 0 };
-	int playCoordinates[2] = { 0 }, playPosition, player;
-	int insertionPreference, symbolPreference;
-	int win = 0, tie = 0;
-	int tieFlag = 0;
-	int freeCellsReturn[4][2];
-	char keepPlaying;
-	char trashcan[10];
+	static int grid[3][3] = { 0 }; //grid creation
+	int playCoordinates[2] = { 0 }, playPosition, player; // creates the player interaction
+	int  symbolPreference; // this will be used to determine if the player 1 wants X or O
+	int win = 0, tie = 0; // win and tie flags
+	int freeCellsReturn[4][2]; // this will hold the return array of the free cells verifyer function
+	char keepPlaying; // keep playing flag
+	char trashcan[10]; //used to freeze the program
 	keepPlaying = 'x';
 
-	printf("Iniciando Jogo da Velha!\n");
+	printf("Starting Tic Tac Toe\n");
 	printf("To select a position you use:\n");
 	gridPrinter(grid, 3);
 	fgets(trashcan, 5, stdin);
-	printf("Gostaria de jogar o modo: 1- Singleplyer ou 2- Multiplayer\n");
+	printf("Would you like to play which mode: 1- Singleplyer or 2- Multiplayer\n");
 	if (scanf("%i", &player) == 1);
-	printf("Com qual gostaria de jogar? 1- X ou 2- O\n");
+	printf("Which you'll play with? 1- X ou 2- O\n");
 	if (scanf("%i", &symbolPreference) == 2);
 	if (symbolPreference == 2)
 		symbolPreference = -1;
@@ -682,7 +681,6 @@ int main(int argc, char* argv[])
 			gridPrinter(grid, 0);
 			win = 0;
 			tie = 0;
-			tieFlag = 0;
 			while (win == 0 && tie == 0)
 			{
 				setupConsole();
@@ -692,7 +690,7 @@ int main(int argc, char* argv[])
 				gridPrinter(grid, 2);
 				if (player == 3)
 					player = 1;
-				printf("Jogue, Jogador %i\n", player);
+				printf("Play, Player %i\n", player);
 
 				if(scanf("%i", &playPosition) == 1);
 				memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
@@ -701,7 +699,7 @@ int main(int argc, char* argv[])
 					break;
 				if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
 				{
-					printf("\nEssa casa já foi marcada!\n");
+					printf("\nThis cell is already marked!\n");
 					if (getchar() != NULL);
 					continue;
 				}
@@ -716,7 +714,7 @@ int main(int argc, char* argv[])
 					moveTo(0, 0);
 					restoreConsole();
 					gridPrinter(grid, 5);
-					printf("\nJogador %i venceu!", player);
+					printf("\nPlayer %i wins!", player);
 					win = 1;
 					break;
 				}
@@ -727,7 +725,7 @@ int main(int argc, char* argv[])
 					if (freeCellsReturn[0][0] == 3)
 					{
 						gridPrinter(gridTiedReturner(grid, 1), 2);
-						printf("\nDeu velha...\n");
+						printf("\nTie...\n");
 						tie = 1;
 						break;
 					}
@@ -736,13 +734,13 @@ int main(int argc, char* argv[])
 					{
 						memcpy(grid, gridTiedReturner(grid, 1), sizeof(grid));
 						gridPrinter(gridTiedReturner(grid, 1), 2);
-						printf("\nDeu velha...\n");
+						printf("\nTie...\n");
 						tie = 1;
 						break;
 					}
 				}
 			}
-			printf("\nContinuar Jogando?\n s- Sim  n- Não\n");
+			printf("\nContinue playing?\n y- yes  n- no\n");
 			if(getchar() == '\n');
 			if (scanf("%c", &keepPlaying) == 1);
 			player = 0;
@@ -752,7 +750,7 @@ int main(int argc, char* argv[])
 	if (player == 1)
 	{
 		int difficulty;
-		printf("Selecione sua dificuldade: 1- Fácil, 2- Normal, 3- Impossível\n");
+		printf("Select your difficulty: 1- Easy, 2- Normal, 3- Impossible\n");
 		if (scanf(" %i", &difficulty) == 1);
 		difficulty--;
 		aiStart(grid, -symbolPreference);
@@ -769,16 +767,18 @@ int main(int argc, char* argv[])
 			gridPrinter(grid, 0);
 			win = 0;
 			tie = 0;
-			tieFlag = 0;
 			while (win == 0 && tie == 0)
 			{
-				printf("\033[2J"); //funciona como system("clear") ou system("cls");
+				setupConsole();
+				clearScreenToTop();
+				moveTo(0, 0);
+				restoreConsole();
 				if (player == 3)
 					player = 1;
 				if (player == 1)
 				{
 					gridPrinter(grid, 2);
-					printf("Jogue, Jogador!\n");
+					printf("Play, Player!\n");
 				
 					if (scanf("%i", &playPosition) == 1);
 					memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
@@ -787,7 +787,7 @@ int main(int argc, char* argv[])
 						break;
 					if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
 					{
-						printf("\nEssa casa já foi marcada!\n");
+						printf("\nThis cell is already marked!\n");
 						if (getchar() != NULL);
 						continue;
 					}
@@ -797,7 +797,7 @@ int main(int argc, char* argv[])
 				if (freeCellsReturn[0][0] == 3)
 				{
 					gridPrinter(grid, 2);
-					printf("\nDeu velha...\n");
+					printf("\nTie...\n");
 					tie = 1;
 					break;
 				}
@@ -811,9 +811,9 @@ int main(int argc, char* argv[])
 				{
 					gridPrinter(grid, 5);
 					if (player == 1)
-						printf("\nVocê venceu!");
+						printf("\nYou win!");
 					if (player == 2)
-						printf("\nVocê Perdeu!\n");
+						printf("\nYou lose!\n");
 					win = 1;
 					break;
 				}
@@ -824,7 +824,7 @@ int main(int argc, char* argv[])
 					if (freeCellsReturn[0][0] == 3)
 					{
 						gridPrinter(grid, 2);
-						printf("\nDeu velha...\n");
+						printf("\nTie...\n");
 						tie = 1;
 						break;
 					}
@@ -833,13 +833,13 @@ int main(int argc, char* argv[])
 					{
 						memcpy(grid, gridTiedReturner(grid, 1), sizeof(grid));
 						gridPrinter(gridTiedReturner(grid, 1), 2);
-						printf("\nDeu velha...\n");
+						printf("\nTie...\n");
 						tie = 1;
 						break;
 					}
 				}
 			}
-			printf("\nContinuar Jogando?\n s- Sim  n- Não\n");
+			printf("\nContine playing?\n y- yes  n- no\n");
 			if (getchar() == '\n');
 			if (scanf("%c", &keepPlaying) == 1);
 		}
