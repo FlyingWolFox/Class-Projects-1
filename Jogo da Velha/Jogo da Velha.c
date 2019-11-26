@@ -2,9 +2,14 @@
 #include "Jogo da Velha.h"
 #include "ai.h"
 #include "minimax.h"
+#include "ansi_escapes.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+extern void setupConsole(void);
+extern void restoreConsoleMode(void);
+extern void restoreConsole(void);
 
 /*verifica se alguém venceu e retorna um array[3]
 caso verdade, retorna {1, W, C},
@@ -648,16 +653,13 @@ int main(int argc, char* argv[])
 	int tieFlag = 0;
 	int freeCellsReturn[4][2];
 	char keepPlaying;
+	char trashcan[10];
 	keepPlaying = 'x';
 
 	printf("Iniciando Jogo da Velha!\n");
-	printf("Como gostaria o tabuleiro? (Alerta, muitas linhas! Pressione enter para continuar)\n");
-	if(getchar() == '\n');
-	printf("1: As posições vão de 1 a 9\n");
+	printf("To select a position you use:\n");
 	gridPrinter(grid, 3);
-	printf("\n2: As posições são coordenadas to tipo (x,y)\n");
-	gridPrinter(grid, 4);
-	if (scanf("%i", &insertionPreference) == 1);
+	fgets(trashcan, 5, stdin);
 	printf("Gostaria de jogar o modo: 1- Singleplyer ou 2- Multiplayer\n");
 	if (scanf("%i", &player) == 1);
 	printf("Com qual gostaria de jogar? 1- X ou 2- O\n");
@@ -683,22 +685,18 @@ int main(int argc, char* argv[])
 			tieFlag = 0;
 			while (win == 0 && tie == 0)
 			{
-				printf("\033[2J"); //funciona como system("clear") ou system("cls");
+				setupConsole();
+				clearScreenToTop();
+				moveTo(0, 0);
+				restoreConsole();
 				gridPrinter(grid, 2);
 				if (player == 3)
 					player = 1;
 				printf("Jogue, Jogador %i\n", player);
-				if (insertionPreference == 1)
-				{
-					if (scanf("%i", &playPosition) == 1);
-					memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
-				}
-				if (insertionPreference == 2)
-				{
-					if (scanf("%i %i", &playCoordinates[0], &playCoordinates[1]) == 2);
-					playCoordinates[0]--;
-					playCoordinates[1]--;
-				}
+
+				if(scanf("%i", &playPosition) == 1);
+				memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
+
 				if (playCoordinates[0] < 0 || playCoordinates[1] < 0)
 					break;
 				if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
@@ -713,6 +711,10 @@ int main(int argc, char* argv[])
 					grid[playCoordinates[0]][playCoordinates[1]] = -symbolPreference;
 				if ((winVerifyer(grid))[0] == 1)
 				{
+					setupConsole();
+					clearScreenToTop();
+					moveTo(0, 0);
+					restoreConsole();
 					gridPrinter(grid, 5);
 					printf("\nJogador %i venceu!", player);
 					win = 1;
@@ -730,7 +732,7 @@ int main(int argc, char* argv[])
 						break;
 					}
 
-					if (tieVerifyer(grid, player, insertionPreference) == 1)
+					if (tieVerifyer(grid, player, symbolPreference) == 1)
 					{
 						memcpy(grid, gridTiedReturner(grid, 1), sizeof(grid));
 						gridPrinter(gridTiedReturner(grid, 1), 2);
@@ -777,17 +779,10 @@ int main(int argc, char* argv[])
 				{
 					gridPrinter(grid, 2);
 					printf("Jogue, Jogador!\n");
-					if (insertionPreference == 1)
-					{
-						if (scanf("%i", &playPosition) == 1);
-						memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
-					}
-					if (insertionPreference == 2)
-					{
-						if (scanf("%i %i", &playCoordinates[0], &playCoordinates[1]) == 2);
-						playCoordinates[0]--;
-						playCoordinates[1]--;
-					}
+				
+					if (scanf("%i", &playPosition) == 1);
+					memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
+
 					if (playCoordinates[0] < 0 || playCoordinates[1] < 0)
 						break;
 					if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
@@ -834,7 +829,7 @@ int main(int argc, char* argv[])
 						break;
 					}
 
-					if (tieVerifyer(grid, player, insertionPreference) == 1)
+					if (tieVerifyer(grid, player, symbolPreference) == 1)
 					{
 						memcpy(grid, gridTiedReturner(grid, 1), sizeof(grid));
 						gridPrinter(gridTiedReturner(grid, 1), 2);

@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ai.c" />
+    <ClCompile Include="ansi_escapes.c" />
     <ClCompile Include="Jogo da Velha.c" />
     <ClCompile Include="minimax.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ai.h" />
+    <ClInclude Include="ansi_escapes.h" />
     <ClInclude Include="Jogo da Velha.h" />
     <ClInclude Include="minimax.h" />
   </ItemGroup>

@@ -1,7 +1,6 @@
 #include "minimax.h"
 #include <stdbool.h>
 
-
 int player;
 extern Win winVerifyer(int grid[6][7]);
 extern void getTheRow(int grid[6][7], Move* move);
@@ -53,7 +52,7 @@ int bestValReturner(int bestVal, int mod)
 	return -1;
 }
 
-int** tiedGridReturner(int aiGrid[6][7], int mod)
+void tiedGridReturner(int aiGrid[6][7], int mod)
 {
 	static int tiedGrid[6][7];
 	if (mod == 0)
@@ -65,8 +64,13 @@ int** tiedGridReturner(int aiGrid[6][7], int mod)
 		}
 	}
 	if (mod == 1)
-		return tiedGrid;
-	return tiedGrid;
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			for (int j = 0; j < 7; j++)
+				aiGrid[i][j] = tiedGrid[i][j];
+		}
+	}
 }
 
 bool isMovesLeft(int aiGrid[6][7])
@@ -320,11 +324,7 @@ bool minimaxTie(int grid[6][7], int nextplayer)
 	}
 	findBestMove(aiGrid);
 	if (bestValReturner(1, 1) == 0) {
-		for (int i = 0; i < 6; i++)
-		{
-			for (int j = 0; j < 7; j++)
-				grid[i][j] = aiGrid[i][j];
-		}
+		tiedGridReturner(aiGrid, 1);
 		return true;
 	}
 	else

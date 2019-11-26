@@ -1,5 +1,0 @@
-#ifndef BATALHA_NAVAL_MAIN_H
-#define BATALHA_NAVAL_MAIN_H
-
-
-#endif
