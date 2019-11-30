@@ -3,21 +3,24 @@
 /* ^^ these are the include guards */
 
 /* Prototypes for the functions */
-//inicia as variáveis da I.A.
-extern void aiStart(int symbolToPlay);
 
-/*faz a I.A. jogar, de acordo com a dificuldade
-e retorna as coordenadas de seua jogada*/
-extern int* aiPlay(int grid[3][3], int difficulty);
+// start the AI variables and gets a random seed to srand
+ void aiStart(int symbolToPlay);
 
-/*verifica se falta somente um simbolo para
-alguém ganhar em uma ou mais posições de vitória
-retornando um array com arrays contendo as informções
-de vitória. è quase uma cópia do winVerifyer em Jogo da Velha.c*/
+ // makes the AI play, accordingly to the difficulty
+ // and return its play coordinates
+int* aiPlay(int grid[3][3], int difficulty);
+
+// looks if the AI or player can will win in the next turn
+// retunrs an array with "win" info
+//	[0]: position of the possible win
+//	[1]: win type
+//	[2]: row for hotizontal, and column for the rest
+// it's almost a copy of winVerifyer in tictactoe.c
 int** winPositionVerifyer(int aiGrid[3][3], int symbol);
 
+// it'll receive a position on the board that it's not available
+// to play and will chose randomly of the other two positions 
 int randPostion(int positionNotAvailible);
-
-
 
 #endif

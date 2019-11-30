@@ -866,7 +866,7 @@ int main(int argc, char* argv[])
 		difficulty--;
 
 		// starts the AI
-		aiStart(grid, -symbolPreference);
+		aiStart(grid, (-symbolPreference));
 		while (keepPlaying != 'n' && keepPlaying != 'N')
 		{
 			for (int i = 0; i < 3; i++)
@@ -901,7 +901,7 @@ int main(int argc, char* argv[])
 					if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
 					{
 						printf("\nThis cell is already marked!\n");
-						if (getchar() != NULL);
+						fgets(trashcan, 5, stdin);
 						continue;
 					}
 				}
