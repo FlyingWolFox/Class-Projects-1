@@ -733,8 +733,12 @@ int main(int argc, char* argv[])
 	printf("To select a position you use:\n");
 	gridPrinter(grid, 3);
 	fgets(trashcan, 5, stdin); // freezes the execution so the player can see how the game handles the play
-	printf("Would you like to play which mode: 1- Singleplyer or 2- Multiplayer\n");
-	if (scanf("%i", &player) == 1); // gets the player mode
+
+	// AI disabled for now, too buggy
+	//printf("Would you like to play which mode: 1- Singleplyer or 2- Multiplayer\n");
+	//if (scanf("%i", &player) == 1); // gets the player mode
+	player = 2;
+
 	printf("Which you'll play with? 1- X ou 2- O\n");
 	if (scanf("%i", &symbolPreference) == 2); // gets the symbol preference for player 1
 	if (symbolPreference == 2) // if the player selected O (2) it'll use -1 as representation of O
