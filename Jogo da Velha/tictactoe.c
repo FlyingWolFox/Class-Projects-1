@@ -735,6 +735,7 @@ int main(int argc, char* argv[])
 	fgets(trashcan, 5, stdin); // freezes the execution so the player can see how the game handles the play
 
 	// AI disabled for now, too buggy
+	// look at issues to know why
 	//printf("Would you like to play which mode: 1- Singleplyer or 2- Multiplayer\n");
 	//if (scanf("%i", &player) == 1); // gets the player mode
 	player = 2;
