@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="forca.c">
+    <ClCompile Include="ansi_escapes.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="ansi_escapes.c">
+    <ClCompile Include="hangman.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
