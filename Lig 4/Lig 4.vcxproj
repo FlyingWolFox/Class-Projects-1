@@ -153,12 +153,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ansi_escapes.c" />
-    <ClCompile Include="lig 4.c" />
+    <ClCompile Include="connect_4.c" />
     <ClCompile Include="minimax.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ansi_escapes.h" />
-    <ClInclude Include="lig 4.h" />
+    <ClInclude Include="connect_4.h" />
     <ClInclude Include="minimax.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

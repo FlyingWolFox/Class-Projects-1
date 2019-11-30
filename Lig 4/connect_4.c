@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "minimax.h"
 #include "ansi_escapes.h"
-#include "lig 4.h"
+#include "connect_4.h"
 
 extern void setupConsole(void);
 extern void restoreConsoleMode(void);
@@ -13,10 +13,14 @@ extern void supergridTied(char supergrid[37][98]);
 extern bool minimaxTie(int grid[6][7], int nextplayer);
 extern Move minimaxPlay(int grid[6][7], int nextplayer);
 
+// looks for wins
+// return a Win variable
 Win winVerifyer(int grid[6][7])
 {
 	Win returnValue;
 	returnValue.win = false;
+	
+	// looks in the rows
 	for (int i = 5; i >= 0; i--)
 	{
 		for (int j = 0; j < 4; j++)
@@ -43,6 +47,7 @@ Win winVerifyer(int grid[6][7])
 		}
 	}
 
+	// looks in the collumns
 	for (int j = 0; j < 7; j++)
 	{
 		for (int i = 5; i > 2; i--)
@@ -70,6 +75,7 @@ Win winVerifyer(int grid[6][7])
 
 	}
 
+	// looks in the '\' diagonals
 	for (int j = 0; j < 4; j++)
 	{
 		for (int i = 5; i > 2; i--)
@@ -96,6 +102,7 @@ Win winVerifyer(int grid[6][7])
 		}
 	}
 
+	// looks in the '/' diagonals
 	for (int j = 6; j > 2; j--)
 	{
 		for (int i = 5; i > 2; i--)
@@ -125,8 +132,10 @@ Win winVerifyer(int grid[6][7])
 	return returnValue;
 }
 
+// generates (visually) the supergrid
 void supergridGenerator(char supergrid[37][98])
 {
+	// put the ascii art of an empty board in the supergrid
 	for (int i = 0; i < 37; i++)
 	{
 		for (int j = 0; j < 97; j++)
@@ -159,8 +168,11 @@ void supergridGenerator(char supergrid[37][98])
 	}
 }
 
+// prints the supergrid in the screen
 void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinates[4])
 {
+	// prints looking in the grid to put the correct colors
+	// also receive win information to see if highlights the win positions
 	for (int i = 0, gridI = 0; i < 37; i++)
 	{
 		printf(" ");
@@ -229,6 +241,7 @@ void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinate
 	}
 }
 
+// modifyes the supergrid, putting a circle on the modification coordinates
 void supergridModifyer(char supergrid[37][98], Move modification)
 {
 	Move startCoordinate, copy_of_startCoordinate, circleCoordinates;
@@ -279,6 +292,7 @@ void supergridModifyer(char supergrid[37][98], Move modification)
 
 }
 
+// gets the row available to play in a certain column
 void getTheRow(int grid[6][7], Move* move)
 {
 	for (int i = 5; i >= 0; i--)
@@ -300,7 +314,8 @@ int main(int argc, char** argv)
 	int grid[6][7] = { 0 };
 	char supergrid[37][98];
 
-
+	// main menu loop, the player will be prompet if
+	// it wants to exit the game or to main menu
 	for (bool mainMenu = true; mainMenu == true;)
 	{
 		int player;
@@ -308,9 +323,10 @@ int main(int argc, char** argv)
 		Move playerMove;
 		Win winVerifyerReturn;
 		Move winCoordinates[4];
-		//used to freeze the program instead of getchar
-		char trashCan[10];
+		char trashCan[10];	//used to freeze the program instead of getchar
 
+		// verifyes if the windows is big enought to play the game
+		// and prompts the player to maximaze the console window
 		{
 			int windowSize[2];
 			setupConsole();
@@ -329,6 +345,7 @@ int main(int argc, char** argv)
 			restoreConsoleMode();
 		}
 
+		// sets the background to a more bright black
 		setupConsole();
 		setBackgroundColorRGB(20, 20, 20);
 		restoreConsole();
@@ -340,15 +357,21 @@ int main(int argc, char** argv)
 		else
 			multiplayer = false;
 
+		// keep playing loop
+		// the player will be prompted if it wants to play again
+		// if yes the loop stays running
+		// else goes to main menu or exits the game
 		for (char keepPlaying = 's'; keepPlaying == 's' || keepPlaying == 'S';)
 		{
-			supergridGenerator(supergrid);
+			supergridGenerator(supergrid); //generates the supergrid
 			for (int i = 0; i < 6; i++)
 			{
 				for (int j = 0; j < 7; j++)
 					grid[i][j] = 0;
 			}
 			player = 1;
+
+			// play loop
 			for (bool win = false, tie = false; win == false && tie == false;)
 			{
 				for (int count = 0; count < 4; count++)
@@ -356,7 +379,7 @@ int main(int argc, char** argv)
 					winCoordinates[count].row = -1;
 					winCoordinates[count].col = -1;
 				}
-				if (player == 3)
+				if (player == 3) // loops the  player
 					player = 1;
 				setupConsole();
 				setBackgroundColorRGB(20, 20, 20);
