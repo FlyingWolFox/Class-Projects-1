@@ -5,11 +5,12 @@
 #include "ansi_escapes.h"
 #include "windowsConsoleInteraction.h"
 
+// used to play the sounds
 #include "bass.h"
 #include <conio.h>
 #pragma comment(lib, "bass.lib")
 
-DWORD green_button, red_button, yellow_button, blue_button, wrong;
+DWORD green_button, red_button, yellow_button, blue_button, wrong; // sounds dwords
 
 extern EVENT eventMain(VOID);
 
@@ -18,7 +19,7 @@ extern void restoreConsoleMode(void);
 extern void restoreConsole(void);
 extern void getCursorPosition(int* row, int* col);
 
-typedef unsigned char sshort;
+typedef unsigned char sshort; // defines a char type as sshor, to use just one byte intead or 2 of the short
 
 typedef enum ColorButtons {
 	NO_COLOR = 0,
@@ -28,6 +29,7 @@ typedef enum ColorButtons {
 	BLUE
 }Color;
 
+// delays the period of time passed by argument
 void delay(int milliseconds)
 {
 	long pause;
@@ -39,12 +41,14 @@ void delay(int milliseconds)
 		now = clock();
 }
 
+// display the game
 void display(int button, int screenSize[2])
 {
 	setupConsole();
 
 	moveTo(0, 0);
-
+	// will print the buttons
+	// if they're triggered, they're printed in a bright color
 	for (int row = 0; row <= (screenSize[0] / 2) - 2; row++)
 	{
 		if (button == GREEN)
@@ -65,6 +69,7 @@ void display(int button, int screenSize[2])
 
 	}
 
+	// if the screen buffer is even, it'll make a little black line to separate the buttons
 	if (screenSize[0] % 2 != 0)
 		printf("\n");
 
@@ -92,6 +97,7 @@ void display(int button, int screenSize[2])
 	printf("\n");
 }
 
+// converts the coordinates of the click of the mouse to which button was pressed
 int coordinatesToButton(COORD click, int windowSize[2])
 {
 	if (click.Y < windowSize[0] / 2)
@@ -112,12 +118,14 @@ int coordinatesToButton(COORD click, int windowSize[2])
 	return 0;
 }
 
+// generates the next button of the sequence
 void rng(sshort* sequence, int level)
 {
 	sequence[level - 1] = 1 + rand() % 4;
 	sequence[level] = 0;
 }
 
+// plays the sound effects
 void playSFX(int button)
 {
 	switch (button)
@@ -139,7 +147,7 @@ void playSFX(int button)
 	}
 }
 
-// display error messages
+// display error messages from BASS
 void Error(const char* text)
 {
 	printf("Error(%d): %s\n", BASS_ErrorGetCode(), text);
@@ -147,6 +155,7 @@ void Error(const char* text)
 	exit(0);
 }
 
+// prints the thanks
 void thanks()
 {
 	clearScreenToTop();
@@ -174,17 +183,18 @@ void thanks()
 int main(int argc, char** argv)
 {
 
-	int level = 1;
+	int level = 1; // start level
 	int windowSize[2];
-	sshort sequence[4000];
-	sshort input[4000];
+	sshort sequence[4000]; // sequence of buttons to press
+	sshort input[4000]; // sequence of button pressed
 	COORD mouseCoord;
-	EVENT retEvent;
-	char trashcan[10];
-	bool mistake = false;
+	EVENT retEvent; // return event of the windows console interaction
+	char trashcan[10]; // used to get inputs and freeze the program
+	bool mistake = false; // flag
 
-	srand(time(NULL));
+	srand(time(NULL)); // random seed to srand
 	
+	// use the default device for sound
 	int device = -1;
 
 	// check the correct BASS was loaded
@@ -193,11 +203,11 @@ int main(int argc, char** argv)
 		return;
 	}
 
+	// checks if the device was initialized
 	if (!BASS_Init(device, 44100, 0, 0, NULL))
 		Error("Can't initialize device");
 
-	// try streaming the file/url
-
+	// try streaming the file
 	green_button = BASS_StreamCreateFile(FALSE, "green_button.wav", 0, 0, 0);
 	red_button = BASS_StreamCreateFile(FALSE, "red_button.wav", 0, 0, 0);
 	yellow_button = BASS_StreamCreateFile(FALSE, "yellow_button.wav", 0, 0, 0);
@@ -207,6 +217,7 @@ int main(int argc, char** argv)
 	printf("Starting Simon. Do you wish to:\n(P) play now\nor \n(T)see the tutorial?\n");
 	fgets(trashcan, 5, stdin);
 
+	// prints the tutorial
 	if (trashcan[0] == 'T' || trashcan[0] == 't')
 	{
 		clearScreenToTop();
@@ -223,6 +234,7 @@ int main(int argc, char** argv)
 		puts("-Here you can go until the level 3999, good luck");
 		puts("");
 		puts("-Ready to start?");
+		// special effect
 		for (int count = 0; count < 15; count++)
 		{
 			delay(250);
@@ -241,20 +253,29 @@ int main(int argc, char** argv)
 
 	if (trashcan[0] == 'P' || trashcan[0] == 'p')
 	{
+		// play loop
 		for (bool replay = true; replay == true;)
 		{
 			level = 1;
 			while (mistake == false)
 			{
-				setupConsole();
-				moveTo(999, 999);
-				getCursorPosition(&windowSize[0], &windowSize[1]);
-				clearScreenToTop();
-				restoreConsoleMode();
+				// gets the console window size
+				{
+					setupConsole();
+					moveTo(999, 999);
+					getCursorPosition(&windowSize[0], &windowSize[1]);
+					clearScreenToTop();
+					restoreConsoleMode();
+				}
+				// prints the simon withou any bright buttons
 				display(NO_COLOR, windowSize);
 
+				// generates the next button of the sequnce
 				rng(sequence, level);
 
+				// will display the triggered button,
+				// play its sound
+				// and wait a little before continuing
 				for (int count = 0; count < level; count++)
 				{
 					delay(500);
@@ -264,9 +285,13 @@ int main(int argc, char** argv)
 					display(NO_COLOR, windowSize);
 				}
 
+				// gets the mouse input
+				// and make the button that are pressed bright
 				for (int count = 0; count < level; count++)
 				{
 					display(NO_COLOR, windowSize);
+
+					// won't get out of the loop until the mouse click was received
 					while (true)
 					{
 						retEvent.event.mouseEvent = 0xc00;
@@ -276,11 +301,16 @@ int main(int argc, char** argv)
 							break;
 					}
 
+					// will add the button input into its array
 					input[count] = coordinatesToButton(mouseCoord, windowSize);
 
+					// displays the button pressed
+					// and play its sound
 					display(input[count], windowSize);
 					playSFX(sequence[count]);
 
+					// checks if you make a mistake
+					// if yes it breaks the loop
 					if (sequence[count] != input[count])
 					{
 						mistake = true;
@@ -288,23 +318,24 @@ int main(int argc, char** argv)
 					}
 				}
 
+				// runs the mistake routine
 				if (mistake == true)
 				{
-					//play error
+					// plays mistake sound
 					BASS_ChannelPlay(wrong, FALSE);
 					puts("Not right! Try again? (Y/N)");
 					fgets(trashcan, 5, stdin);
 					if (trashcan[0] == 'n' || trashcan[0] == 'N')
 						replay = false;
 				}
-				level++;
+				level++; // high the level by one
 			}
-			mistake = false;
+			mistake = false; // reset the mistake flag when starting a new game
 		}
 	}
-	BASS_Free();
-	thanks();
-	fgets(trashcan, 5, stdin);
+	BASS_Free(); // free the BASS from memory
+	thanks(); // prints the thanks
+	fgets(trashcan, 5, stdin); // freezes execution before the game closes
 
 	return 0;
 }
