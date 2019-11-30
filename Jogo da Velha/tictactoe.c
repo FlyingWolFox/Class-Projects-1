@@ -736,9 +736,9 @@ int main(int argc, char* argv[])
 
 	// AI disabled for now, too buggy
 	// look at issues to know why
-	//printf("Would you like to play which mode: 1- Singleplyer or 2- Multiplayer\n");
-	//if (scanf("%i", &player) == 1); // gets the player mode
-	player = 2;
+	printf("Would you like to play which mode: 1- Singleplyer or 2- Multiplayer\n");
+	if (scanf("%i", &player) == 1); // gets the player mode
+	//player = 2;
 
 	printf("Which you'll play with? 1- X ou 2- O\n");
 	if (scanf("%i", &symbolPreference) == 2); // gets the symbol preference for player 1

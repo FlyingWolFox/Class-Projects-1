@@ -350,7 +350,7 @@ int main(int argc, char** argv)
 		setBackgroundColorRGB(20, 20, 20);
 		restoreConsole();
 
-		printf("Gostaria de jogar o modo: 1- Singleplayer ou 2- Multiplayer\n");
+		printf("You would like to play: 1- Singleplayer or 2- Multiplayer\n");
 		fgets(trashCan, 5, stdin);
 		if (trashCan[0] == '2')
 			multiplayer = true;
@@ -382,25 +382,26 @@ int main(int argc, char** argv)
 				if (player == 3) // loops the  player
 					player = 1;
 				setupConsole();
-				setBackgroundColorRGB(20, 20, 20);
+				setBackgroundColorRGB(20, 20, 20); // set the background to a bright black
 
 				clearScreenToTop();
 				moveTo(0, 0);
 
-				supergridPrinter(supergrid, grid, winCoordinates);
+				supergridPrinter(supergrid, grid, winCoordinates); // prints the super grid
 				restoreConsoleMode();
-				printf("Jogue jogador %i\n", player);
-				while (scanf(" %i", &playerMove.col) != 1);
+				printf("Play, player %i\n", player);
+				fgets(trashCan, 5, stdin);
+				playerMove.col = trashCan[0] - '0';
 				playerMove.col--;
 				if (playerMove.col > 6 || playerMove.col < 0)
 				{
-					printf("Fora de Alcance!");
+					printf("Out of range!");
 					continue;
 				}
-				getTheRow(grid, &playerMove);
-				if (playerMove.row == -1)
+				getTheRow(grid, &playerMove); // get the row to play in that column
+				if (playerMove.row == -1) 
 				{
-					printf("Você não pode jogar aí!\n");
+					printf("You can't play there!\n");
 					fgets(trashCan, 5, stdin);
 					continue;
 				}

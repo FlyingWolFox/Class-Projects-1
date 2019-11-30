@@ -596,7 +596,7 @@ int* aiPlay(int grid[3][3], int difficulty)
 
 			// if no play was found
 			// play a random position
-			if (freeWinPositions[0][2] == 0)
+			if (freeWinPositions[0][2] == -1)
 			{
 				for (int playFlag = 0; playFlag == 0;)
 				{
