@@ -331,13 +331,17 @@ bool minimaxTie(int grid[6][7], int nextplayer)
 		return false;
 }
 
-Move minimaxPlay(int grid[6][7], int nextplayer)
+Move minimaxPlay(int grid[6][7])
 {
+	int gridCopy[6][7];
+
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 7; j++)
+			gridCopy[i][j] = grid[i][j];
+	}
 	Move bestMove;
-	if (nextplayer == 1 || nextplayer == 3)
-		player = 1;
-	if (nextplayer == 2)
-		player = -1;
-	bestMove = findBestMove(grid);
+	player = -1;
+	bestMove = findBestMove(gridCopy);
 	return bestMove;
 }

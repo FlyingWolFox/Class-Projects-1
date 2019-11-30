@@ -11,7 +11,7 @@ extern void restoreConsole(void);
 
 extern void supergridTied(char supergrid[37][98]);
 extern bool minimaxTie(int grid[6][7], int nextplayer);
-extern Move minimaxPlay(int grid[6][7], int nextplayer);
+extern Move minimaxPlay(int grid[6][7]);
 
 // looks for wins
 // return a Win variable
@@ -350,11 +350,12 @@ int main(int argc, char** argv)
 		setBackgroundColorRGB(20, 20, 20);
 		restoreConsole();
 
-		printf("You would like to play: 1- Singleplayer or 2- Multiplayer\n");
-		fgets(trashCan, 5, stdin);
-		if (trashCan[0] == '2')
-			multiplayer = true;
-		else
+		// --- AI DISBLED - NOT WORKING ---
+		//printf("You would like to play: 1- Singleplayer or 2- Multiplayer\n");
+		//fgets(trashCan, 5, stdin);
+		//if (trashCan[0] == '2')
+		//	multiplayer = true;
+		//else
 			multiplayer = false;
 
 		// keep playing loop
@@ -390,9 +391,22 @@ int main(int argc, char** argv)
 				supergridPrinter(supergrid, grid, winCoordinates); // prints the super grid
 				restoreConsoleMode();
 				printf("Play, player %i\n", player);
+
+				// substitute tie system
+				{
+					printf("Type T after the column you want to play to declare a tie and end the game\n");
+				}
+
 				fgets(trashCan, 5, stdin);
 				playerMove.col = trashCan[0] - '0';
 				playerMove.col--;
+
+				// substitute tie system
+				{
+					if (trashCan[1] == 'T' || trashCan[1] == 't')
+						tie = true;
+				}
+
 				if (playerMove.col > 6 || playerMove.col < 0)
 				{
 					printf("Out of range!");
@@ -411,14 +425,15 @@ int main(int argc, char** argv)
 					grid[playerMove.row][playerMove.col] = 1;
 				if (player == 2)
 					grid[playerMove.row][playerMove.col] = -1;
-								
-				if (multiplayer == false) // single player mode, the AI will play
+							
+				supergridModifyer(supergrid, playerMove); // modifies the grid with the player move
+				if (multiplayer == true) // single player mode, the AI will play
 				{
-					supergridModifyer(supergrid, minimaxPlay(grid, 2));
+					playerMove = minimaxPlay(grid);
+					grid[playerMove.row][playerMove.col] = -1;
+					supergridModifyer(supergrid, playerMove); // modifies the grid with the player move
 					player = 0;
 				}
-
-				supergridModifyer(supergrid, playerMove); // modifies the grid with the player move
 
 				// sees if there's a win
 				// if yes it'll fill the winCoordinates with the win information
@@ -470,6 +485,10 @@ int main(int argc, char** argv)
 				}
 				player++; // next player
 				
+				// this tie detection system uses the minimax algorithm, which is disbaled now 
+				// because it causes Run-time check error #2, this will be enabled again when fixed
+
+				/*
 				// looks for ties
 				// if true, prints the tied grid and ends the game
 				tie = minimaxTie(grid, player);
@@ -480,6 +499,34 @@ int main(int argc, char** argv)
 						clearScreenToTop();
 						moveTo(0, 0);
 						supergridTied(supergrid);
+						supergridPrinter(supergrid, grid, winCoordinates);
+						printf("Tie!");
+						fgets(trashCan, 5, stdin);
+					}
+				}
+				*/
+
+				// substitute tie system
+				// it'll state tie if the board is full
+				// or by player input
+				{
+					bool freeCell = true;
+					for (int i = 0; i < 6; i++)
+					{
+						for (int j = 0; j < 7; j++)
+						{
+							if (grid[i][j] == 0)
+							{
+								freeCell = false;
+								break;
+							}
+						}
+					}
+
+					if (freeCell == true || tie == true)
+					{
+						clearScreenToTop();
+						moveTo(0, 0);
 						supergridPrinter(supergrid, grid, winCoordinates);
 						printf("Tie!");
 						fgets(trashCan, 5, stdin);

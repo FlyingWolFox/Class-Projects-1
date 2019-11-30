@@ -5,6 +5,6 @@
 
 void supergridTied(char supergrid[37][98]);
 bool minimaxTie(int grid[6][7], int nextplayer);
-Move minimaxPlay(int grid[6][7], int nextplayer);
+Move minimaxPlay(int grid[6][7]);
 
 #endif
