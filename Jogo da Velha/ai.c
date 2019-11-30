@@ -1,5 +1,5 @@
 #include "ai.h"
-#include "Jogo da Velha.h"
+#include "tictactoe.h"
 #include "minimax.h"
 #include <stdlib.h>
 #include <string.h>

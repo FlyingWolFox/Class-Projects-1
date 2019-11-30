@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "Jogo da Velha.h"
+#include "tictactoe.h"
 #include "ai.h"
 #include "minimax.h"
 #include "ansi_escapes.h"
@@ -208,10 +208,16 @@ int tieVerifyer(int grid[3][3], int player, int insertionPreference)
 	static int gridCopy[3][3];
 	int symbol = 0, winVerifyerReturn[4], freeCellsReturn[4][2];
 	
+	// gives the gridTieReturn the tied grid, so, if the game ties before the end
+	// the board won't be empty
 	gridTiedReturner(gridCopy, 0);
 
 	memcpy(gridCopy, grid, sizeof(gridCopy));
+
+	// get the free cells
 	memcpy(freeCellsReturn, freeCells(grid), sizeof(freeCellsReturn));
+
+	// loops to player 3
 	if (player == 3)
 	{
 		player = 1;
@@ -221,25 +227,38 @@ int tieVerifyer(int grid[3][3], int player, int insertionPreference)
 	if (player == 2)
 		symbol = -insertionPreference;
 
-	if (freeCellsReturn[0][0] == 0 && freeCellsReturn[0][1] == 0 && freeCellsReturn[1][0] == 0 && freeCellsReturn[1][1] == 0)
+	// if no free cell exists
+	if (freeCellsReturn[0][0] == 3 && freeCellsReturn[0][1] == 3 && freeCellsReturn[1][0] == 3 && freeCellsReturn[1][1] == 3)
 	{
+		// stores the tied grid
 		gridTiedReturner(gridCopy, 0);
 		return 1;
 	}
 
+	// if 1 free cell exists
 	if (freeCellsReturn[1][0] == -1 && freeCellsReturn[1][1] == -1 && freeCellsReturn[2][0] == -1 && freeCellsReturn[2][1] == -1)
 	{
+		// try to do a play in that cell
 		gridCopy[freeCellsReturn[0][0]][freeCellsReturn[0][1]] = symbol;
 		memcpy(winVerifyerReturn, winVerifyer(gridCopy), sizeof(winVerifyerReturn));
 
+		// if there was a win the game flow continues
 		if (winVerifyerReturn[0] == 1)
 			return 0;
+
+		// else it stores the tied grid and
+		// return 1 (tie)
 		gridTiedReturner(gridCopy, 0);
 		return 1;
 	}
 
+	// if 2 free cells exist
 	if (freeCellsReturn[1][0] != -1 && freeCellsReturn[1][1] != -1  && freeCellsReturn[2][0] == -1 && freeCellsReturn[2][1] == -1)
 	{
+		// try to play every possible combination
+		// and see if there's a win
+		// if yes, the game continues
+		// else it stores the tied grid and returns a tie
 		gridCopy[freeCellsReturn[0][0]][freeCellsReturn[0][1]] = symbol;
 		gridCopy[freeCellsReturn[1][0]][freeCellsReturn[1][1]] = -symbol;
 		memcpy(winVerifyerReturn, winVerifyer(gridCopy), sizeof(winVerifyerReturn));
@@ -255,8 +274,13 @@ int tieVerifyer(int grid[3][3], int player, int insertionPreference)
 		return 1;
 	}
 
+	// if 3 free cells exits
 	if (freeCellsReturn[1][0] != -1 && freeCellsReturn[1][1] != -1 && freeCellsReturn[2][0] != -1 && freeCellsReturn[2][1] != -1)
 	{
+		// try to play every possible combination
+		// and see if there's a win
+		// if yes, the game continues
+		// else it stores the tied grid and returns a tie
 		gridCopy[freeCellsReturn[0][0]][freeCellsReturn[0][1]] = symbol;
 		gridCopy[freeCellsReturn[1][0]][freeCellsReturn[1][1]] = -symbol;
 		gridCopy[freeCellsReturn[2][0]][freeCellsReturn[2][1]] = symbol;
@@ -276,7 +300,11 @@ int tieVerifyer(int grid[3][3], int player, int insertionPreference)
 		gridTiedReturner(gridCopy, 0);
 		return 1;
 	}
+	
+	//safety guard, stores the received grid (ot tied grid)
 	gridTiedReturner(gridCopy, 0);
+
+	// will return tie, for safety
 	return 1;
 }
 
@@ -284,6 +312,9 @@ int tieVerifyer(int grid[3][3], int player, int insertionPreference)
 int* convertToCoordinate(int position)
 {
 	static int coordinate[2];
+
+	// receives the positions played and
+	// converts it to arrat coordinates
 	if (position == 1)
 	{
 		coordinate[0] = 0;
@@ -337,6 +368,8 @@ int* convertToCoordinate(int position)
 int* coordinatesToSupergrid(int coordinates[2])
 {
 	static int supergridCoordinates[2];
+	// receives array coordinates and
+	// converts to array coordinates of the supergrid
 	if (coordinates[0] == 0)
 	{
 		supergridCoordinates[0] = 1;
@@ -372,12 +405,14 @@ int* coordinatesToSupergrid(int coordinates[2])
 	return supergridCoordinates;
 }
 
-// Modifies the supergrid, putting X or O
+// Modifies the supergrid, putting X or O on the place they are
 void superGridModifier(char supergrid[31][51], int grid[3][3])
 {
 	int supergridCoordinates[2], gridCoordinates[2];
-	int symbolI = 0, symbolJ = 0;
-	int supergridI, supergridJ;
+	int symbolI = 0, symbolJ = 0; // to track the symbol array coordinates
+	int supergridI, supergridJ; // to keep the start coordinates
+
+	// X symbol in ascii in an 2d array
 	char x[8][14] = { {' ','8', 'b', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'd', '8', ' '},
 					  {' ',' ', 'Y', '8', ',', ' ', ' ', ' ', ' ', ',', '8', 'P', ' ', ' '},
 					  {' ',' ', ' ', '`', '8', 'b', ' ', ' ', 'd', '8', '\'', ' ', ' ', ' '},
@@ -387,6 +422,7 @@ void superGridModifier(char supergrid[31][51], int grid[3][3])
 					  {' ',' ', 'd', '8', '\'', ' ', ' ', ' ', ' ', '`', '8', 'b', ' ', ' '},
 					  {' ','8', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'Y', '8', ' '} };
 
+	// O symbol in ascii in an 2d array
 	char o[8][14] = { {' ', ' ', ',', 'a', 'd', '8', '8', '8', '8', 'b', 'a', ',', ' ', ' ' },
 					  {' ', 'd', '8', '"', '\'', ' ', ' ', ' ', ' ', '`', '"', '8', 'b', ' ' },
 					  {'d', '8', '\'', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '`', '8', 'b'},
@@ -396,14 +432,19 @@ void superGridModifier(char supergrid[31][51], int grid[3][3])
 					  {' ', 'Y', '8', 'a', '.', ' ', ' ', ' ', ' ', '.', 'a', '8', 'P', ' '},
 					  {' ', ' ', '`', '"', 'Y', '8', '8', '8', '8', 'Y', '"', '\'', ' ', ' '} };
 
+	// the loop will search for X's (1) or O's (-1) in the board
+	// if it finds it'll place the X or O in the supergrid
 	for (gridCoordinates[0] = 0; gridCoordinates[0] < 3; gridCoordinates[0]++)
 	{
 		for (gridCoordinates[1] = 0; gridCoordinates[1] < 3; gridCoordinates[1]++)
 		{
-			memcpy(supergridCoordinates, coordinatesToSupergrid(gridCoordinates), sizeof(supergridCoordinates));
+			memcpy(supergridCoordinates, coordinatesToSupergrid(gridCoordinates), sizeof(supergridCoordinates)); // gets the supergrid coordinates
+			// store the initial values
 			supergridI = supergridCoordinates[0];
 			supergridJ = supergridCoordinates[1];
 			symbolI = 0;
+
+			// this puts the ascii X or O in the supergrid
 			for (supergridCoordinates[0] = supergridI; supergridCoordinates[0] < supergridI + 8; supergridCoordinates[0]++)
 			{
 				symbolJ = 0;
@@ -427,7 +468,8 @@ void gridPrinter(int grid[3][3], int mod)
 {
 	static char superGrid[31][51];
 	int i, j;
-	//cria a super grade
+	// creates (visualy) the supergrid
+	// putting the character to create an empty board
 	if (mod == 0)
 	{
 		for (i = 0; i < 31; i++)
@@ -451,7 +493,7 @@ void gridPrinter(int grid[3][3], int mod)
 			superGrid[i][50] = '\n';
 		}
 	}
-	//somente imprime a super grade
+	// just prints the supergrid
 	if (mod == 1)
 	{
 		for (int i = 0; i < 31; i++)
@@ -463,7 +505,7 @@ void gridPrinter(int grid[3][3], int mod)
 			}
 		}
 	}
-	//chama a função que modifica a grade e imprime depois
+	// calls the supergridModifyer then prints the supergrid
 	if (mod == 2)
 	{
 		superGridModifier(superGrid, grid);
@@ -476,25 +518,33 @@ void gridPrinter(int grid[3][3], int mod)
 			}
 		}
 	}
-	//imprime a grade com números de 1 a 9 nela
+	// prints the supergrid witn the numbers from 1 to 9 in it
+	// it's printed when the game launches
 	if (mod == 3)
 	{
 		printf("\n                ##               ##              \n         88     ##   ad888888b,  ##   ad888888b,  \n       ,d88     ##  d8\"     \"88  ##  d8\"     \"88  \n     888888     ##          a8P  ##          a8P  \n         88     ##       ,d8P\"   ##       aad8\"   \n         88     ##     a8P\"      ##       \"\"Y8,   \n         88     ##   a8P\'        ##          \"8b  \n         88     ##  d8\"          ##  Y8,     a88  \n         88     ##  88888888888  ##   \"Y888888P\' \n                ##               ##               \n ################################################\n                ##               ##                 \n          ,d8   ##  8888888888   ##    ad8888ba,  \n        ,d888   ##  88           ##   8P\'    \"Y8  \n      ,d8\" 88   ##  88  ____     ##  d8           \n    ,d8\"   88   ##  88a8PPPP8b,  ##  88,dd888bb,  \n  ,d8\"     88   ##  PP\"     `8b  ##  88P\'    `8b  \n  8888888888888 ##           d8  ##  88       d8  \n           88   ##  Y8a     a8P  ##  88a     a8P  \n           88   ##   \"Y88888P\"   ##   \"Y88888P\"   \n                ##               ##               \n ################################################\n                ##               ##                  \n  888888888888  ##   ad88888ba   ##   ad88888ba   \n           8P\'  ##  d8\"     \"8b  ##  d8\"     \"88  \n         d8\"    ##  Y8a     a8P  ##  8P       88  \n       ,8P\'     ##    \"Y8aaa8P\"  ##  Y8,    ,d88  \n      d8\"       ##   ,d8\"\"\"8b,   ##   \"PPPPPP\"88  \n    ,8P\'        ##  d8\"     \"8b  ##           8P \n   d8\"          ##  Y8a     a8P  ##  8b,    a8P   \n  8P\'           ##   \"Y88888P\"   ##  `\"Y8888P\'    \n");
 	}
-	//imprime a grade com as coordenadas de (1,1) até (3,3)
+	// prints the supergrid with the coordinates from (1, 1) to (3, 3)
+	// unused in the final version, because the option to use coordinates has been removed
 	if (mod == 4)
 	{
 		printf("\n                ##               ##              \n                ##               ##              \n   /         \\  ##  /      __ \\  ##  /      __ \\ \n  ( /|    /|  ) ## ( /|     _) ) ## ( /|    __) )\n   \\ |  /  | /  ##  \\ |  / /__/  ##  \\ |  / __)/ \n                ##               ##              \n                ##               ##              \n                ##               ##              \n ##############################################\n                ##               ##              \n                ##               ##              \n   /__       \\  ##  /__    __ \\  ##  /__    __ \\ \n  (  _)   /|  ) ## (  _)    _) ) ## (  _)   __) )\n   \\/__ /  | /  ##  \\/__ / /__/  ##  \\/__ / __)/ \n                ##               ##              \n                ##               ##              \n                ##               ##              \n ##############################################\n                ##               ##              \n                ##               ##              \n   /__       \\  ##  /__    __ \\  ##  /__    __ \\ \n  ( __)   /|  ) ## ( __)    _) ) ## ( __)   __) )\n   \\__) /  | /  ##  \\__) / /__/  ##  \\__) / __)/ \n                ##               ##              \n                ##               ##              \n                ##               ##              \n");
 	}
-	//imprime a grade com o risco de vitória
+
+	// prinnts the supergrid with the victory line in it
 	if (mod == 5)
 	{
+		// updates the supergrid to the last move
 		superGridModifier(superGrid, grid);
 
 		int winVerifyerReturn[4];
 
+		// gets the winVerifyer return array know which victory line to print
 		memcpy(winVerifyerReturn, winVerifyer(grid), sizeof(winVerifyerReturn));
 		printf(" ");
+
+		// if the win is horizontal
+		// it'll print ':' in sequence on a horizontal line
 		if (winVerifyerReturn[1] == 0)
 		{
 			if (winVerifyerReturn[2] == 0)
@@ -525,6 +575,8 @@ void gridPrinter(int grid[3][3], int mod)
 			}
 		}
 
+		// if the win is vertical
+		// it'll print ':' in sequence on a vertical line
 		if (winVerifyerReturn[1] == 1)
 		{
 			if (winVerifyerReturn[2] == 0)
@@ -555,6 +607,10 @@ void gridPrinter(int grid[3][3], int mod)
 			}
 		}
 
+		//if the win is a diagonal 1 (comes from top left to botton right)
+		// it'll print '\' in a diagonal line
+		// this print isn't exactly a sequence
+		// but will print more than one '\' per line until it goes to the next
 		if (winVerifyerReturn[1] == 2)
 		{
 			j = 0;
@@ -593,6 +649,10 @@ void gridPrinter(int grid[3][3], int mod)
 			}
 		}
 
+		//if the win is a diagonal 2 (comes from top right to botton left)
+		// it'll print '/' in a diagonal line
+		// this print isn't exactly a sequence
+		// but will print more than one '/' per line until it goes to the next
 		if (winVerifyerReturn[1] == 3)
 		{
 			j = 49;
@@ -631,6 +691,7 @@ void gridPrinter(int grid[3][3], int mod)
 			}
 		}
 		
+		// prints the supergrid
 		for (i = 0; i < 31; i++)
 		{
 			for (j = 0; j < 51; j++)
@@ -643,17 +704,17 @@ void gridPrinter(int grid[3][3], int mod)
 	}
 }
 
-//print the thanks
+// prints the thanks
 void thanks()
 {
-	printf("\nMuito Obrigado por Jogar!\n");
-	printf("Agradecimentos especiais para:\n");
-	printf("Minha mãe, que, mesmo não sabendo nada de código, me ouviu e ajudou a clarear as idéias,\n");
-	printf("Patrick Gillespie (twiiter @patorjk) e seu Text to ASCII Art Generator (http://patorjk.com/software/taag)\n");
+	printf("\nThank you for playing!\n");
+	printf("pecial thanks to::\n");
+	printf("My mom, that, while not knowing anything about code, listened to me and helped clarify as ideas,\n");
+	printf("Patrick Gillespie (twiiter @patorjk) and his Text to ASCII Art Generator (http://patorjk.com/software/taag)\n");
 	printf("\n");
-	printf("Esse projeto é possível graças ao Notepad++ e ao Visual Studio Community 2019\n");
+	printf("This projecct is possible due to Notepad++ and Visaul Studio Community 2019\n");
 	printf("\n");
-	printf("Autoria de Lucas Isaac (@LIPSilva5)\n");
+	printf("Author: Lucas Isaac (@LIPSilva5)\n");
 	system("pause");
 }
 
@@ -671,18 +732,21 @@ int main(int argc, char* argv[])
 	printf("Starting Tic Tac Toe\n");
 	printf("To select a position you use:\n");
 	gridPrinter(grid, 3);
-	fgets(trashcan, 5, stdin);
+	fgets(trashcan, 5, stdin); // freezes the execution so the player can see how the game handles the play
 	printf("Would you like to play which mode: 1- Singleplyer or 2- Multiplayer\n");
-	if (scanf("%i", &player) == 1);
+	if (scanf("%i", &player) == 1); // gets the player mode
 	printf("Which you'll play with? 1- X ou 2- O\n");
-	if (scanf("%i", &symbolPreference) == 2);
-	if (symbolPreference == 2)
+	if (scanf("%i", &symbolPreference) == 2); // gets the symbol preference for player 1
+	if (symbolPreference == 2) // if the player selected O (2) it'll use -1 as representation of O
 		symbolPreference = -1;
 
+	// multiplayer mode
 	if (player == 2)
 	{
+		// this loops will keep the game running if the player selects keep playing
 		while (keepPlaying != 'n' && keepPlaying != 'N')
 		{
+			// put zeros in the grid
 			for (int i = 0; i < 3; i++)
 			{
 				for (int j = 0; j < 3; j++)
@@ -690,36 +754,55 @@ int main(int argc, char* argv[])
 					grid[i][j] = 0;
 				}
 			}
-			player = 1;
-			gridPrinter(grid, 0);
+			player = 1; // set to player 1
+			gridPrinter(grid, 0); // prints the supergrid
+			
+			// set win and tie flags to zero
 			win = 0;
 			tie = 0;
+
+			// play loop
 			while (win == 0 && tie == 0)
 			{
-				setupConsole();
-				clearScreenToTop();
-				moveTo(0, 0);
-				restoreConsole();
+				// uses ANSI escape codes to clear the screen
+				{
+					setupConsole();
+					clearScreenToTop();
+					moveTo(0, 0);
+					restoreConsole();
+				}
+
+				// prints the updated grid
 				gridPrinter(grid, 2);
+
+				// sets to player 1 if player 2 already played
 				if (player == 3)
 					player = 1;
 				printf("Play, Player %i\n", player);
 
-				if(scanf("%i", &playPosition) == 1);
-				memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates));
+				if(scanf("%i", &playPosition) == 1); // gets play position
+				memcpy(playCoordinates, convertToCoordinate(playPosition), sizeof(playCoordinates)); // converts the play position to array coordinates
 
+				// if play coordinates come negarive this stops the game (not inted to be done)
 				if (playCoordinates[0] < 0 || playCoordinates[1] < 0)
 					break;
+
+				// looks if the cell isn't empty, if it is, warns the player and loops early
 				if (grid[playCoordinates[0]][playCoordinates[1]] != 0)
 				{
 					printf("\nThis cell is already marked!\n");
-					if (getchar() != NULL);
+					fgets(trashcan, 5, stdin);
 					continue;
 				}
+
+				// makes the payer move
 				if (player == 1)
 					grid[playCoordinates[0]][playCoordinates[1]] = symbolPreference;
 				if (player == 2)
 					grid[playCoordinates[0]][playCoordinates[1]] = -symbolPreference;
+
+				// calls the winVerifyer function, if it returns a win
+				// it will print the board with the victory line and the message of who won
 				if ((winVerifyer(grid))[0] == 1)
 				{
 					setupConsole();
@@ -731,10 +814,17 @@ int main(int argc, char* argv[])
 					win = 1;
 					break;
 				}
-				player++;
-				memcpy(freeCellsReturn, freeCells(grid), sizeof(freeCellsReturn));
+
+				player++; // next player
+
+				memcpy(freeCellsReturn, freeCells(grid), sizeof(freeCellsReturn)); // looks for free cells
+
+				// if the freeCells function retuned something different of -1 (more than 3 free cells)
+				// it'll look for tie
 				if (freeCellsReturn[0][0] != -1)
 				{
+					// if there aren't free cells
+					// prits the tied board and the tie message
 					if (freeCellsReturn[0][0] == 3)
 					{
 						gridPrinter(gridTiedReturner(grid, 1), 2);
@@ -743,6 +833,9 @@ int main(int argc, char* argv[])
 						break;
 					}
 
+					// calls the tieVerifyer function
+					// if it returns 1 (tie)
+					// prits the tied board and the tie message
 					if (tieVerifyer(grid, player, symbolPreference) == 1)
 					{
 						memcpy(grid, gridTiedReturner(grid, 1), sizeof(grid));
@@ -753,6 +846,7 @@ int main(int argc, char* argv[])
 					}
 				}
 			}
+			// prompts if the player wants to continue playing
 			printf("\nContinue playing?\n y- yes  n- no\n");
 			if(getchar() == '\n');
 			if (scanf("%c", &keepPlaying) == 1);
@@ -760,12 +854,18 @@ int main(int argc, char* argv[])
 		}
 	}
 	
+	// single player mode
+	// instead of the player 2 play, the AI plays
+	// what happens here that also happens in two player mode won't be commented
+	// just things that are for single player only
 	if (player == 1)
 	{
 		int difficulty;
 		printf("Select your difficulty: 1- Easy, 2- Normal, 3- Impossible\n");
 		if (scanf(" %i", &difficulty) == 1);
 		difficulty--;
+
+		// starts the AI
 		aiStart(grid, -symbolPreference);
 		while (keepPlaying != 'n' && keepPlaying != 'N')
 		{
@@ -816,8 +916,8 @@ int main(int argc, char* argv[])
 				}
 				if (player == 2)
 				{
-					memcpy(playCoordinates, aiPlay(grid, difficulty), sizeof(playCoordinates));
-					grid[playCoordinates[0]][playCoordinates[1]] = -symbolPreference;
+					memcpy(playCoordinates, aiPlay(grid, difficulty), sizeof(playCoordinates)); // gets the AI play
+					grid[playCoordinates[0]][playCoordinates[1]] = -symbolPreference; // puts the AI play inthe board
 				}
 					
 				if ((winVerifyer(grid))[0] == 1)
@@ -857,7 +957,7 @@ int main(int argc, char* argv[])
 			if (scanf("%c", &keepPlaying) == 1);
 		}
 	}
-
-	if (keepPlaying == 'n')
-		thanks();
+	
+	// prints the thanks after playing
+	thanks();
 }

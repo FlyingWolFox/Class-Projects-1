@@ -1,5 +1,5 @@
-#ifndef JOGO_DA_VELHA_MAIN_H
-#define JOGO_DA_VELHA_MAIN_H
+#ifndef TIC_TAC_TOE_MAIN_H
+#define TIC_TAC_TOE_MAIN_H
 /* ^^ these are the include guards */
 
 /* Prototypes for the functions */
