@@ -7,6 +7,8 @@
 
 // used to play the sounds
 #include "bass.h"
+
+// handles mouse interaction
 #include <conio.h>
 #pragma comment(lib, "bass.lib")
 

@@ -4,13 +4,16 @@
 #include <stdbool.h>
 #include "ansi_escapes.h"
 
+// handles mouse interaction
 #include "windowsConsoleInteraction.h"
 #include <conio.h>
 
+// coordinate system
 typedef struct Coordinates {
 	short i, j;
 }coord;
 
+// converts the mouse click to board coordinates
 coord clickToCoordinates(COORD click)
 {
 	coord retValue;
@@ -38,6 +41,8 @@ coord clickToCoordinates(COORD click)
 	return retValue;
 }
 
+// creates the display board
+// putting the character to create an empty board
 void createDisplayeGrid(char displayGrid[37][100])
 {
 	for (int i = 0; i < 37; i++)
@@ -58,6 +63,8 @@ void createDisplayeGrid(char displayGrid[37][100])
 	}
 }
 
+// modifyes the display grid putting
+// a ship part, submarine or miss in the squares
 void modifyDisplayGrid(char displayGrid[37][100], coord coordinates, char symbol)
 {
 	char horizontalBow[3][8] = { {' ', ' ', ' ', ' ', ' ', ' ', ' ', '_'} ,
@@ -159,6 +166,7 @@ void modifyDisplayGrid(char displayGrid[37][100], coord coordinates, char symbol
 
 }
 
+// prints the display
 void printDisplayGrid(char displayGrid[37][100])
 {
 	for (int i = 0; i < 37; i++)
@@ -170,6 +178,8 @@ void printDisplayGrid(char displayGrid[37][100])
 	}
 }
 
+// sees if the game ended
+// if yes, is because all ships have been found
 bool isEnd(char grid[9][11], char playerGrid[9][11])
 {
 	bool isEnd = true;
@@ -182,6 +192,7 @@ bool isEnd(char grid[9][11], char playerGrid[9][11])
 	return isEnd;
 }
 
+// prints the thanks
 void thanks(void)
 {
 	puts("Thanks for playing!");
@@ -193,12 +204,13 @@ void thanks(void)
 
 int main(int argc, char** argv)
 {
+	// if there's no argument, shows the usage
 	if (argc < 2)
 	{
 		printf("\tusage: battleship <file>\n");
 		return -1;
 	}
-
+	// try to open the file
 	FILE* textFile;
 	textFile = fopen(argv[1], "r");
 	if (textFile == NULL)
@@ -208,13 +220,16 @@ int main(int argc, char** argv)
 	}
 
 	char displayGrid[37][100];
-	char grid[9][11];
-	char playGrid[9][11];
-	coord play;
-	EVENT retEvent;
-	COORD mouseCoord;
-	char trashcan[10];
+	char grid[9][11]; // grid with the complete board
+	char playGrid[9][11]; // the grid that the player sees
+	coord play; // play coordinates
+	EVENT retEvent; // console window events
+	COORD mouseCoord; // mouse click coordinates
+	char trashcan[10]; // used to get inputs or freeze execution
 
+	// looks if the file is valid and
+	// formatted correctly, and 
+	// gets the map from the file
 	{
 		char getGrid[9][25] = { 0 };
 		bool pass = true;
@@ -250,6 +265,8 @@ int main(int argc, char** argv)
 
 	}
 	
+	// verifies the windows size
+	// if it's too small it'll prompt to maximaze it
 	{
 		int windowSize[2];
 		setupConsole();
@@ -270,8 +287,11 @@ int main(int argc, char** argv)
 
 	createDisplayeGrid(displayGrid);
 	printDisplayGrid(displayGrid);
+
+	// play loop
 	for (bool playing = true; playing == true;)
 	{
+		// gets the mouse click coordinates
 		while (true)
 		{
 			retEvent.event.mouseEvent = 0xc00;
@@ -281,16 +301,20 @@ int main(int argc, char** argv)
 				break;
 		}
 
+		// if the mouse click coordinates weren't captured
+		// (for some reason) it'll loop to get it again
 		play = clickToCoordinates(mouseCoord);
 		if (play.i == -1 || play.j == -1)
 			continue;
 
+		// modifies the grid and prints it
 		modifyDisplayGrid(displayGrid, play, grid[play.i][play.j]);
 		playGrid[play.i][play.j] = grid[play.i][play.j];
 		clearScreenToTop;
 		moveTo(0, 0);
 		printDisplayGrid(displayGrid);
 
+		// verifies if the game ended
 		if (isEnd(grid, playGrid))
 		{
 			puts("Game Over!");
@@ -299,6 +323,7 @@ int main(int argc, char** argv)
 		}
 	}
 
+	// prints the thanks
 	thanks();
 	puts("---Press any key to exit---");
 	fgets(trashcan, 5, stdin);
