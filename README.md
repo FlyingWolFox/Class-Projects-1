@@ -20,9 +20,10 @@ Here you'll find 5 games: Tic Tac Toe (or naughts and crosses), Connect 4, Hangm
 - ### Tic Tac Toe (Naughts and Crosses)
   - The classic game, there isn't that much to talk about
   - The game need ANSI Escape Codes for cleaning the screen
-  - The game has two modes: Singleplayer and Multiplayer
+  - The game has two modes: ~~Singleplayer and~~ Multiplayer
     - Multiplayer is the classic form of playing. You and a person play against each other
-    - On singleplayer you'll play against a AI, which have 3 difficult levels: Easy, Normal and Impossible. More on that on the wiki
+    - ~~On singleplayer you'll play against a AI, which have 3 difficult levels: Easy, Normal and Impossible. More on that on the wiki~~
+	- The Singleplayer/AI is disabled for now because of the bugs. The lastest works are in the working branch
 	- The game looks if the game will tie when there are 3 free positions or less. If it finds that the game will tie, it finishes it
   - The board is made with ascii art, including the X and the O. The thanks for the people behind the ascii art is in the wiki and the game
  
@@ -31,10 +32,12 @@ Here you'll find 5 games: Tic Tac Toe (or naughts and crosses), Connect 4, Hangm
   - Two people play against each oder, dropping pieces, which fall in the last line in the board, trying to connect 4 pieces horizontaly, verticaly or diagonally. Who does that first wins
   - The game nedd ANSI Escape Codes to clear the screen and give colors to the pieces, backgroung, and detecting window size
   - The game needs a certain Window Size to work, because the board is big
-  - The game has two modes: Singleplayer and Multiplayer
+  - The game has two modes: ~~Singleplayer and~~ Multiplayer
     - On multiplayer you and a person play against each other
-    - On singleplayer you'll play against a AI, which is made to be impossible to win. More on that on the wiki
-	- The game looks if the game will tie. If it finds that the game will tie, it finishes it
+    - ~~On singleplayer you'll play against a AI, which is made to be impossible to win. More on that on the wiki~~
+	- The Singleplayer/AI is disabled for now because of the bugs. The lastest works are in the working branch
+  - ~~The game looks if the game will tie. If it finds that the game will tie, it finishes it~~
+  - The smart tie system is disabled, for the same reason of the AI (they share code). The game you tie if you say so or if the board is full.
   - The board is made with ascii art, including the pieces, which have colors! . The thanks for the people behind the ascii art is in the wiki and the game
   - The background color are made with true color (RGB), your terminal emulator may not support it. If it doesn't I don't know What will happen
   
