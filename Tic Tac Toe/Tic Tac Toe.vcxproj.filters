@@ -1,35 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="ai.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ansi_escapes.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="minimax.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="connect_4.c">
+    <ClCompile Include="tictactoe.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ansi_escapes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="minimax.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="connect_4.h">
+    <ClInclude Include="tictactoe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2d8fe2dd-5d86-49a5-8d70-a8cf65832d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{0b3e18b7-53da-4932-bfe6-216da4e8df1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
