@@ -9,9 +9,12 @@ VOID KeyEventProc(KEY_EVENT_RECORD);
 VOID MouseEventProc(MOUSE_EVENT_RECORD);
 VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD);
 
+// Original code is commented
+// eventMain was the main of this code
+
 EVENT eventMain(VOID)
 {
-		DWORD cNumRead, fdwMode, i;
+	DWORD cNumRead, fdwMode, i;
 	INPUT_RECORD irInBuf[128];
 	int counter = 0;
 
@@ -77,6 +80,7 @@ EVENT eventMain(VOID)
 	return retEvent;
 }
 
+// Prints the error when it happens
 VOID ErrorExit(LPSTR lpszMessage)
 {
 	fprintf(stderr, "%s\n", lpszMessage);
@@ -88,6 +92,7 @@ VOID ErrorExit(LPSTR lpszMessage)
 	ExitProcess(0);
 }
 
+// Gets keyboard event
 VOID KeyEventProc(KEY_EVENT_RECORD ker)
 {
 	/*printf("Key event: ");
@@ -99,6 +104,8 @@ VOID KeyEventProc(KEY_EVENT_RECORD ker)
 	retEvent.event.keyPressed = ker.bKeyDown;
 	retEvent.event.keyPressed = ker.uChar.AsciiChar;
 }
+
+// Gets mouse event
 VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
 {
 #ifndef MOUSE_HWHEELED
@@ -149,6 +156,8 @@ VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
 		break;
 	}
 }
+
+// Gets the resize event
 VOID ResizeEventProc(WINDOW_BUFFER_SIZE_RECORD wbsr)
 {
 	//printf("Resize event\n");

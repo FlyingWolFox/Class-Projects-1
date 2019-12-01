@@ -24,6 +24,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Lig4</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Connect 4</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -152,12 +153,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ansi_escapes.c" />
-    <ClCompile Include="lig 4.c" />
+    <ClCompile Include="connect_4.c" />
     <ClCompile Include="minimax.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ansi_escapes.h" />
-    <ClInclude Include="lig 4.h" />
+    <ClInclude Include="connect_4.h" />
     <ClInclude Include="minimax.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

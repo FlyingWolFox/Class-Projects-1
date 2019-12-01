@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "minimax.h"
 #include "ansi_escapes.h"
-#include "lig 4.h"
+#include "connect_4.h"
 
 extern void setupConsole(void);
 extern void restoreConsoleMode(void);
@@ -11,12 +11,16 @@ extern void restoreConsole(void);
 
 extern void supergridTied(char supergrid[37][98]);
 extern bool minimaxTie(int grid[6][7], int nextplayer);
-extern Move minimaxPlay(int grid[6][7], int nextplayer);
+extern Move minimaxPlay(int grid[6][7]);
 
+// looks for wins
+// return a Win variable
 Win winVerifyer(int grid[6][7])
 {
 	Win returnValue;
 	returnValue.win = false;
+	
+	// looks in the rows
 	for (int i = 5; i >= 0; i--)
 	{
 		for (int j = 0; j < 4; j++)
@@ -43,6 +47,7 @@ Win winVerifyer(int grid[6][7])
 		}
 	}
 
+	// looks in the collumns
 	for (int j = 0; j < 7; j++)
 	{
 		for (int i = 5; i > 2; i--)
@@ -70,6 +75,7 @@ Win winVerifyer(int grid[6][7])
 
 	}
 
+	// looks in the '\' diagonals
 	for (int j = 0; j < 4; j++)
 	{
 		for (int i = 5; i > 2; i--)
@@ -96,6 +102,7 @@ Win winVerifyer(int grid[6][7])
 		}
 	}
 
+	// looks in the '/' diagonals
 	for (int j = 6; j > 2; j--)
 	{
 		for (int i = 5; i > 2; i--)
@@ -125,8 +132,10 @@ Win winVerifyer(int grid[6][7])
 	return returnValue;
 }
 
+// generates (visually) the supergrid
 void supergridGenerator(char supergrid[37][98])
 {
+	// put the ascii art of an empty board in the supergrid
 	for (int i = 0; i < 37; i++)
 	{
 		for (int j = 0; j < 97; j++)
@@ -159,8 +168,11 @@ void supergridGenerator(char supergrid[37][98])
 	}
 }
 
+// prints the supergrid in the screen
 void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinates[4])
 {
+	// prints looking in the grid to put the correct colors
+	// also receive win information to see if highlights the win positions
 	for (int i = 0, gridI = 0; i < 37; i++)
 	{
 		printf(" ");
@@ -229,6 +241,7 @@ void supergridPrinter(char supergrid[37][98], int grid[6][7], Move winCoordinate
 	}
 }
 
+// modifyes the supergrid, putting a circle on the modification coordinates
 void supergridModifyer(char supergrid[37][98], Move modification)
 {
 	Move startCoordinate, copy_of_startCoordinate, circleCoordinates;
@@ -279,6 +292,7 @@ void supergridModifyer(char supergrid[37][98], Move modification)
 
 }
 
+// gets the row available to play in a certain column
 void getTheRow(int grid[6][7], Move* move)
 {
 	for (int i = 5; i >= 0; i--)
@@ -300,7 +314,8 @@ int main(int argc, char** argv)
 	int grid[6][7] = { 0 };
 	char supergrid[37][98];
 
-
+	// main menu loop, the player will be prompet if
+	// it wants to exit the game or to main menu
 	for (bool mainMenu = true; mainMenu == true;)
 	{
 		int player;
@@ -308,9 +323,10 @@ int main(int argc, char** argv)
 		Move playerMove;
 		Win winVerifyerReturn;
 		Move winCoordinates[4];
-		//used to freeze the program instead of getchar
-		char trashCan[10];
+		char trashCan[10];	//used to freeze the program instead of getchar
 
+		// verifyes if the windows is big enought to play the game
+		// and prompts the player to maximaze the console window
 		{
 			int windowSize[2];
 			setupConsole();
@@ -329,26 +345,34 @@ int main(int argc, char** argv)
 			restoreConsoleMode();
 		}
 
+		// sets the background to a more bright black
 		setupConsole();
 		setBackgroundColorRGB(20, 20, 20);
 		restoreConsole();
 
-		printf("Gostaria de jogar o modo: 1- Singleplayer ou 2- Multiplayer\n");
-		fgets(trashCan, 5, stdin);
-		if (trashCan[0] == '2')
-			multiplayer = true;
-		else
+		// --- AI DISBLED - NOT WORKING ---
+		//printf("You would like to play: 1- Singleplayer or 2- Multiplayer\n");
+		//fgets(trashCan, 5, stdin);
+		//if (trashCan[0] == '2')
+		//	multiplayer = true;
+		//else
 			multiplayer = false;
 
-		for (char keepPlaying = 's'; keepPlaying == 's' || keepPlaying == 'S';)
+		// keep playing loop
+		// the player will be prompted if it wants to play again
+		// if yes the loop stays running
+		// else goes to main menu or exits the game
+		for (bool keepPlaying = true; keepPlaying == true;)
 		{
-			supergridGenerator(supergrid);
+			supergridGenerator(supergrid); //generates the supergrid
 			for (int i = 0; i < 6; i++)
 			{
 				for (int j = 0; j < 7; j++)
 					grid[i][j] = 0;
 			}
 			player = 1;
+
+			// play loop
 			for (bool win = false, tie = false; win == false && tie == false;)
 			{
 				for (int count = 0; count < 4; count++)
@@ -356,41 +380,64 @@ int main(int argc, char** argv)
 					winCoordinates[count].row = -1;
 					winCoordinates[count].col = -1;
 				}
-				if (player == 3)
+				if (player == 3) // loops the  player
 					player = 1;
 				setupConsole();
-				setBackgroundColorRGB(20, 20, 20);
+				setBackgroundColorRGB(20, 20, 20); // set the background to a bright black
 
 				clearScreenToTop();
 				moveTo(0, 0);
 
-				supergridPrinter(supergrid, grid, winCoordinates);
+				supergridPrinter(supergrid, grid, winCoordinates); // prints the super grid
 				restoreConsoleMode();
-				printf("Jogue jogador %i\n", player);
-				while (scanf(" %i", &playerMove.col) != 1);
+				printf("Play, player %i\n", player);
+
+				// substitute tie system
+				{
+					printf("Type T after the column you want to play to declare a tie and end the game\n");
+				}
+
+				fgets(trashCan, 5, stdin);
+				playerMove.col = trashCan[0] - '0';
 				playerMove.col--;
+
+				// substitute tie system
+				{
+					if (trashCan[1] == 'T' || trashCan[1] == 't')
+						tie = true;
+				}
+
 				if (playerMove.col > 6 || playerMove.col < 0)
 				{
-					printf("Fora de Alcance!");
+					printf("Out of range!");
 					continue;
 				}
-				getTheRow(grid, &playerMove);
-				if (playerMove.row == -1)
+				getTheRow(grid, &playerMove); // get the row to play in that column
+				if (playerMove.row == -1) // if the colunm is full it'll be -1
 				{
-					printf("Você não pode jogar aí!\n");
+					printf("You can't play there!\n");
 					fgets(trashCan, 5, stdin);
 					continue;
 				}
+
+				// put the player's piece on the board
 				if (player == 1)
 					grid[playerMove.row][playerMove.col] = 1;
 				if (player == 2)
 					grid[playerMove.row][playerMove.col] = -1;
-				supergridModifyer(supergrid, playerMove);
-				if (multiplayer == false)
+							
+				supergridModifyer(supergrid, playerMove); // modifies the grid with the player move
+				if (multiplayer == true) // single player mode, the AI will play
 				{
-					supergridModifyer(supergrid, minimaxPlay(grid, 2));
+					playerMove = minimaxPlay(grid);
+					grid[playerMove.row][playerMove.col] = -1;
+					supergridModifyer(supergrid, playerMove); // modifies the grid with the player move
 					player = 0;
 				}
+
+				// sees if there's a win
+				// if yes it'll fill the winCoordinates with the win information
+				// to be used by the supergrid printer
 				winVerifyerReturn = winVerifyer(grid);
 				if (winVerifyerReturn.win == true)
 				{
@@ -432,11 +479,18 @@ int main(int argc, char** argv)
 					clearScreenToTop();
 					moveTo(0, 0);
 					supergridPrinter(supergrid, grid, winCoordinates);
-					printf("Jogador %i venceu!", player);
+					printf("Player %i wins!", player);
 					win = true;
 					continue;
 				}
-				player++;
+				player++; // next player
+				
+				// this tie detection system uses the minimax algorithm, which is disbaled now 
+				// because it causes Run-time check error #2, this will be enabled again when fixed
+
+				/*
+				// looks for ties
+				// if true, prints the tied grid and ends the game
 				tie = minimaxTie(grid, player);
 				if (tie == true);
 				{
@@ -446,16 +500,45 @@ int main(int argc, char** argv)
 						moveTo(0, 0);
 						supergridTied(supergrid);
 						supergridPrinter(supergrid, grid, winCoordinates);
-						printf("Empate!");
+						printf("Tie!");
+						fgets(trashCan, 5, stdin);
+					}
+				}
+				*/
+
+				// substitute tie system
+				// it'll state tie if the board is full
+				// or by player input
+				{
+					bool freeCell = true;
+					for (int i = 0; i < 6; i++)
+					{
+						for (int j = 0; j < 7; j++)
+						{
+							if (grid[i][j] == 0)
+							{
+								freeCell = false;
+								break;
+							}
+						}
+					}
+
+					if (freeCell == true || tie == true)
+					{
+						clearScreenToTop();
+						moveTo(0, 0);
+						supergridPrinter(supergrid, grid, winCoordinates);
+						printf("Tie!");
 						fgets(trashCan, 5, stdin);
 					}
 				}
 			}
 
-			printf("\nContinuar jogando? s-sim n-não\n");
-			if (scanf(" %c", &keepPlaying) == 1)
-				continue;
-			printf("Voltar ao menu principal? s-sim n-não\n");
+			printf("\nContinue playing? (Y/n)\n");
+			fgets(trashCan, 5, stdin);
+			if (trashCan[0] == 'n' || trashCan[0] == 'N')
+				keepPlaying = false;
+			printf("Go back to the main menu? (Y/n)\n");
 			fgets(trashCan, 5, stdin);
 			if (trashCan[0] == 'n' || trashCan[1] == 'N')
 				mainMenu = false;

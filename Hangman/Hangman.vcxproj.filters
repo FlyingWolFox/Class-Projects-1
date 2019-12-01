@@ -11,21 +11,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="battleship.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ansi_escapes.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windowsConsoleInteraction.c">
+    <ClCompile Include="hangman.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ansi_escapes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="windowsConsoleInteraction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
