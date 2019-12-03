@@ -8,7 +8,7 @@
 typedef struct WordInfo {
 	char word[30];
 	int numberOfLetters;
-	char tip[40];
+	char hint[40];
 }Word;
 
 // the coordinate system used
@@ -298,7 +298,7 @@ void letterCopier(char letterGrid[3][5], char letter, bool inicialization)
 }
 
 // prints the screem, with the hangman, word and letters already picked
-void screenPrinter(char hangMan[8][11], char* tip, Word word, char* alreadyChoosenLetters)
+void screenPrinter(char hangMan[8][11], char* hint, Word word, char* alreadyChoosenLetters)
 {
 	char letterGrid[3][5];
 
@@ -312,8 +312,8 @@ void screenPrinter(char hangMan[8][11], char* tip, Word word, char* alreadyChoos
 	}
 	moveRight(5);
 
-	// prints the tip at the top
-	printf("%s", word.tip);
+	// prints the hint at the top
+	printf("%s", word.hint);
 	moveTo(2, 0);
 
 	// prints the rest of the hangman
@@ -389,7 +389,7 @@ int main(int argc, char** argv)
 	char alreadyChosenLetters[27]; // letters that were already choose are stored here
 	int alreadyChosenLettersCounter = 0; // tracks how many letters were choosen. Used to manipulate the the alreadyChosenLetters array
 	int hangManState = 0; // tracks the hangman state
-	FILE* textFile; // the text file where the word and the tip is
+	FILE* textFile; // the text file where the word and the hint is
 	Word word; // stores the word info
 	Word display; // stores the displayed word
 
@@ -417,8 +417,8 @@ int main(int argc, char** argv)
 		return 2;
 	}
 
-	if (fgets(word.tip, 40, textFile) == NULL)
-		word.tip[0] = '\0';
+	if (fgets(word.hint, 40, textFile) == NULL)
+		word.hint[0] = '\0';
 
 	// gets the word lenght
 	word.numberOfLetters = (strlen(word.word) - 1);
@@ -442,7 +442,7 @@ int main(int argc, char** argv)
 	// play loop
 	for (bool end = false; end == false;)
 	{
-		screenPrinter(hangMan, display.tip, display, alreadyChosenLetters); // prints the screen
+		screenPrinter(hangMan, display.hint, display, alreadyChosenLetters); // prints the screen
 		puts("\n\nChoose a letter:");
 		fgets(trashcan, 5, stdin);
 
@@ -485,7 +485,7 @@ int main(int argc, char** argv)
 		if (endVerifyer(hangMan, display) == 1)
 		{
 			// prints the screen with victory
-			screenPrinter(hangMan, display.tip, display, alreadyChosenLetters);
+			screenPrinter(hangMan, display.hint, display, alreadyChosenLetters);
 			printf("\nYou win!\n");
 			fgets(trashcan, 5, stdin);
 			end = true;
@@ -493,7 +493,7 @@ int main(int argc, char** argv)
 		if (endVerifyer(hangMan, display) == 2)
 		{
 			// prints the screen with loss
-			screenPrinter(hangMan, word.tip, word, alreadyChosenLetters);
+			screenPrinter(hangMan, word.hint, word, alreadyChosenLetters);
 			printf("\nYou Lose!\n");
 			fgets(trashcan, 5, stdin);
 			end = true;
