@@ -12,7 +12,7 @@
 #include <conio.h>
 #pragma comment(lib, "bass.lib")
 
-DWORD green_button, red_button, yellow_button, blue_button, wrong; // sounds dwords
+DWORD green_button, red_button, yellow_button, blue_button, wrong, youreTooSlow; // sounds dwords
 
 extern EVENT eventMain(VOID);
 
@@ -47,9 +47,13 @@ void delay(int milliseconds)
 int timeElapsed(bool start)
 {
 	long maxTime;
-	clock_t start, end;
+	static clock_t now, then;
 
 	maxTime = 5000 * (CLOCKS_PER_SEC / 1000);
+	if (start)
+		now = then = clock();
+	now = clock();
+	return (now - then);
 }
 
 // display the game
@@ -202,6 +206,7 @@ int main(int argc, char** argv)
 	EVENT retEvent; // return event of the windows console interaction
 	char trashcan[10]; // used to get inputs and freeze the program
 	bool mistake = false; // flag
+	bool tooSlow = false; // flag
 
 	srand(time(NULL)); // random seed to srand
 	
@@ -224,6 +229,7 @@ int main(int argc, char** argv)
 	yellow_button = BASS_StreamCreateFile(FALSE, "yellow_button.wav", 0, 0, 0);
 	blue_button = BASS_StreamCreateFile(FALSE, "blue_button.wav", 0, 0, 0);
 	wrong = BASS_StreamCreateFile(FALSE, "wrong.wav", 0, 0, 0);
+	youreTooSlow = BASS_StreamCreateFile(FALSE, "youre-too-slow.ogg", 0, 0, 0);
 
 	printf("Starting Simon. Do you wish to:\n(P) play now\nor \n(T)see the tutorial?\n");
 	fgets(trashcan, 5, stdin);
@@ -302,37 +308,63 @@ int main(int argc, char** argv)
 				{
 					display(NO_COLOR, windowSize);
 
+					timeElapsed(true);
+					tooSlow = false;
+
 					// won't get out of the loop until the mouse click was received
 					while (true)
 					{
 						retEvent.event.mouseEvent = 0xc00;
 						retEvent = eventMain();
 						mouseCoord = retEvent.event.mouseCoord;
+						if (timeElapsed(false) >= 5000)
+						{
+							tooSlow = true;
+							break;
+						}
 						if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
 							break;
 					}
 
 					// will add the button input into its array
-					input[count] = coordinatesToButton(mouseCoord, windowSize);
+					if (!tooSlow)
+						input[count] = coordinatesToButton(mouseCoord, windowSize);
 
 					// displays the button pressed
 					// and play its sound
-					display(input[count], windowSize);
-					playSFX(sequence[count]);
+					if (!tooSlow)
+					{
+						display(input[count], windowSize);
+						playSFX(sequence[count]);
+					}
 
 					// checks if you make a mistake
 					// if yes it breaks the loop
-					if (sequence[count] != input[count])
+					if (!tooSlow)
 					{
-						mistake = true;
-						break;
+						if (sequence[count] != input[count])
+						{
+							mistake = true;
+							break;
+						}
 					}
+					if (tooSlow)
+						break;					
+				}
 
-					
+				// runs the "too slow" routine
+				if (tooSlow == true)
+				{
+					// plays "too slow" sound
+					puts("Too Slow! Try again? (Y/N)");
+					BASS_ChannelPlay(youreTooSlow, FALSE);
+					fgets(trashcan, 5, stdin);
+					if (trashcan[0] == 'n' || trashcan[0] == 'N')
+						replay = false;
 				}
 
 				// runs the mistake routine
-				if (mistake == true)
+				if (mistake == true && tooSlow == false)
 				{
 					// plays mistake sound
 					BASS_ChannelPlay(wrong, FALSE);
@@ -341,9 +373,12 @@ int main(int argc, char** argv)
 					if (trashcan[0] == 'n' || trashcan[0] == 'N')
 						replay = false;
 				}
+				if (tooSlow)
+					mistake = true;
 				level++; // high the level by one
 			}
 			mistake = false; // reset the mistake flag when starting a new game
+			tooSlow = false; // reset the tooSlow flag when starting a new game
 		}
 	}
 	BASS_Free(); // free the BASS from memory

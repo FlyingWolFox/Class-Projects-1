@@ -35,6 +35,9 @@
     <Media Include="wrong.wav" />
     <Media Include="yellow_button.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="youre-too-slow.ogg" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{108814A1-98EE-47AA-8749-2BFDAFC780E0}</ProjectGuid>

@@ -53,4 +53,9 @@
       <Filter>SFX</Filter>
     </Media>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="youre-too-slow.ogg">
+      <Filter>SFX</Filter>
+    </None>
+  </ItemGroup>
 </Project>
