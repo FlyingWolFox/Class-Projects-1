@@ -24,33 +24,20 @@
     - Must enforce the rules
     - Make rule deactivation easy (in code)
   - Ship types and quantity
-    - 5 Hydroplanes
-    - 4 Submarines
-    - 3 Cruiser
-    - 2 Battleship
-    - 1 Aircraft Carrier
+    - 5 Hydroplanes: (<^>)
+    - 4 Submarines (o)
+    - 3 Cruiser (<>)
+    - 2 Battleship (<==>)
+    - 1 Aircraft Carrier (<===>)
   - The ships shouldn't touch each other, one square of space between at least
   - Map size: 15 x 15
+  - (maybe it'll need to be show the ship type)
   - ### Easy Rule:
   
-    1. Disparará 3 tiros, indicando a coordenadas do alvo através do número da linha e da letra da coluna que definem a posição. Para que o jogador tenha o controle dos tiros disparados, deverá marcar cada um deles no reticulado intitulado "Seu jogo".
-
-    2. Após cada um dos tiros, o oponente avisará se acertou e, nesse caso, qual a arma foi atingida. Se ela for afundada, esse fato também deverá ser informado.
-
-    3. A cada tiro acertado em um alvo, o oponente deverá marcar em seu tabuleiro para que possa informar quando a arma for afundada.
-
-    4. Uma arma é afundada quando todas as casas que formam essa arma forem atingidas.
-
-    5. Após os 3 tiros e as respostas do opoente, a vez para para o outro jogador.
+    1. 3 shots, paused (default)
+    2. Show which ship was hit in each shot and if it sink
     
   - ### Hard Rule:
-    1. Disparará 3 tiros consecutivos, indicando a coordenadas do alvo através do número da linha e da letra da coluna que definem a posição. Para que o jogador tenha o controle dos tiros disparados, deverá marcar cada um deles no reticulado intitulado "Seu jogo".
-
-    2. Após os 3 tiros, o oponente avisará quantos acertaram, mas não quais, informando também quais as armas foram atingidas. Se uma delas for totalmente destruída, esse fato também deverá ser informado.
-
-    3. A cada tiro acertado em um alvo, o oponente deverá marcar em seu tabuleiro para que possa informar quando a arma for destruída.
-
-    4. Uma arma é afundada quando todas as casas que formam essa arma forem atingidas.
-
-    5. Após os 3 tiros e a resposta do opoente, a vez para para o outro jogador.
+    1. 3 consecutive shots
+    2. Show if how many hit, but not which, also displaying the what ship was hit. If one sunk, inform
 
