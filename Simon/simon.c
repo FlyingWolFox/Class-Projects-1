@@ -12,7 +12,7 @@
 #include <conio.h>
 #pragma comment(lib, "bass.lib")
 
-DWORD green_button, red_button, yellow_button, blue_button, wrong, youreTooSlow; // sounds dwords
+DWORD green_button, red_button, yellow_button, blue_button, wrong, youreTooSlow, fanfare[2]; // sounds dwords
 
 extern EVENT eventMain(VOID);
 
@@ -140,6 +140,29 @@ void rng(sshort* sequence, int level)
 	sequence[level] = 0;
 }
 
+void setSkillLevel(int* skillLevel)
+{
+	switch (*skillLevel)
+	{
+	case 1:
+		*skillLevel = 8;
+		break;
+	case 2:
+		*skillLevel = 14;
+		break;
+	case 3:
+		*skillLevel = 20;
+		break;
+	case 4:
+		*skillLevel = 31;
+		break;
+
+	default:
+		*skillLevel = 8;
+		break;
+	}
+}
+
 // plays the sound effects
 void playSFX(int button)
 {
@@ -199,9 +222,11 @@ int main(int argc, char** argv)
 {
 
 	int level = 1; // start level
+	int skillLevel = 8; // max lenght of the sequence. Can be changed by the user
+	int gameMode = 0; // game mode switch
 	int windowSize[2];
-	sshort sequence[4000]; // sequence of buttons to press
-	sshort input[4000]; // sequence of button pressed
+	sshort sequence[35]; // sequence of buttons to press
+	sshort input[35]; // sequence of button pressed
 	COORD mouseCoord;
 	EVENT retEvent; // return event of the windows console interaction
 	char trashcan[10]; // used to get inputs and freeze the program
@@ -230,8 +255,10 @@ int main(int argc, char** argv)
 	blue_button = BASS_StreamCreateFile(FALSE, "blue_button.wav", 0, 0, 0);
 	wrong = BASS_StreamCreateFile(FALSE, "wrong.wav", 0, 0, 0);
 	youreTooSlow = BASS_StreamCreateFile(FALSE, "youre-too-slow.ogg", 0, 0, 0);
+	fanfare[0] = BASS_StreamCreateFile(FALSE, "ffi_victory.ogg", 0, 0, 0);
+	fanfare[1] = BASS_StreamCreateFile(FALSE, "chrono_trigger_fanfare.ogg", 0, 0, 0);
 
-	printf("Starting Simon. Do you wish to:\n(P) play now\nor \n(T)see the tutorial?\n");
+	printf("Starting Simon. Do you wish to:\n(P) play now;\n(O)change options\n or\n(T)see the tutorial?\n");
 	fgets(trashcan, 5, stdin);
 
 	// prints the tutorial
@@ -248,7 +275,8 @@ int main(int argc, char** argv)
 		puts("-Have paciense, the click will only work if the cursor is at the botton of the window");
 		puts("-Also, the color have sounds, use this to your advantage");
 		puts("-Your failure also has a sound, don't be scared");
-		puts("-Here you can go until the level 3999, good luck");
+		puts("-Your skill you'll be rewarded if you win");
+		puts("-Per default the maximun lenght of a sequence is 8, but you can change this in the options menu");
 		puts("");
 		puts("-Ready to start?");
 		// special effect
@@ -266,6 +294,36 @@ int main(int argc, char** argv)
 		trashcan[0] = 'P';
 		clearScreenToTop();
 		moveTo(0, 0);
+		trashcan[0] == 'O';
+	}
+
+	if (trashcan[0] == 'O' || trashcan[0] == 'o')
+	{
+		clearScreenToTop();
+		moveTo(0, 0);
+		puts("Here you can change the skill level and the game mode");
+		puts("");
+		puts("Skill level defines the maximum lenght of the sequnce before you win");
+		puts("There's 4 skill levels:");
+		puts("1- lenght = 8");
+		puts("2- lenght = 14");
+		puts("3- lenght = 20");
+		puts("4- lenght = 31");
+		puts("");
+		puts("Game mode is how you play Simon. There's 3 modes:");
+		puts("1- ");
+		puts("");
+		puts("");
+		puts("");
+		puts("");
+		printf("What skill level will you play? ");
+		fgets(trashcan, 5, stdin);
+		skillLevel = trashcan[0] - '0';
+		setSkillLevel(&skillLevel);
+		printf("What game mode will you play? ");
+		fgets(trashcan, 5, stdin);
+		gameMode = trashcan[0] - '0';
+		trashcan[0] == 'P';
 	}
 
 	if (trashcan[0] == 'P' || trashcan[0] == 'p')
@@ -274,7 +332,7 @@ int main(int argc, char** argv)
 		for (bool replay = true; replay == true;)
 		{
 			level = 1;
-			while (mistake == false)
+			while (mistake == false && level <= skillLevel)
 			{
 				// gets the console window size
 				{
@@ -375,7 +433,19 @@ int main(int argc, char** argv)
 				}
 				if (tooSlow)
 					mistake = true;
+
 				level++; // high the level by one
+			}
+
+			if (!tooSlow && !mistake)
+			{
+				int randFanfare = rand() % 2;
+				BASS_ChannelPlay(fanfare[randFanfare], TRUE);
+				printf("You win! Try again? (Y/N)");
+				fgets(trashcan, 5, stdin);
+				if (trashcan[0] == 'n' || trashcan[0] == 'N')
+					replay = false;
+				BASS_ChannelStop(fanfare[randFanfare]);
 			}
 			mistake = false; // reset the mistake flag when starting a new game
 			tooSlow = false; // reset the tooSlow flag when starting a new game

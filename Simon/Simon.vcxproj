@@ -36,6 +36,8 @@
     <Media Include="yellow_button.wav" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="chrono_trigger_fanfare.ogg" />
+    <None Include="ffi_victory.ogg" />
     <None Include="youre-too-slow.ogg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

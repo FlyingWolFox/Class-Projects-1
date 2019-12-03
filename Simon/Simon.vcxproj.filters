@@ -57,5 +57,11 @@
     <None Include="youre-too-slow.ogg">
       <Filter>SFX</Filter>
     </None>
+    <None Include="chrono_trigger_fanfare.ogg">
+      <Filter>SFX</Filter>
+    </None>
+    <None Include="ffi_victory.ogg">
+      <Filter>SFX</Filter>
+    </None>
   </ItemGroup>
 </Project>
