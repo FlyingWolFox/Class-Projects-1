@@ -43,6 +43,15 @@ void delay(int milliseconds)
 		now = clock();
 }
 
+// tracks the time elapsed
+int timeElapsed(bool start)
+{
+	long maxTime;
+	clock_t start, end;
+
+	maxTime = 5000 * (CLOCKS_PER_SEC / 1000);
+}
+
 // display the game
 void display(int button, int screenSize[2])
 {
@@ -318,6 +327,8 @@ int main(int argc, char** argv)
 						mistake = true;
 						break;
 					}
+
+					
 				}
 
 				// runs the mistake routine
