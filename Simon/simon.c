@@ -202,6 +202,7 @@ void thanks()
 	puts("");
 	puts("Thanks to:");
 	puts("-Brodhead Media Features for the Wrong Buzzer SFX (https://youtu.be/2naim9F4010)");
+	puts("-My Instant for the \"You're too slow\" SFX (https://www.myinstants.com/instant/youre-too-slow/)");
 	puts("-gamesplusjames for the button sounds that he used in his simon");
 	puts("-Stackoverflow people, mainly Ahmad Taha whose question was my solution (https://stackoverflow.com/questions/35797336/how-to-find-the-mouse-button-click-position-x-and-y*/)");
 	puts("-Raymond, helping with disabling the quick edit mode (https://devblogs.microsoft.com/oldnewthing/?p=4453)");
@@ -223,7 +224,7 @@ int main(int argc, char** argv)
 
 	int level = 1; // start level
 	int skillLevel = 8; // max lenght of the sequence. Can be changed by the user
-	int gameMode = 0; // game mode switch
+	int gameMode = 1; // game mode switch
 	int windowSize[2];
 	sshort sequence[35]; // sequence of buttons to press
 	sshort input[35]; // sequence of button pressed
@@ -266,7 +267,7 @@ int main(int argc, char** argv)
 	{
 		clearScreenToTop();
 		moveTo(0, 0);
-		puts("Simon rules:");
+		puts("Simon (basic) rules:");
 		puts("-The board will flash colors on screen, in certain order");
 		puts("-You repeat the pattern clicking on the same colors");
 		puts("-If you get every color right, you go to the next level");
@@ -278,7 +279,6 @@ int main(int argc, char** argv)
 		puts("-Your skill you'll be rewarded if you win");
 		puts("-Per default the maximun lenght of a sequence is 8, but you can change this in the options menu");
 		puts("");
-		puts("-Ready to start?");
 		// special effect
 		for (int count = 0; count < 15; count++)
 		{
@@ -291,10 +291,9 @@ int main(int argc, char** argv)
 		}
 		puts("---Press enter to continue---");
 		fgets(trashcan, 5, stdin);
-		trashcan[0] = 'P';
+		trashcan[0] = 'O';
 		clearScreenToTop();
 		moveTo(0, 0);
-		trashcan[0] == 'O';
 	}
 
 	if (trashcan[0] == 'O' || trashcan[0] == 'o')
@@ -311,10 +310,9 @@ int main(int argc, char** argv)
 		puts("4- lenght = 31");
 		puts("");
 		puts("Game mode is how you play Simon. There's 3 modes:");
-		puts("1- ");
-		puts("");
-		puts("");
-		puts("");
+		puts("1- You against Simon. It says and you repeat");
+		puts("2- You againnst your (or a friend's) memory. You say, you (or them) repeat");
+		puts("3- Multiplayer. Everyone have a color, when Simon say someone's color, this person has to repeat. If it fails, his color is eliminated. The last Man standing wins");
 		puts("");
 		printf("What skill level will you play? ");
 		fgets(trashcan, 5, stdin);
@@ -323,132 +321,270 @@ int main(int argc, char** argv)
 		printf("What game mode will you play? ");
 		fgets(trashcan, 5, stdin);
 		gameMode = trashcan[0] - '0';
-		trashcan[0] == 'P';
+		trashcan[0] = 'P';
 	}
 
 	if (trashcan[0] == 'P' || trashcan[0] == 'p')
 	{
-		// play loop
-		for (bool replay = true; replay == true;)
+		if (gameMode == 1)
 		{
-			level = 1;
-			while (mistake == false && level <= skillLevel)
+			// play loop
+			for (bool replay = true; replay == true;)
 			{
-				// gets the console window size
+				level = 1;
+				while (mistake == false && level <= skillLevel)
 				{
-					setupConsole();
-					moveTo(999, 999);
-					getCursorPosition(&windowSize[0], &windowSize[1]);
-					clearScreenToTop();
-					restoreConsoleMode();
-				}
-				// prints the simon withou any bright buttons
-				display(NO_COLOR, windowSize);
-
-				// generates the next button of the sequnce
-				rng(sequence, level);
-
-				// will display the triggered button,
-				// play its sound
-				// and wait a little before continuing
-				for (int count = 0; count < level; count++)
-				{
-					delay(500);
-					display(sequence[count], windowSize);
-					playSFX(sequence[count]);
-					delay(510);
-					display(NO_COLOR, windowSize);
-				}
-
-				// gets the mouse input
-				// and make the button that are pressed bright
-				for (int count = 0; count < level; count++)
-				{
-					display(NO_COLOR, windowSize);
-
-					timeElapsed(true);
-					tooSlow = false;
-
-					// won't get out of the loop until the mouse click was received
-					while (true)
+					// gets the console window size
 					{
-						retEvent.event.mouseEvent = 0xc00;
-						retEvent = eventMain();
-						mouseCoord = retEvent.event.mouseCoord;
-						if (timeElapsed(false) >= 5000)
+						setupConsole();
+						moveTo(999, 999);
+						getCursorPosition(&windowSize[0], &windowSize[1]);
+						clearScreenToTop();
+						restoreConsoleMode();
+					}
+					// prints the simon withou any bright buttons
+					display(NO_COLOR, windowSize);
+
+					// generates the next button of the sequnce
+					rng(sequence, level);
+
+					// will display the triggered button,
+					// play its sound
+					// and wait a little before continuing
+					for (int count = 0; count < level; count++)
+					{
+						delay(500);
+						display(sequence[count], windowSize);
+						playSFX(sequence[count]);
+						delay(510);
+						display(NO_COLOR, windowSize);
+					}
+
+					// gets the mouse input
+					// and make the button that are pressed bright
+					for (int count = 0; count < level; count++)
+					{
+						display(NO_COLOR, windowSize);
+
+						timeElapsed(true);
+						tooSlow = false;
+
+						// won't get out of the loop until the mouse click was received
+						while (true)
 						{
-							tooSlow = true;
-							break;
+							retEvent.event.mouseEvent = 0xc00;
+							retEvent = eventMain();
+							mouseCoord = retEvent.event.mouseCoord;
+							if (timeElapsed(false) >= 5000)
+							{
+								tooSlow = true;
+								break;
+							}
+							if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
+								break;
 						}
-						if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
+
+						// will add the button input into its array
+						if (!tooSlow)
+							input[count] = coordinatesToButton(mouseCoord, windowSize);
+
+						// displays the button pressed
+						// and play its sound
+						if (!tooSlow)
+						{
+							display(input[count], windowSize);
+							playSFX(sequence[count]);
+						}
+
+						// checks if you make a mistake
+						// if yes it breaks the loop
+						if (!tooSlow)
+						{
+							if (sequence[count] != input[count])
+							{
+								mistake = true;
+								break;
+							}
+						}
+						if (tooSlow)
 							break;
 					}
 
-					// will add the button input into its array
-					if (!tooSlow)
-						input[count] = coordinatesToButton(mouseCoord, windowSize);
-
-					// displays the button pressed
-					// and play its sound
-					if (!tooSlow)
+					// runs the "too slow" routine
+					if (tooSlow == true)
 					{
-						display(input[count], windowSize);
+						// plays "too slow" sound
+						puts("Too Slow! Try again? (Y/N)");
+						BASS_ChannelPlay(youreTooSlow, FALSE);
+						fgets(trashcan, 5, stdin);
+						if (trashcan[0] == 'n' || trashcan[0] == 'N')
+							replay = false;
+					}
+
+					// runs the mistake routine
+					if (mistake == true && tooSlow == false)
+					{
+						// plays mistake sound
+						BASS_ChannelPlay(wrong, FALSE);
+						puts("Not right! Try again? (Y/N)");
+						fgets(trashcan, 5, stdin);
+						if (trashcan[0] == 'n' || trashcan[0] == 'N')
+							replay = false;
+					}
+					if (tooSlow)
+						mistake = true;
+
+					level++; // high the level by one
+				}
+
+				if (!tooSlow && !mistake)
+				{
+					int randFanfare = rand() % 2;
+					BASS_ChannelPlay(fanfare[randFanfare], TRUE);
+					printf("You win! Try again? (Y/N)");
+					fgets(trashcan, 5, stdin);
+					if (trashcan[0] == 'n' || trashcan[0] == 'N')
+						replay = false;
+					BASS_ChannelStop(fanfare[randFanfare]);
+				}
+				mistake = false; // reset the mistake flag when starting a new game
+				tooSlow = false; // reset the tooSlow flag when starting a new game
+			}
+		}
+	
+		if (gameMode == 2)
+		{
+			// play loop
+			for (bool replay = true; replay == true;)
+			{
+				level = 1;
+				while (mistake == false && level <= skillLevel)
+				{
+					// gets the console window size
+					{
+						setupConsole();
+						moveTo(999, 999);
+						getCursorPosition(&windowSize[0], &windowSize[1]);
+						clearScreenToTop();
+						restoreConsoleMode();
+					}
+
+					// gets the mouse input
+					// and make the button that are pressed bright
+
+					// here we get the sequence from the player
+					// the screen willl be cleaned up when the sequence get the correct size
+					for (int count = 0; count < level; count++)
+					{
+						display(NO_COLOR, windowSize);
+
+						// won't get out of the loop until the mouse click was received
+						while (true)
+						{
+							retEvent.event.mouseEvent = 0xc00;
+							retEvent = eventMain();
+							mouseCoord = retEvent.event.mouseCoord;
+							if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
+								break;
+						}
+
+						// will add the button input into the sequence array
+						sequence[count] = coordinatesToButton(mouseCoord, windowSize);
+
+						display(sequence[count], windowSize);
 						playSFX(sequence[count]);
 					}
 
-					// checks if you make a mistake
-					// if yes it breaks the loop
-					if (!tooSlow)
+					// here the player have to repeat the sequence he created
+					// the behavior here is a lot like of the game mode 1
+					for (int count = 0; count < level; count++)
 					{
-						if (sequence[count] != input[count])
+						display(NO_COLOR, windowSize);
+
+						timeElapsed(true);
+						tooSlow = false;
+
+						// won't get out of the loop until the mouse click was received
+						while (true)
 						{
-							mistake = true;
-							break;
+							retEvent.event.mouseEvent = 0xc00;
+							retEvent = eventMain();
+							mouseCoord = retEvent.event.mouseCoord;
+							if (timeElapsed(false) >= 5000)
+							{
+								tooSlow = true;
+								break;
+							}
+							if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
+								break;
 						}
+
+						// will add the button input into its array
+						if (!tooSlow)
+							input[count] = coordinatesToButton(mouseCoord, windowSize);
+
+						// displays the button pressed
+						// and play its sound
+						if (!tooSlow)
+						{
+							display(input[count], windowSize);
+							playSFX(sequence[count]);
+						}
+
+						// checks if you make a mistake
+						// if yes it breaks the loop
+						if (!tooSlow)
+						{
+							if (sequence[count] != input[count])
+							{
+								mistake = true;
+								break;
+							}
+						}
+						if (tooSlow)
+							break;
+					}
+
+					// runs the "too slow" routine
+					if (tooSlow == true)
+					{
+						// plays "too slow" sound
+						puts("Too Slow! Try again? (Y/N)");
+						BASS_ChannelPlay(youreTooSlow, FALSE);
+						fgets(trashcan, 5, stdin);
+						if (trashcan[0] == 'n' || trashcan[0] == 'N')
+							replay = false;
+					}
+
+					// runs the mistake routine
+					if (mistake == true && tooSlow == false)
+					{
+						// plays mistake sound
+						BASS_ChannelPlay(wrong, FALSE);
+						puts("Not right! Try again? (Y/N)");
+						fgets(trashcan, 5, stdin);
+						if (trashcan[0] == 'n' || trashcan[0] == 'N')
+							replay = false;
 					}
 					if (tooSlow)
-						break;					
+						mistake = true;
+
+					level++; // high the level by one
 				}
 
-				// runs the "too slow" routine
-				if (tooSlow == true)
+				if (!tooSlow && !mistake)
 				{
-					// plays "too slow" sound
-					puts("Too Slow! Try again? (Y/N)");
-					BASS_ChannelPlay(youreTooSlow, FALSE);
+					int randFanfare = rand() % 2;
+					BASS_ChannelPlay(fanfare[randFanfare], TRUE);
+					printf("You win! Try again? (Y/N)");
 					fgets(trashcan, 5, stdin);
 					if (trashcan[0] == 'n' || trashcan[0] == 'N')
 						replay = false;
+					BASS_ChannelStop(fanfare[randFanfare]);
 				}
-
-				// runs the mistake routine
-				if (mistake == true && tooSlow == false)
-				{
-					// plays mistake sound
-					BASS_ChannelPlay(wrong, FALSE);
-					puts("Not right! Try again? (Y/N)");
-					fgets(trashcan, 5, stdin);
-					if (trashcan[0] == 'n' || trashcan[0] == 'N')
-						replay = false;
-				}
-				if (tooSlow)
-					mistake = true;
-
-				level++; // high the level by one
+				mistake = false; // reset the mistake flag when starting a new game
+				tooSlow = false; // reset the tooSlow flag when starting a new game
 			}
-
-			if (!tooSlow && !mistake)
-			{
-				int randFanfare = rand() % 2;
-				BASS_ChannelPlay(fanfare[randFanfare], TRUE);
-				printf("You win! Try again? (Y/N)");
-				fgets(trashcan, 5, stdin);
-				if (trashcan[0] == 'n' || trashcan[0] == 'N')
-					replay = false;
-				BASS_ChannelStop(fanfare[randFanfare]);
-			}
-			mistake = false; // reset the mistake flag when starting a new game
-			tooSlow = false; // reset the tooSlow flag when starting a new game
 		}
 	}
 	BASS_Free(); // free the BASS from memory
