@@ -21,8 +21,6 @@ extern void restoreConsoleMode(void);
 extern void restoreConsole(void);
 extern void getCursorPosition(int* row, int* col);
 
-typedef unsigned char sshort; // defines a char type as sshor, to use just one byte intead or 2 of the short
-
 typedef enum ColorButtons {
 	NO_COLOR = 0,
 	GREEN = 1,
@@ -134,29 +132,30 @@ int coordinatesToButton(COORD click, int windowSize[2])
 }
 
 // generates the next button of the sequence
-void rng(sshort* sequence, int level)
+void rng(int* sequence, int level)
 {
 	sequence[level - 1] = 1 + rand() % 4;
 	sequence[level] = 0;
 }
 
-void mode3RNG(sshort* sequence, int level, sshort buttons[4])
+// generates the next button of the sequence
+// but don't add if the button was eliminated
+void mode3RNG(int* sequence, int level, int buttons[4])
 {
 	int randomNum;
-	for (bool okay = false; okay == false;)
+
+	while (true)
 	{
 		randomNum = 1 + rand() % 4;
-		for (int count = 0; count < 4; count++)
-		{
-			if (buttons[count] != randomNum)
-				break;
-			okay = true;
-		}
+		if (buttons[randomNum - 1] != 0)
+			break;
 	}
+
 	sequence[level - 1] = randomNum;
 	sequence[level] = 0;
 }
 
+// converts the player option to a real value
 void setSkillLevel(int* skillLevel)
 {
 	switch (*skillLevel)
@@ -178,6 +177,58 @@ void setSkillLevel(int* skillLevel)
 		*skillLevel = 8;
 		break;
 	}
+}
+
+// returns the button name
+char* whatColor(int button)
+{
+	static char buttonName[9];
+	switch (button)
+	{
+	case 1:
+		buttonName[0] = ',';
+		buttonName[1] = ' ';
+		buttonName[2] = 'G';
+		buttonName[3] = 'r';
+		buttonName[4] = 'e';
+		buttonName[5] = 'e';
+		buttonName[6] = 'n';
+		buttonName[7] = '\0';
+		break;
+	case 2:
+		buttonName[0] = ',';
+		buttonName[1] = ' ';
+		buttonName[2] = 'R';
+		buttonName[3] = 'e';
+		buttonName[4] = 'd';
+		buttonName[5] = '\0';
+		break;
+	case 3:
+		buttonName[0] = ',';
+		buttonName[1] = ' ';
+		buttonName[2] = 'Y';
+		buttonName[3] = 'e';
+		buttonName[4] = 'l';
+		buttonName[5] = 'l';
+		buttonName[6] = 'o';
+		buttonName[7] = 'w';
+		buttonName[8] = '\0';
+		break;
+	case 4:
+		buttonName[0] = ',';
+		buttonName[1] = ' ';
+		buttonName[2] = 'B';
+		buttonName[3] = 'l';
+		buttonName[4] = 'u';
+		buttonName[5] = 'e';
+		buttonName[6] = '\0';
+		break;
+	default:
+		buttonName[0] = '\0';
+		break;
+	}
+
+	return buttonName;
 }
 
 // plays the sound effects
@@ -243,38 +294,42 @@ int main(int argc, char** argv)
 	int skillLevel = 8; // max lenght of the sequence. Can be changed by the user
 	int gameMode = 1; // game mode switch
 	int windowSize[2];
-	sshort sequence[35]; // sequence of buttons to press
-	sshort input[35]; // sequence of button pressed
+	int sequence[35]; // sequence of buttons to press
+	int input[35]; // sequence of button pressed
 	COORD mouseCoord;
 	EVENT retEvent; // return event of the windows console interaction
 	char trashcan[10]; // used to get inputs and freeze the program
 	bool mistake = false; // flag
 	bool tooSlow = false; // flag
+	bool mode3Win; // flag
 
-	srand(time(NULL)); // random seed to srand
-	
-	// use the default device for sound
-	int device = -1;
+	srand(time(0)); // random seed to srand
 
-	// check the correct BASS was loaded
-	if (HIWORD(BASS_GetVersion()) != BASSVERSION) {
-		printf("An incorrect version of BASS was loaded");
-		return;
+	// BASS initialization and SFX set up
+	{
+		// use the default device for sound
+		int device = -1;
+
+		// check the correct BASS was loaded
+		if (HIWORD(BASS_GetVersion()) != BASSVERSION) {
+			printf("An incorrect version of BASS was loaded");
+			return;
+		}
+
+		// checks if the device was initialized
+		if (!BASS_Init(device, 44100, 0, 0, NULL))
+			Error("Can't initialize device");
+
+		// try streaming the file
+		green_button = BASS_StreamCreateFile(FALSE, "green_button.wav", 0, 0, 0);
+		red_button = BASS_StreamCreateFile(FALSE, "red_button.wav", 0, 0, 0);
+		yellow_button = BASS_StreamCreateFile(FALSE, "yellow_button.wav", 0, 0, 0);
+		blue_button = BASS_StreamCreateFile(FALSE, "blue_button.wav", 0, 0, 0);
+		wrong = BASS_StreamCreateFile(FALSE, "wrong.wav", 0, 0, 0);
+		youreTooSlow = BASS_StreamCreateFile(FALSE, "youre-too-slow.ogg", 0, 0, 0);
+		fanfare[0] = BASS_StreamCreateFile(FALSE, "ffi_victory.ogg", 0, 0, 0);
+		fanfare[1] = BASS_StreamCreateFile(FALSE, "chrono_trigger_fanfare.ogg", 0, 0, 0);
 	}
-
-	// checks if the device was initialized
-	if (!BASS_Init(device, 44100, 0, 0, NULL))
-		Error("Can't initialize device");
-
-	// try streaming the file
-	green_button = BASS_StreamCreateFile(FALSE, "green_button.wav", 0, 0, 0);
-	red_button = BASS_StreamCreateFile(FALSE, "red_button.wav", 0, 0, 0);
-	yellow_button = BASS_StreamCreateFile(FALSE, "yellow_button.wav", 0, 0, 0);
-	blue_button = BASS_StreamCreateFile(FALSE, "blue_button.wav", 0, 0, 0);
-	wrong = BASS_StreamCreateFile(FALSE, "wrong.wav", 0, 0, 0);
-	youreTooSlow = BASS_StreamCreateFile(FALSE, "youre-too-slow.ogg", 0, 0, 0);
-	fanfare[0] = BASS_StreamCreateFile(FALSE, "ffi_victory.ogg", 0, 0, 0);
-	fanfare[1] = BASS_StreamCreateFile(FALSE, "chrono_trigger_fanfare.ogg", 0, 0, 0);
 
 	printf("Starting Simon. Do you wish to:\n(P) play now;\n(O)change options\n or\n(T)see the tutorial?\n");
 	fgets(trashcan, 5, stdin);
@@ -458,7 +513,7 @@ int main(int argc, char** argv)
 				{
 					int randFanfare = rand() % 2;
 					BASS_ChannelPlay(fanfare[randFanfare], TRUE);
-					printf("You win! Try again? (Y/N)");
+					printf("You win! Play again? (Y/N)");
 					fgets(trashcan, 5, stdin);
 					if (trashcan[0] == 'n' || trashcan[0] == 'N')
 						replay = false;
@@ -468,7 +523,7 @@ int main(int argc, char** argv)
 				tooSlow = false; // reset the tooSlow flag when starting a new game
 			}
 		}
-	
+
 		if (gameMode == 2)
 		{
 			// play loop
@@ -593,7 +648,7 @@ int main(int argc, char** argv)
 				{
 					int randFanfare = rand() % 2;
 					BASS_ChannelPlay(fanfare[randFanfare], TRUE);
-					printf("You win! Try again? (Y/N)");
+					printf("You win! Play again? (Y/N)");
 					fgets(trashcan, 5, stdin);
 					if (trashcan[0] == 'n' || trashcan[0] == 'N')
 						replay = false;
@@ -612,6 +667,7 @@ int main(int argc, char** argv)
 			for (bool replay = true; replay == true;)
 			{
 				level = 1;
+				mode3Win = false;
 				while (mistake == false && level <= skillLevel)
 				{
 					// gets the console window size
@@ -642,7 +698,8 @@ int main(int argc, char** argv)
 
 					// gets the mouse input
 					// and make the button that are pressed bright
-					for (int count = 0; count < level; count++)
+					int inputCount = 0;
+					for (int inputCount = 0; inputCount < level; inputCount++)
 					{
 						display(NO_COLOR, windowSize);
 
@@ -666,36 +723,45 @@ int main(int argc, char** argv)
 
 						// will add the button input into its array
 						if (!tooSlow)
-							input[count] = coordinatesToButton(mouseCoord, windowSize);
+							input[inputCount] = coordinatesToButton(mouseCoord, windowSize);
 
 						// displays the button pressed
 						// and play its sound
 						if (!tooSlow)
 						{
-							display(input[count], windowSize);
-							playSFX(sequence[count]);
+							display(input[inputCount], windowSize);
+							playSFX(sequence[inputCount]);
 						}
 
 						// checks if you make a mistake
-						// if yes it breaks the loop
+						// if yes it'll elimate the button
 						if (!tooSlow)
 						{
-							if (sequence[count] != input[count])
+							if (sequence[inputCount] != input[inputCount])
 							{
 								mistake = true;
-								buttons[input[count] - 1] = 0;
+								buttons[input[inputCount] - 1] = 0;
 								break;
 							}
 						}
+
+						// ckecks if the player was too slow to respond
+						// if yes it'll eliminate the button
 						if (tooSlow)
+						{
+							buttons[sequence[inputCount] - 1] = 0;
 							break;
+						}
+
+						if ((inputCount + 1) == level)
+							mode3Win = true;
 					}
 
 					// runs the "too slow" routine
 					if (tooSlow == true)
 					{
 						// plays "too slow" sound
-						puts("Too Slow! Eliminated!");
+						printf("Too Slow%s! Eliminated!", whatColor(sequence[inputCount]));
 						BASS_ChannelPlay(youreTooSlow, FALSE);
 						fgets(trashcan, 5, stdin);
 					}
@@ -705,24 +771,44 @@ int main(int argc, char** argv)
 					{
 						// plays mistake sound
 						BASS_ChannelPlay(wrong, FALSE);
-						puts("Not right! Eliminated");
+						printf("Not right%s! Eliminated!", whatColor(input[inputCount]));
 						fgets(trashcan, 5, stdin);
 					}
 					if (tooSlow)
 						mistake = true;
 
+
+					for (int loopCount = 0, buttonsEliminated = 0; loopCount < 4; loopCount++)
+					{
+						if (buttons[loopCount] == 0)
+							buttonsEliminated++;
+
+						if (buttonsEliminated == 3)
+							mode3Win = true;
+					}
+
 					level++; // high the level by one
 				}
 
-				if (!tooSlow && !mistake)
+				if (mode3Win)
 				{
 					int randFanfare = rand() % 2;
 					BASS_ChannelPlay(fanfare[randFanfare], TRUE);
-					printf("You win! Try again? (Y/N)");
+
+					printf("You win");
+					for (int count = 0; count < 4; count++)
+						printf("%s", whatColor(buttons[count]));
+					printf("! Play again? (Y/N)");
+
 					fgets(trashcan, 5, stdin);
 					if (trashcan[0] == 'n' || trashcan[0] == 'N')
 						replay = false;
 					BASS_ChannelStop(fanfare[randFanfare]);
+					mode3Win = false;
+					buttons[0] = 1;
+					buttons[1] = 2;
+					buttons[2] = 3;
+					buttons[3] = 4;
 				}
 				mistake = false; // reset the mistake flag when starting a new game
 				tooSlow = false; // reset the tooSlow flag when starting a new game
