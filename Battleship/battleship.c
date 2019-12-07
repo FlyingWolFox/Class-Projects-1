@@ -43,11 +43,11 @@ coord clickToCoordinates(COORD click)
 
 // creates the display board
 // putting the character to create an empty board
-void createDisplayeGrid(char displayGrid[37][100])
+void createDisplayeGrid(char displayGrid[61][145])
 {
-	for (int i = 0; i < 37; i++)
+	for (int i = 0; i < 61; i++)
 	{
-		for (int j = 0; j < 100; j++)
+		for (int j = 0; j < 145; j++)
 		{
 			if (j % 9 == 0 || i % 4 == 0)
 			{
@@ -65,7 +65,7 @@ void createDisplayeGrid(char displayGrid[37][100])
 
 // modifyes the display grid putting
 // a ship part, submarine or miss in the squares
-void modifyDisplayGrid(char displayGrid[37][100], coord coordinates, char symbol)
+void modifyDisplayGrid(char displayGrid[61][145], coord coordinates, char symbol)
 {
 	char horizontalBow[3][8] = { {' ', ' ', ' ', ' ', ' ', ' ', ' ', '_'} ,
 								 {' ', ' ', ' ', ' ', '_', '_', '/', ' '} ,
@@ -167,12 +167,12 @@ void modifyDisplayGrid(char displayGrid[37][100], coord coordinates, char symbol
 }
 
 // prints the display
-void printDisplayGrid(char displayGrid[37][100])
+void printDisplayGrid(char displayGrid[61][145])
 {
-	for (int i = 0; i < 37; i++)
+	for (int i = 0; i < 61; i++)
 	{
 		moveRight(1);
-		for (int j = 0; j < 100; j++)
+		for (int j = 0; j < 145; j++)
 			printf("%c", displayGrid[i][j]);
 		printf("\n");
 	}
@@ -180,7 +180,7 @@ void printDisplayGrid(char displayGrid[37][100])
 
 // sees if the game ended
 // if yes, is because all ships have been found
-bool isEnd(char grid[9][11], char playerGrid[9][11])
+bool isEnd(char grid[15][15], char playerGrid[15][15])
 {
 	bool isEnd = true;
 	for (int i = 0; i < 9; i++)
@@ -205,9 +205,9 @@ void thanks(void)
 int main(int argc, char** argv)
 {
 	// if there's no argument, shows the usage
-	if (argc < 2)
+	if (argc < 3)
 	{
-		printf("\tusage: battleship <file>\n");
+		printf("\tusage: battleship <file> <map mode>\n");
 		return -1;
 	}
 	// try to open the file
@@ -219,9 +219,9 @@ int main(int argc, char** argv)
 		return -2;
 	}
 
-	char displayGrid[37][100];
-	char grid[9][11]; // grid with the complete board
-	char playGrid[9][11]; // the grid that the player sees
+	char displayGrid[61][145];
+	char grid[15][15]; // grid with the complete board
+	char playGrid[15][15]; // the grid that the player sees
 	coord play; // play coordinates
 	EVENT retEvent; // console window events
 	COORD mouseCoord; // mouse click coordinates
@@ -231,14 +231,14 @@ int main(int argc, char** argv)
 	// formatted correctly, and 
 	// gets the map from the file
 	{
-		char getGrid[9][25] = { 0 };
+		char getGrid[15][33] = { 0 };
 		bool pass = true;
-		for (int count = 0; count < 9; count++)
-			fgets(getGrid[count], 25, textFile);
+		for (int count = 0; count < 15; count++)
+			fgets(getGrid[count], 33, textFile);
 
-		for (int count = 0; count < 9; count++)
+		for (int count = 0; count < 15; count++)
 		{
-			if (getGrid[count][24] != '\0' && getGrid[count][24] != '\n')
+			if (getGrid[count][32] != '\0' && getGrid[count][32] != '\n')
 			{
 				pass = false;
 				break;
@@ -248,18 +248,18 @@ int main(int argc, char** argv)
 		if (pass == false)
 		{
 			puts("the file isn't formatted correctly, please try again");
-			return -1;
+			return 1;
 		}
 
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 15; i++)
 		{
-			for (int j = 1; j < 22; j += 2)
+			for (int j = 1; j < 31; j += 2)
 				grid[i][j - (j/2 + 1)] = getGrid[i][j];
 		}
 
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 15; i++)
 		{
-			for (int j = 0; j < 11; j++)
+			for (int j = 0; j < 15; j++)
 				playGrid[i][j] = ' ';
 		}
 
