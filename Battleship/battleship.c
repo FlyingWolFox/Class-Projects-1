@@ -14,8 +14,6 @@ typedef struct Coordinates {
 	short i, j;
 }coord;
 
-int mapMode;
-
 // the _x inthe function names express in which mode they're used
 // I done this because the grid array can have variable lenght
 // I tried getting the size by argument, just avilable in c99, bit it didn't work
@@ -370,6 +368,7 @@ int main(int argc, char** argv)
 		printf("\tusage: battleship <file> <map mode>\n");
 		return -1;
 	}
+
 	// try to open the file
 	FILE* textFile;
 	textFile = fopen(argv[1], "r");
@@ -385,6 +384,8 @@ int main(int argc, char** argv)
 		return -3;
 	}
 
+	// sets map mode
+	int mapMode;
 	mapMode = argv[2][0] - '0';
 
 	char trashcan[10]; // used to get inputs or freeze execution
