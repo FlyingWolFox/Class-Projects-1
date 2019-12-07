@@ -60,8 +60,9 @@ Here you'll find 5 games: Tic Tac Toe (or naughts and crosses), Connect 4, Hangm
   - The game nedd ANSI Escape Codes to clear the screen, and print colors in terminal
   - The colors are made with true color (RGB), your terminal emulator may not support it. If it doesn't I don't know What will happen
   - The game uses mouse interaction, which, for now, it's limited to Windows
-  - The game has sounds for each button/color and a game over sound!
-  - It uses the BASS Audio Library to play the souds. There five audio files on the project already, 4 for the buttons and 1 for the game over. If you keep the name, you can put your own sounds!
+  - The game has sounds for each button/color, victory, "You're to Slow" and a game over sound!
+  - It uses the BASS Audio Library to play the souds. There eight audio files on the project already, 4 for the buttons, 2 for victory fanfares, 1 if you're too slow and 1 for the game over. If you keep the name, you can put your own sounds!
+  - The victory fanfares are from Final Fantasy and Chrono Trigger
   - Due to have to print the entire screen, the game is dependent of the cpu speed, slowdown with the printing may occur. Don't cick until the cursor is at the botton of the screen or the click won't count
   - ~~~Don't get scared at the game over sound!~~~
 
