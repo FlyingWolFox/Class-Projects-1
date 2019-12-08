@@ -14,6 +14,12 @@ typedef struct Coordinates {
 	short i, j;
 }coord;
 
+// holds the shot info
+typedef struct ShotInfo {
+	bool fired;
+	coord position;
+}shot;
+
 // the _x inthe function names express in which mode they're used
 // I done this because the grid array can have variable lenght
 // I tried getting the size by argument, just avilable in c99, bit it didn't work
@@ -389,6 +395,40 @@ int main(int argc, char** argv)
 	mapMode = argv[2][0] - '0';
 
 	char trashcan[10]; // used to get inputs or freeze execution
+	
+	// verifies the windows size
+	// if it's too small it'll prompt to maximaze it
+	{
+		int windowSize[2];
+		setupConsole();
+		moveTo(999, 999);
+		getCursorPosition(&windowSize[0], &windowSize[1]);
+		moveTo(0, 0);
+
+		while (windowSize[0] < 40)
+		{
+			puts("Please, expand the console window!");
+			moveTo(999, 999);
+			getCursorPosition(&windowSize[0], &windowSize[1]);
+			moveTo(0, 0);
+		}
+		clearScreenToBottom();
+		restoreConsoleMode();
+	}
+
+
+	// ask the player if it wants the harder ruleset
+	bool hardRule = false;
+	puts("Hard or easy ruleset? (Hard/easy)");
+	fgets(trashcan, 10, stdin);
+
+	clearScreenToTop();
+	moveTo(0, 0);
+
+	if (trashcan[0] == 'H' || trashcan[0] == 'h')
+		hardRule = true;
+
+	shot attack[3];
 
 	if (mapMode == 0)
 	{
@@ -435,65 +475,55 @@ int main(int argc, char** argv)
 
 		}
 
-		// verifies the windows size
-		// if it's too small it'll prompt to maximaze it
-		{
-			int windowSize[2];
-			setupConsole();
-			moveTo(999, 999);
-			getCursorPosition(&windowSize[0], &windowSize[1]);
-			moveTo(0, 0);
-
-			while (windowSize[0] < 40)
-			{
-				puts("Please, expand the console window!");
-				moveTo(999, 999);
-				getCursorPosition(&windowSize[0], &windowSize[1]);
-				moveTo(0, 0);
-			}
-			clearScreenToBottom();
-			restoreConsoleMode();
-		}
-
 		createDisplayeGrid_0(displayGrid);
 		printDisplayGrid_0(displayGrid);
 
 		// play loop
 		for (bool playing = true; playing == true;)
 		{
-			// initialization. withou it won't compile
-			play.i = 0;
-			play.j = 0;
+			attack[0].fired = false;
+			attack[1].fired = false;
+			attack[2].fired = false;
 
-			// gets the player move coordinates and converts to int
-			puts("What cordinates to attack? (Type the X coordinate and enter, then type the Y coordinate)");
-			fgets(trashcan, 10, stdin);
-			play.i = (strtoimax(trashcan, NULL, 10)) - 1;
-
-			fgets(trashcan, 10, stdin);
-			play.j = (strtoimax(trashcan, NULL, 10)) - 1;
-
-
-			if ( (play.i == UINTMAX_MAX && errno == ERANGE) || (play.j == UINTMAX_MAX && errno == ERANGE) )
+			for (int count = 0; attack[2].fired == false; count++)
 			{
-				puts("Invalid input. Just numbers are allowed");
+				// gets the player move coordinates and converts to int
+				puts("What cordinates to attack? (Type the X coordinate and enter, then type the Y coordinate)");
 				fgets(trashcan, 10, stdin);
-				continue;
+				attack[count].position.i = (strtoimax(trashcan, NULL, 10)) - 1;
+
+				fgets(trashcan, 10, stdin);
+				attack[count].position.j = (strtoimax(trashcan, NULL, 10)) - 1;
+
+				if ((attack[count].position.i == UINTMAX_MAX && errno == ERANGE) || (attack[count].position.j == UINTMAX_MAX && errno == ERANGE))
+				{
+					puts("Invalid input. Just numbers are allowed");
+					fgets(trashcan, 10, stdin);
+					count--;
+					continue;
+				}
+
+				if (attack[count].position.i > 15 || attack[count].position.i < 1 || attack[count].position.j > 15 || attack[count].position.j < 1)
+				{
+					puts("Out of the range!");
+					fgets(trashcan, 10, stdin);
+					count--;
+					continue;
+				}
+
+				attack[count].position.i--;
+				attack[count].position.j--;
+				attack[count].fired = true;
+				printf("Shoot %i!", count + 1);
 			}
 
-			if (play.i > 15 || play.i < 1 || play.j > 15 || play.j < 1)
+			for (int count = 0; count < 3; count++)
 			{
-				puts("Out of the range!");
-				fgets(trashcan, 10, stdin);
-				continue;
+				// modifies the grid and prints it
+				modifyDisplayGrid_0(displayGrid, attack[count].position, grid[attack[count].position.i][attack[count].position.j]);
+				playGrid[attack[count].position.i][attack[count].position.j] = grid[attack[count].position.i][attack[count].position.j];
+				attack[count].fired = false;
 			}
-
-			play.i--;
-			play.j--;
-
-			// modifies the grid and prints it
-			modifyDisplayGrid_0(displayGrid, play, grid[play.i][play.j]);
-			playGrid[play.i][play.j] = grid[play.i][play.j];
 			printDisplayGrid_0(displayGrid);
 
 			// verifies if the game ended
@@ -554,54 +584,46 @@ int main(int argc, char** argv)
 
 		}
 
-		// verifies the windows size
-		// if it's too small it'll prompt to maximaze it
-		{
-			int windowSize[2];
-			setupConsole();
-			moveTo(999, 999);
-			getCursorPosition(&windowSize[0], &windowSize[1]);
-			moveTo(0, 0);
-
-			while (windowSize[0] < 40)
-			{
-				puts("Please, expand the console window!");
-				moveTo(999, 999);
-				getCursorPosition(&windowSize[0], &windowSize[1]);
-				moveTo(0, 0);
-			}
-			clearScreenToBottom();
-			restoreConsoleMode();
-		}
-
-
 		createDisplayeGrid_1(displayGrid);
 		printDisplayGrid_1(displayGrid);
 
 		// play loop
 		for (bool playing = true; playing == true;)
 		{
-			// gets the mouse click coordinates
-			while (true)
+			attack[0].fired = false;
+			attack[1].fired = false;
+			attack[2].fired = false;
+
+			for (int count = 0; attack[2].fired == false; count++)
 			{
-				retEvent.event.mouseEvent = 0xc00;
-				retEvent = eventMain();
-				mouseCoord = retEvent.event.mouseCoord;
-				if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
-					break;
+				// gets the mouse click coordinates
+				while (true)
+				{
+					retEvent.event.mouseEvent = 0xc00;
+					retEvent = eventMain();
+					mouseCoord = retEvent.event.mouseCoord;
+					if (retEvent.event.mouseEvent == FROM_LEFT_1ST_BUTTON_PRESSED)
+						break;
+				}
+
+				// if the mouse click coordinates weren't captured
+				// (for some reason) it'll loop to get it again
+				attack[count].position = clickToCoordinates(mouseCoord);
+				if (attack[count].position.i == -1 || attack[count].position.j == -1)
+					continue;
+
+				attack[count].fired = true;
+				printf("Shoot %i!", count + 1);
 			}
 
-			// if the mouse click coordinates weren't captured
-			// (for some reason) it'll loop to get it again
-			play = clickToCoordinates(mouseCoord);
-			if (play.i == -1 || play.j == -1)
-				continue;
-
-			// modifies the grid and prints it
-			modifyDisplayGrid_1(displayGrid, play, grid[play.i][play.j]);
-			playGrid[play.i][play.j] = grid[play.i][play.j];
-			clearScreenToTop();
-			moveTo(0, 0);
+			for (int count = 0; count < 3; count++)
+			{
+				// modifies the grid and prints it
+				modifyDisplayGrid_1(displayGrid, attack[count].position, grid[attack[count].position.i][attack[count].position.j]);
+				playGrid[attack[count].position.i][attack[count].position.j] = grid[attack[count].position.i][attack[count].position.j];
+				clearScreenToTop();
+				moveTo(0, 0);
+			}
 			printDisplayGrid_1(displayGrid);
 
 			// verifies if the game ended
