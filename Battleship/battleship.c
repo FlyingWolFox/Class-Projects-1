@@ -24,6 +24,13 @@ typedef struct ShotInfo {
 // I done this because the grid array can have variable lenght
 // I tried getting the size by argument, just avilable in c99, bit it didn't work
 
+// converts the simple map received by file
+// and converts it to internal symbol for each ship
+// so identify each ship using other character for display drawning
+void convertMap(char grid)
+{
+
+}
 
 // converts the mouse click to board coordinates
 coord clickToCoordinates(COORD click)
